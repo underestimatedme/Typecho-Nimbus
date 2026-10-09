@@ -4,7 +4,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 use Nimbus\Options;
 use Nimbus\View;
 $mode = (string)Options::get('Pagination', 'normal');
-if (!$archive->have()) return;
+if ($archive->is('single') || $archive->is('archive', '404') || !$archive->have()) return;
 if ($mode === 'normal') {
     $archive->pageNav('‹', '›', 2, '…', ['wrapTag' => 'nav', 'wrapClass' => 'n-pagination', 'itemTag' => 'span', 'textTag' => 'span', 'currentClass' => 'is-current', 'prevClass' => 'n-page-prev', 'nextClass' => 'n-page-next']);
     return;
