@@ -8,15 +8,18 @@
  * @link https://github.com/underestimatedme/Nimbus
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
-?><!DOCTYPE html>
-<html lang="zh-CN" data-theme="sky">
-<head>
-<meta charset="utf-8">
-<title><?php $this->options->title(); ?></title>
-</head>
-<body data-page="index">
-<?php while ($this->next()): ?>
-<h2><a href="<?php $this->permalink(); ?>"><?php $this->title(); ?></a></h2>
-<?php endwhile; ?>
-</body>
-</html>
+use Nimbus\View;
+use Nimbus\Options;
+View::partial('header', ['archive' => $this]);
+?>
+<div class="n-container">
+  <div class="n-wrap" data-side="<?= View::e((string)Options::get('SidebarPosition', 'right')) ?>">
+    <section class="n-main">
+      <?php while ($this->next()): ?>
+      <h2><a href="<?php $this->permalink(); ?>"><?php $this->title(); ?></a></h2>
+      <?php endwhile; ?>
+    </section>
+    <aside class="n-side"></aside>
+  </div>
+</div>
+<?php View::partial('footer', ['archive' => $this]); ?>

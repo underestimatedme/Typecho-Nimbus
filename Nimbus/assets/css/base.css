@@ -61,3 +61,13 @@ html[data-motion="off"] .n-reveal { opacity: 1; translate: 0 0; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   .n-reveal { opacity: 1; translate: 0 0; }
 }
+
+/* Toast */
+.n-toast { position: fixed; left: 50%; bottom: 32px; translate: -50% 0; z-index: var(--z-toast); display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+.n-toast-item { padding: 10px 18px; border-radius: var(--r-pill); background: var(--fg-strong); color: var(--bg); font-size: var(--text-sm); box-shadow: 0 10px 30px -10px rgba(0, 0, 0, .5); opacity: 0; translate: 0 10px; transition: opacity var(--dur-fast), translate var(--dur) var(--ease); }
+.n-toast-item.is-in { opacity: 1; translate: 0 0; }
+
+/* 皮肤切换圆形扩散过渡 */
+.n-vt-theme::view-transition-old(root) { animation: none; }
+.n-vt-theme::view-transition-new(root) { animation: n-vt-reveal .6s var(--ease-in-out); }
+@keyframes n-vt-reveal { from { clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 50%)); } to { clip-path: circle(150% at var(--vt-x, 50%) var(--vt-y, 50%)); } }

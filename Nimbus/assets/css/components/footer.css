@@ -1,1 +1,21 @@
-/* components/footer — 待实现 */
+/* 页脚与返回顶部 */
+.n-footer { position: relative; z-index: 2; border-top: 1px solid var(--line); padding: var(--space-6) 0; color: var(--muted); font-size: var(--text-sm); }
+.n-footer-in { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.n-footer-brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-title); font-weight: 700; font-size: 18px; color: var(--fg-strong); }
+.n-footer-brand .n-logo-mark { width: 22px; height: 22px; border-radius: 7px; }
+.n-footer-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; }
+.n-footer-meta a { color: var(--fg-soft); transition: color var(--dur-fast); }
+.n-footer-meta a:hover { color: var(--accent-text); }
+.n-footer-custom { max-width: 720px; }
+:root[data-theme="cyber"] .n-footer { font-family: var(--font-mono); font-size: 12.5px; }
+
+.n-totop { position: fixed; right: 28px; bottom: 28px; z-index: var(--z-nav); width: 48px; height: 48px; border-radius: 50%; background: var(--card); border: 1px solid var(--line); box-shadow: 0 10px 30px -10px rgba(0, 0, 0, .4); display: grid; place-items: center; color: var(--fg); font-size: 18px; opacity: 0; translate: 0 16px; pointer-events: none; transition: opacity var(--dur), translate var(--dur) var(--ease), transform var(--dur-fast); }
+.n-totop.is-show { opacity: 1; translate: 0 0; pointer-events: auto; }
+.n-totop:hover { transform: translateY(-3px); }
+.n-totop-ring { position: absolute; inset: -1px; width: 50px; height: 50px; transform: rotate(-90deg); }
+.n-totop-ring circle { fill: none; stroke-width: 2.5; }
+.n-totop-bg { stroke: var(--chip); }
+.n-totop-fg { stroke: var(--accent); stroke-dasharray: 148; stroke-dashoffset: 148; transition: stroke-dashoffset .15s linear; }
+:root[data-theme="cyber"] .n-totop { border-radius: var(--r-md); }
+:root[data-theme="cyber"] .n-totop-ring { display: none; }
+@media (max-width: 640px) { .n-totop { right: 16px; bottom: 16px; width: 44px; height: 44px; } .n-totop-ring { width: 46px; height: 46px; } }
