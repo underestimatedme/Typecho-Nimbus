@@ -4,6 +4,7 @@ import * as nav from './modules/nav.js';
 import * as progress from './modules/progress.js';
 import * as search from './modules/search.js';
 import * as reveal from './modules/reveal.js';
+import * as count from './modules/count.js';
 
 function readConfig() {
   const el = document.getElementById('n-config');
@@ -21,6 +22,7 @@ async function boot(root = document) {
   progress.init();
   search.init(root);
   reveal.init(root);
+  count.init(root);
   if (pageModule && pageModule.destroy) { try { pageModule.destroy(); } catch (e) {} }
   pageModule = null;
   const page = (document.body.dataset.page || 'index');
