@@ -1,1 +1,63 @@
-/* components/card — 待实现 */
+/* ==========================================================================
+   文章卡片：交错 / 网格 / 纯文字
+   ========================================================================== */
+.n-list { display: flex; flex-direction: column; gap: 20px; }
+.n-card { position: relative; display: grid; grid-template-columns: 300px minmax(0, 1fr); border-radius: var(--r); overflow: hidden; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), border-color var(--dur-fast); }
+.n-list-card .n-card:nth-child(even) { grid-template-columns: minmax(0, 1fr) 300px; }
+.n-list-card .n-card:nth-child(even) .n-card-img { order: 2; }
+.n-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: var(--line-hover); }
+.n-card-img { display: block; height: 214px; overflow: hidden; position: relative; background: var(--chip); }
+.n-card-img i { position: absolute; inset: 0; background: center / cover no-repeat; transition: transform var(--dur-slow) var(--ease); }
+.n-card:hover .n-card-img i { transform: scale(1.06); }
+.n-card-img::after { content: ""; position: absolute; top: 0; left: -80%; width: 50%; height: 100%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .28), transparent); transform: skewX(-20deg); transition: left .7s var(--ease); pointer-events: none; }
+.n-card:hover .n-card-img::after { left: 130%; }
+.n-card-body { padding: 24px 28px; display: flex; flex-direction: column; min-width: 0; }
+.n-meta { display: flex; gap: 12px; align-items: center; font-size: var(--text-xs); color: var(--muted); font-variant-numeric: tabular-nums; }
+.n-meta .n-chip { position: relative; z-index: 2; }
+.n-card-title { font-family: var(--font-title); font-size: 22px; line-height: 1.35; margin: 12px 0 10px; color: var(--fg-strong); font-weight: 700; transition: color var(--dur-fast); }
+.n-card-title a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.n-card:hover .n-card-title { color: var(--accent-text); }
+.n-card-excerpt { font-size: var(--text-sm); line-height: 1.75; flex: 1; color: var(--fg-soft); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.n-card-foot { margin-top: 14px; display: flex; gap: 16px; align-items: center; font-size: var(--text-xs); color: var(--muted); }
+.n-card-foot span { display: inline-flex; align-items: center; gap: 4px; }
+.n-card-more { margin-left: auto; color: var(--accent-text); font-weight: 600; }
+.n-card-more .n-ico { transition: transform var(--dur) var(--ease); }
+.n-card:hover .n-card-more .n-ico { transform: translateX(5px); }
+:root[data-theme="cyber"] .n-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent-grad); z-index: 2; box-shadow: 0 0 12px var(--accent-glow); }
+:root[data-theme="cyber"] .n-card:hover .n-card-title { color: var(--neon); text-shadow: 0 0 12px rgba(255, 45, 149, .5); }
+:root[data-theme="cyber"] .n-meta { font-family: var(--font-mono); }
+
+/* 网格 */
+.n-list-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.n-card-grid { grid-template-columns: 1fr; }
+.n-card-grid .n-card-img { height: 170px; }
+.n-card-grid .n-card-body { padding: 18px 20px; }
+.n-card-grid .n-card-title { font-size: 17px; margin: 10px 0 8px; }
+.n-card-grid .n-card-excerpt { -webkit-line-clamp: 2; font-size: var(--text-xs); }
+.n-card-grid .n-card-foot { margin-top: 12px; }
+
+/* 纯文字 */
+.n-list-plain { gap: 0; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); overflow: hidden; }
+.n-plain { position: relative; padding: 20px 24px 20px 28px; border-bottom: 1px solid var(--line); transition: background var(--dur-fast); }
+.n-plain:last-child { border-bottom: 0; }
+.n-plain::before { content: ""; position: absolute; left: 0; top: 18px; bottom: 18px; width: 3px; border-radius: 2px; background: var(--accent); transform: scaleY(0); transition: transform var(--dur) var(--ease); }
+.n-plain:hover { background: color-mix(in srgb, var(--chip) 60%, transparent); }
+.n-plain:hover::before { transform: scaleY(1); }
+.n-plain time { font-size: var(--text-xs); color: var(--muted); font-variant-numeric: tabular-nums; }
+.n-plain-title { font-family: var(--font-title); font-size: 19px; margin: 4px 0 6px; color: var(--fg-strong); }
+.n-plain-title a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.n-plain:hover .n-plain-title { color: var(--accent-text); }
+.n-plain-excerpt { font-size: var(--text-sm); color: var(--fg-soft); display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.n-plain-meta { margin-top: 8px; display: flex; gap: 12px; align-items: center; font-size: var(--text-xs); color: var(--muted); }
+.n-plain-meta span { display: inline-flex; align-items: center; gap: 4px; }
+.n-plain-meta .n-chip { position: relative; z-index: 2; }
+
+@media (max-width: 1000px) { .n-list-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) {
+  .n-card, .n-list-card .n-card:nth-child(even) { grid-template-columns: 1fr; }
+  .n-list-card .n-card:nth-child(even) .n-card-img { order: 0; }
+  .n-card-img { height: 190px; }
+  .n-card-body { padding: 18px 20px; }
+  .n-card-title { font-size: 19px; }
+}
+@media (max-width: 560px) { .n-list-grid { grid-template-columns: 1fr; } }

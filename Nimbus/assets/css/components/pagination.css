@@ -1,1 +1,11 @@
-/* components/pagination — 待实现 */
+/* 分页 */
+.n-pagination { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; margin-top: var(--space-6); }
+.n-pagination span { display: inline-flex; }
+.n-pagination a, .n-pagination .is-current span, .n-pagination span > span { display: inline-flex; align-items: center; justify-content: center; min-width: 40px; height: 40px; padding: 0 12px; border-radius: var(--r-pill); font-size: var(--text-sm); font-weight: 600; background: var(--card); border: 1px solid var(--line); color: var(--fg-soft); transition: transform var(--dur-fast) var(--ease), background var(--dur-fast), color var(--dur-fast), border-color var(--dur-fast); }
+.n-pagination a:hover { transform: translateY(-2px); border-color: var(--line-hover); color: var(--accent-text); }
+.n-pagination .is-current span { background: var(--accent-grad); color: var(--on-accent); border-color: transparent; box-shadow: 0 6px 18px -6px var(--accent-glow); }
+:root[data-theme="cyber"] .n-pagination a, :root[data-theme="cyber"] .n-pagination .is-current span { border-radius: var(--r-md); font-family: var(--font-mono); }
+.n-load-wrap { display: flex; justify-content: center; margin-top: var(--space-6); }
+.n-load-more { padding: 12px 32px; }
+.n-load-end { font-size: var(--text-sm); color: var(--muted); display: inline-flex; align-items: center; gap: 12px; }
+.n-load-end::before, .n-load-end::after { content: ""; width: 40px; height: 1px; background: var(--line-hover); }
