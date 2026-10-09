@@ -104,7 +104,7 @@ $pages = [
 ];
 foreach ($pages as [$title, $slug, $tpl, $text]) {
     $db->prepare("INSERT INTO {$p}contents (title,slug,created,modified,text,\"order\",authorId,template,type,status,password,commentsNum,allowComment,allowPing,allowFeed,parent) VALUES (?,?,?,?,?,0,1,?,'page','publish',NULL,0,'1','1','1',0)")
-        ->execute([$title, $slug, $now, $now, '<!--markdown-->' . $text, $tpl]);
+        ->execute([$title, $slug, $now, $now, (strpos($text, '<!--markdown-->') === 0 ? '' : '<!--markdown-->') . $text, $tpl]);
     $cid = (int)$db->lastInsertId();
     if ($slug === 'links') {
         $json = json_encode([

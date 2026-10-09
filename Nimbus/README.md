@@ -4,6 +4,10 @@
 
 > 设计灵感来自 Cuteen，代码完全独立实现。MIT 许可。
 
+| 晴空 | 暮色 | 赛博朋克 |
+| --- | --- | --- |
+| ![sky](../docs/screenshots/home-sky.png) | ![dusk](../docs/screenshots/home-dusk.png) | ![cyber](../docs/screenshots/home-cyber.png) |
+
 ## 特性
 
 - **三套皮肤**：晴空（白天）、暮色（夜间）、赛博朋克。一键切换，首屏无闪烁，可跟随系统。
