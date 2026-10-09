@@ -5,7 +5,7 @@ cd "$(dirname "$0")/.."
 ROOT="$(pwd)"
 SITE="$ROOT/.dev/typecho"
 PORT=8099
-URL="http://127.0.0.1:$PORT"
+URL="http://localhost:$PORT"
 if [ ! -f "$SITE/index.php" ]; then
   echo "Typecho 不存在，正在下载 1.2.1 ..."
   mkdir -p "$ROOT/.dev"
@@ -22,4 +22,5 @@ fi
 rm -rf "$SITE/usr/themes/Nimbus"
 ln -sfn "$ROOT/Nimbus" "$SITE/usr/themes/Nimbus"
 php "$ROOT/tests/seed.php" "$SITE/usr/nimbus.db" "$URL"
+php "$ROOT/tests/reset-admin.php" "$SITE/usr/nimbus.db"
 echo "dev site: $URL  (admin / admin123)"

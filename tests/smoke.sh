@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # 渲染冒烟测试：启动 php -S，请求关键页面并断言。
 cd "$(dirname "$0")/.."
-SITE=".dev/typecho"; PORT=8099; BASE="http://127.0.0.1:$PORT"
+SITE=".dev/typecho"; PORT=8099; BASE="http://localhost:$PORT"
 [ -f "$SITE/config.inc.php" ] || { echo "run tests/dev-site.sh first"; exit 1; }
 if ! curl -s -o /dev/null "$BASE/" ; then
   (php -S 127.0.0.1:$PORT -t "$SITE" >/tmp/nimbus-php.log 2>&1 &)

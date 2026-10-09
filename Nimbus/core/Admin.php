@@ -12,7 +12,12 @@ final class Admin
     {
         $url = \Helper::options()->themeUrl . '/assets';
         echo '<link rel="stylesheet" href="' . View::e($url) . '/css/admin.css?v=' . NIMBUS_VERSION . '">';
-        echo '<div class="n-admin" data-nimbus-admin>';
+        $defaults = [];
+        foreach (self::GROUPS as $g) {
+            $cls = 'Nimbus\\Config\\' . $g;
+            foreach ($cls::items() as $it) $defaults[$it['name']] = isset($it['default']) ? $it['default'] : '';
+        }
+        echo '<div class="n-admin" data-nimbus-admin data-defaults="' . View::e(json_encode($defaults, JSON_UNESCAPED_UNICODE)) . '">';
         echo '<div class="n-admin-head"><strong>Nimbus</strong><span class="n-admin-ver">v' . NIMBUS_VERSION . '</span>';
         echo '<a class="n-admin-link" href="https://github.com/underestimatedme/Nimbus" target="_blank" rel="noopener">文档与反馈</a>';
         echo '</div>';
@@ -29,7 +34,7 @@ final class Admin
             $cls = 'Nimbus\\Config\\' . $g;
             foreach ($cls::items() as $it) {
                 $el = self::element($it);
-                $el->setAttribute('class', 'n-admin-item n-tab-' . $g);
+                $el->setAttribute('class', 'typecho-option n-admin-item n-tab-' . $g);
                 $form->addInput($el);
             }
         }
