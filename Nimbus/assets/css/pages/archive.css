@@ -1,1 +1,17 @@
-/* pages/archive — 待实现 */
+/* 归档时间线 */
+.n-timeline { position: relative; padding-left: 28px; }
+.n-timeline::before { content: ""; position: absolute; left: 8px; top: 10px; bottom: 10px; width: 2px; border-radius: 2px; background: linear-gradient(to bottom, var(--accent), var(--line) 70%, transparent); }
+.n-year { position: relative; margin-bottom: var(--space-6); }
+.n-year-title { position: sticky; top: 76px; z-index: 3; display: flex; align-items: baseline; gap: 10px; margin: 0 0 14px -28px; padding: 6px 0 6px 28px; font-family: var(--font-title); font-size: var(--text-2xl); color: var(--fg-strong); background: var(--bg); }
+.n-year-title::before { content: ""; position: absolute; left: 2px; top: 50%; translate: 0 -50%; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft), 0 0 14px var(--accent-glow); }
+.n-year-title small { font-size: var(--text-xs); color: var(--muted); font-family: var(--font-sans); letter-spacing: 1px; }
+.n-month { margin-bottom: 18px; padding: 14px 18px; border-radius: var(--r); background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.n-month-title { font-size: var(--text-xs); letter-spacing: 2px; color: var(--muted); margin-bottom: 8px; font-weight: 600; }
+.n-month li { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px dashed var(--line); font-size: var(--text-sm); }
+.n-month li:last-child { border-bottom: 0; }
+.n-month li time { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--muted); width: 24px; flex-shrink: 0; }
+.n-month li a { flex: 1; min-width: 0; color: var(--fg); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color var(--dur-fast), translate var(--dur-fast) var(--ease); }
+.n-month li a:hover { color: var(--accent-text); translate: 4px 0; }
+.n-month-c { display: inline-flex; align-items: center; gap: 3px; font-size: var(--text-xs); color: var(--muted); }
+:root[data-theme="cyber"] .n-year-title { font-family: var(--font-display); }
+@media (max-width: 640px) { .n-timeline { padding-left: 20px; } .n-year-title { font-size: var(--text-xl); margin-left: -20px; padding-left: 20px; } }
