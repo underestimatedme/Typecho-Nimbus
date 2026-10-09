@@ -1,0 +1,17 @@
+/* 暮色 · 深邃温暖（夜间） */
+:root[data-theme="dusk"] {
+  color-scheme: dark;
+  --bg: #0b1220; --fg: #e2e8f0; --fg-strong: #f8fafc; --fg-soft: #94a3b8; --muted: #64748b;
+  --card: #111a2e; --line: rgba(148, 163, 184, .09); --line-hover: rgba(251, 191, 36, .4);
+  --chip: rgba(148, 163, 184, .1); --glass: rgba(17, 26, 46, .78);
+  --accent: #f59e0b; --accent-text: #fbbf24; --accent-soft: rgba(245, 158, 11, .15); --on-accent: #1c1917;
+  --accent-grad: linear-gradient(135deg, #f59e0b, #f43f5e); --accent-glow: rgba(245, 158, 11, .45);
+  --orb-a: #f59e0b; --orb-b: #7c3aed;
+  --title-grad: linear-gradient(90deg, #fff, #fde68a, #fff);
+  --shadow: 0 1px 0 rgba(255, 255, 255, .02) inset;
+  --shadow-hover: 0 24px 50px -16px rgba(0, 0, 0, .7), 0 0 0 1px rgba(251, 191, 36, .25);
+  --hero-overlay: linear-gradient(180deg, rgba(2, 6, 23, .5), rgba(2, 6, 23, .3) 55%, rgba(11, 18, 32, 0) 100%);
+  --code-bg: #0a0f1c; --code-fg: #e2e8f0; --code-head: #141c30; --selection: #f59e0b;
+  --tok-kw: #f472b6; --tok-str: #fbbf24; --tok-num: #fb923c; --tok-cm: #64748b; --tok-fn: #60a5fa; --tok-op: #2dd4bf;
+  --like: #f43f5e; --ok: #34d399; --warn: #fbbf24;
+}

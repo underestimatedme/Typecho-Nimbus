@@ -1,0 +1,17 @@
+/* 晴空 · 明亮通透（白天） */
+:root[data-theme="sky"] {
+  color-scheme: light;
+  --bg: #f4f7fb; --fg: #1f2937; --fg-strong: #0f172a; --fg-soft: #4b5563; --muted: #6b7280;
+  --card: #ffffff; --line: rgba(15, 23, 42, .06); --line-hover: rgba(59, 130, 246, .35);
+  --chip: #eef2f7; --glass: rgba(255, 255, 255, .72);
+  --accent: #3b82f6; --accent-text: #2563eb; --accent-soft: #dbeafe; --on-accent: #ffffff;
+  --accent-grad: linear-gradient(135deg, #60a5fa, #a78bfa); --accent-glow: rgba(96, 165, 250, .5);
+  --orb-a: #60a5fa; --orb-b: #c084fc;
+  --title-grad: linear-gradient(90deg, #fff, #bfdbfe, #fff);
+  --shadow: 0 1px 2px rgba(15, 23, 42, .04), 0 10px 30px -12px rgba(15, 23, 42, .12);
+  --shadow-hover: 0 24px 50px -16px rgba(59, 130, 246, .3);
+  --hero-overlay: linear-gradient(180deg, rgba(15, 23, 42, .4), rgba(59, 130, 246, .18) 60%, rgba(244, 247, 251, 0) 100%);
+  --code-bg: #0f172a; --code-fg: #e2e8f0; --code-head: #1e293b; --selection: #3b82f6;
+  --tok-kw: #c678dd; --tok-str: #98c379; --tok-num: #d19a66; --tok-cm: #7f848e; --tok-fn: #61afef; --tok-op: #56b6c2;
+  --like: #f43f5e; --ok: #10b981; --warn: #f59e0b;
+}

@@ -1,0 +1,29 @@
+/* 赛博朋克 · 霓虹（夜间可选） */
+:root[data-theme="cyber"] {
+  color-scheme: dark;
+  --r-sm: 4px; --r-md: 6px; --r-lg: 10px;
+  --font-display: "Orbitron", "Noto Serif SC", sans-serif;
+  --bg: #05070f; --fg: #d7e3ff; --fg-strong: #ffffff; --fg-soft: #9fb0d8; --muted: #5f6f99;
+  --card: #0b1024; --line: rgba(0, 240, 255, .16); --line-hover: #ff2d95;
+  --chip: rgba(0, 240, 255, .08); --glass: rgba(5, 7, 15, .82);
+  --accent: #00f0ff; --accent-text: #00f0ff; --accent-soft: rgba(0, 240, 255, .12); --on-accent: #05070f;
+  --accent-grad: linear-gradient(135deg, #00f0ff, #ff2d95); --accent-glow: rgba(0, 240, 255, .55);
+  --orb-a: #00f0ff; --orb-b: #ff2d95;
+  --title-grad: linear-gradient(90deg, #00f0ff, #fff, #ff2d95);
+  --shadow: 0 0 0 1px rgba(0, 240, 255, .04);
+  --shadow-hover: 0 0 28px rgba(255, 45, 149, .35), 0 0 0 1px #ff2d95;
+  --hero-overlay: linear-gradient(180deg, rgba(5, 7, 15, .6), rgba(120, 0, 90, .3) 55%, rgba(5, 7, 15, 0) 100%);
+  --code-bg: #070a18; --code-fg: #d7e3ff; --code-head: #0d1230; --selection: #ff2d95;
+  --tok-kw: #ff2d95; --tok-str: #00f0ff; --tok-num: #ffe600; --tok-cm: #5f6f99; --tok-fn: #c084fc; --tok-op: #7dd3fc;
+  --like: #ff2d95; --ok: #00f0ff; --warn: #ffe600;
+  --grid: rgba(0, 240, 255, .035); --scanline: rgba(0, 0, 0, .12);
+  --neon: #ff2d95;
+}
+:root[data-theme="cyber"] body {
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+:root[data-theme="cyber"] body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  background: repeating-linear-gradient(0deg, var(--scanline) 0 1px, transparent 1px 3px);
+}

@@ -1,0 +1,24 @@
+/* ==========================================================================
+   页面栅格
+   ========================================================================== */
+#n-main { position: relative; z-index: 2; }
+.n-wrap { display: grid; grid-template-columns: minmax(0, 1fr) var(--side-w); gap: var(--gap); align-items: start; padding: var(--space-6) 0 var(--space-8); }
+.n-wrap[data-side="left"] { grid-template-columns: var(--side-w) minmax(0, 1fr); }
+.n-wrap[data-side="left"] > .n-side { order: -1; }
+.n-wrap[data-side="none"] { grid-template-columns: minmax(0, 1fr); max-width: var(--content-w); margin-inline: auto; }
+.n-wrap[data-side="none"] > .n-side { display: none; }
+.n-main { min-width: 0; }
+.n-side { min-width: 0; }
+.n-side-sticky { position: sticky; top: 88px; display: flex; flex-direction: column; gap: 20px; }
+.n-hero + .n-container .n-wrap { padding-top: var(--space-5); }
+
+@media (max-width: 1000px) {
+  .n-wrap, .n-wrap[data-side="left"] { grid-template-columns: minmax(0, 1fr); }
+  .n-wrap[data-side="left"] > .n-side { order: 0; }
+  .n-side-sticky { position: static; }
+  :root { --gap: 20px; }
+}
+@media (max-width: 640px) {
+  .n-container { padding-inline: var(--space-4); }
+  .n-wrap { padding: var(--space-5) 0 var(--space-7); }
+}

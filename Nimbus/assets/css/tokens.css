@@ -1,0 +1,45 @@
+/* ==========================================================================
+   Nimbus · 公共设计令牌（皮肤无关）
+   ========================================================================== */
+:root {
+  /* 间距 */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 24px; --space-6: 32px; --space-7: 48px; --space-8: 64px;
+
+  /* 圆角（由 html[data-radius] 覆盖 --r） */
+  --r-sm: 10px; --r-md: 18px; --r-lg: 26px;
+  --r: var(--r-md);
+  --r-pill: 999px;
+
+  /* 字号 */
+  --text-xs: 12px; --text-sm: 13.5px; --text-base: 15px; --text-md: 16.5px;
+  --text-lg: 20px; --text-xl: 24px; --text-2xl: 30px; --text-3xl: 40px;
+
+  /* 动效 */
+  --ease: cubic-bezier(.2, .8, .2, 1);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --dur-fast: .2s; --dur: .4s; --dur-slow: .8s;
+  --motion-decor: 1;
+
+  /* 层级 */
+  --z-nav: 150; --z-drawer: 250; --z-modal: 300; --z-progress: 400; --z-toast: 500;
+
+  /* 布局 */
+  --max-w: 1180px; --side-w: 320px; --content-w: 860px; --gap: 28px;
+  --nav-h: 72px;
+
+  /* 字体 */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+  --font-title: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "SimSun", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --font-display: var(--font-title);
+}
+
+html[data-radius="sm"] { --r: var(--r-sm); }
+html[data-radius="lg"] { --r: var(--r-lg); }
+
+html[data-font="system"] { --font-title: var(--font-sans); }
+html[data-font="custom"] { --font-title: var(--font-custom, var(--font-sans)); }
+
+html[data-motion="off"] { --dur-fast: 0s; --dur: 0s; --dur-slow: 0s; --motion-decor: 0; }
+html[data-motion="reduced"] { --dur-slow: .3s; --motion-decor: 0; }
