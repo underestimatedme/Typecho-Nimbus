@@ -65,7 +65,7 @@ $favicon = (string)Options::get('Favicon', '');
 <meta charset="<?php $o->charset(); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title><?= View::e($docTitle) ?></title>
-<script>(function(){var l=<?= json_encode($themeLight) ?>,d=<?= json_encode($themeDark) ?>,f=<?= $follow ? 'true' : 'false' ?>,t=null;try{t=localStorage.getItem('nimbus-theme')}catch(e){}if(t!=='sky'&&t!=='dusk'&&t!=='cyber'){t=(f&&matchMedia('(prefers-color-scheme: dark)').matches)?d:l}document.documentElement.dataset.theme=t;})();</script>
+<script>(function(){var l=<?= json_encode($themeLight) ?>,d=<?= json_encode($themeDark) ?>,f=<?= $follow ? 'true' : 'false' ?>,t=null,q=/[?&]nimbus_theme=(sky|dusk|cyber)/.exec(location.search);if(q){t=q[1];try{localStorage.setItem('nimbus-theme',t)}catch(e){}}else{try{t=localStorage.getItem('nimbus-theme')}catch(e){}}if(t!=='sky'&&t!=='dusk'&&t!=='cyber'){t=(f&&matchMedia('(prefers-color-scheme: dark)').matches)?d:l}document.documentElement.dataset.theme=t;})();</script>
 <meta name="theme-color" content="#f4f7fb">
 <?php if ($favicon !== ''): ?><link rel="icon" href="<?= View::e($favicon) ?>">
 <?php else: ?><link rel="icon" href="<?= View::e(preg_replace('/\?v=.*$/', '', View::asset('img/favicon.svg'))) ?>" type="image/svg+xml">
@@ -76,7 +76,6 @@ $favicon = (string)Options::get('Favicon', '');
 <link rel="stylesheet" href="<?= View::e((string)Options::get('FontCustomUrl')) ?>">
 <style>:root{--font-custom:<?= View::e((string)Options::get('FontCustomFamily', 'serif')) ?>,serif}</style>
 <?php elseif ($fontScheme === 'serif'): ?>
-<link rel="preload" href="<?= View::e(View::asset('fonts/NotoSerifSC-subset.woff2')) ?>" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="<?= View::e(View::asset('fonts/fonts.css')) ?>">
 <?php endif; ?>
 <link rel="stylesheet" href="<?= View::e(View::asset('css/nimbus.css')) ?>">

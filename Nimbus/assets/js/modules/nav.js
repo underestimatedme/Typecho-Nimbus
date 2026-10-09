@@ -14,11 +14,13 @@ export function init() {
   destroy();
   const float = qs('[data-nav-float]');
   const totop = qs('[data-totop]');
+  const solid = !!qs('[data-nav].n-nav-solid');
   const update = () => {
     const y = window.scrollY;
     const t = threshold();
-    float && float.classList.toggle('is-show', y > t);
-    float && float.setAttribute('aria-hidden', y > t ? 'false' : 'true');
+    const showFloat = !solid && y > t;
+    float && float.classList.toggle('is-show', showFloat);
+    float && float.setAttribute('aria-hidden', showFloat ? 'false' : 'true');
     totop && totop.classList.toggle('is-show', y > 400);
   };
   unbind.push(on(window, 'scroll', throttle(update, 80), { passive: true }));
