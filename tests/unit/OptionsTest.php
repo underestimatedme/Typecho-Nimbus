@@ -11,3 +11,5 @@ test('bool parses 1/0', function () use (&$store) { $store['HeroEnable'] = '0'; 
 test('int parses', function () use (&$store) { $store['RelatedCount'] = '7'; assert_eq(7, Options::int('RelatedCount')); $store['RelatedCount'] = 'abc'; assert_eq(4, Options::int('RelatedCount')); });
 test('list splits on newline, comma, fullwidth comma, 、 and ;', function () use (&$store) { $store['TopPosts'] = "1, 2，3、4;5\n6\n\n6"; assert_eq(['1','2','3','4','5','6'], Options::list('TopPosts')); });
 test('json returns null on invalid', function () use (&$store) { $store['CustomMenu'] = '{bad'; assert_eq(null, Options::json('CustomMenu')); $store['CustomMenu'] = '[{"a":1}]'; assert_eq([['a'=>1]], Options::json('CustomMenu')); });
+test('get with empty-string default still uses config default', function () use (&$store) { unset($store['CopyrightText']); assert_true(strpos((string)Options::get('CopyrightText', ''), 'CC') !== false); });
+test('get with empty-string default returns empty when no config default', function () use (&$store) { unset($store['NoticeHtml']); assert_eq('', Options::get('NoticeHtml', '')); });

@@ -52,9 +52,10 @@ final class Options
     {
         $v = self::raw($key);
         if ($v === null || trim($v) === '') {
-            if ($default !== null) return $default;
+            if ($default !== null && $default !== '') return $default;
             $d = self::defaults();
-            return isset($d[$key]) && $d[$key] !== '' ? $d[$key] : null;
+            if (isset($d[$key]) && $d[$key] !== '') return $d[$key];
+            return $default;
         }
         return $v;
     }

@@ -1,1 +1,35 @@
-/* components/code — 待实现 */
+/* 代码块（Prism） */
+.n-prose pre[class*="language-"], .n-prose pre { position: relative; margin: 0; padding: 48px 18px 16px; border-radius: var(--r); background: var(--code-bg); color: var(--code-fg); overflow: auto; font-family: var(--font-mono); font-size: 13.5px; line-height: 1.7; tab-size: 4; border: 1px solid var(--line); }
+.n-prose pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+.n-code-head { position: absolute; left: 0; right: 0; top: 0; height: 38px; display: flex; align-items: center; gap: 10px; padding: 0 12px 0 16px; background: var(--code-head); border-bottom: 1px solid rgba(255, 255, 255, .06); font-family: var(--font-mono); font-size: 12px; color: color-mix(in srgb, var(--code-fg) 60%, transparent); }
+.n-code-dots { display: inline-flex; gap: 6px; }
+.n-code-dots i { width: 10px; height: 10px; border-radius: 50%; background: #ff5f57; }
+.n-code-dots i:nth-child(2) { background: #febc2e; } .n-code-dots i:nth-child(3) { background: #28c840; }
+.n-code-lang { text-transform: uppercase; letter-spacing: 1px; }
+.n-code-copy { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 6px; color: inherit; transition: background var(--dur-fast), color var(--dur-fast); }
+.n-code-copy:hover { background: rgba(255, 255, 255, .1); color: var(--code-fg); }
+.n-code-copy.is-done { color: var(--ok); }
+pre[data-fold] { max-height: 420px; overflow: hidden; }
+pre[data-fold]::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 90px; background: linear-gradient(to top, var(--code-bg), transparent); pointer-events: none; }
+pre[data-fold].is-open { max-height: none; overflow: auto; }
+pre[data-fold].is-open::after { display: none; }
+.n-code-expand { position: absolute; left: 50%; bottom: 14px; translate: -50% 0; z-index: 2; padding: 6px 16px; border-radius: var(--r-pill); font-size: 12px; font-family: var(--font-sans); background: var(--accent); color: var(--on-accent); box-shadow: 0 6px 16px -4px var(--accent-glow); }
+pre[data-fold].is-open .n-code-expand { position: sticky; display: inline-block; left: 50%; bottom: 10px; margin-top: 12px; }
+/* 行号 */
+.n-prose pre.line-numbers { padding-left: 3.8em; counter-reset: linenumber; }
+pre.line-numbers > code { position: relative; white-space: inherit; }
+.line-numbers .line-numbers-rows { position: absolute; pointer-events: none; top: 0; left: -3.6em; width: 2.8em; letter-spacing: -1px; border-right: 1px solid rgba(255, 255, 255, .08); user-select: none; }
+.line-numbers-rows > span { display: block; counter-increment: linenumber; }
+.line-numbers-rows > span::before { content: counter(linenumber); color: color-mix(in srgb, var(--code-fg) 35%, transparent); display: block; padding-right: .8em; text-align: right; }
+/* Token 配色随皮肤 */
+.token.comment, .token.prolog, .token.doctype, .token.cdata { color: var(--tok-cm); font-style: italic; }
+.token.punctuation { color: color-mix(in srgb, var(--code-fg) 70%, transparent); }
+.token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: var(--tok-kw); }
+.token.boolean, .token.number { color: var(--tok-num); }
+.token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted { color: var(--tok-str); }
+.token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string, .token.variable { color: var(--tok-op); }
+.token.atrule, .token.attr-value, .token.function, .token.class-name { color: var(--tok-fn); }
+.token.keyword { color: var(--tok-kw); }
+.token.regex, .token.important { color: var(--tok-num); }
+.token.important, .token.bold { font-weight: bold; }
+.token.italic { font-style: italic; }

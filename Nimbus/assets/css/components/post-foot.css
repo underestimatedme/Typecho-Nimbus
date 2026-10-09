@@ -1,1 +1,29 @@
-/* components/post-foot — 待实现 */
+/* 文末：标签、版权、动作、打赏、分享 */
+.n-post-foot { margin-top: var(--space-7); display: flex; flex-direction: column; gap: 20px; }
+.n-post-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.n-copyright { position: relative; overflow: hidden; padding: 18px 22px; border-radius: var(--r); background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent); font-size: var(--text-sm); display: flex; flex-direction: column; gap: 6px; }
+.n-copyright-row { display: flex; gap: 12px; align-items: baseline; min-width: 0; }
+.n-copyright-row span { flex-shrink: 0; color: var(--muted); font-size: var(--text-xs); letter-spacing: 1px; }
+.n-copyright-row a { color: var(--accent-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.n-copyright-row em { font-style: normal; color: var(--fg-soft); }
+.n-copyright-ico { position: absolute; right: -10px; bottom: -14px; font-size: 90px; opacity: .07; }
+.n-post-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; padding: 10px 0; }
+.n-like.is-on { color: var(--like); border-color: var(--like); }
+.n-like.is-on .n-ico { fill: var(--like); stroke: var(--like); animation: n-pop .4s var(--ease); }
+.n-share { position: relative; }
+.n-share-menu { position: absolute; left: 50%; bottom: calc(100% + 8px); translate: -50% 6px; display: flex; gap: 4px; padding: 6px; border-radius: 14px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow-hover); opacity: 0; pointer-events: none; transition: opacity var(--dur-fast), translate var(--dur) var(--ease); z-index: 5; }
+.n-share.is-open .n-share-menu { opacity: 1; translate: -50% 0; pointer-events: auto; }
+.n-share-menu a, .n-share-menu button { display: inline-flex; align-items: center; gap: 5px; padding: 8px 12px; border-radius: 10px; font-size: var(--text-xs); white-space: nowrap; color: var(--fg-soft); transition: background var(--dur-fast), color var(--dur-fast); }
+.n-share-menu a:hover, .n-share-menu button:hover { background: var(--accent-soft); color: var(--accent-text); }
+.n-reward-in { text-align: center; padding: 32px 28px; position: relative; }
+.n-reward-close { position: absolute; right: 12px; top: 12px; background: var(--chip); border-color: transparent; }
+.n-reward-in h3 { font-family: var(--font-title); font-size: var(--text-xl); color: var(--fg-strong); }
+.n-reward-in p { color: var(--muted); font-size: var(--text-sm); margin: 8px 0 18px; }
+.n-reward-tabs { display: inline-flex; gap: 4px; padding: 4px; border-radius: var(--r-pill); background: var(--chip); margin-bottom: 18px; }
+.n-reward-tabs button { padding: 7px 16px; border-radius: var(--r-pill); font-size: var(--text-sm); font-weight: 600; color: var(--fg-soft); transition: background var(--dur-fast), color var(--dur-fast); }
+.n-reward-tabs button.is-on { background: var(--card); color: var(--accent-text); box-shadow: var(--shadow); }
+.n-reward-codes figure { display: none; margin: 0; }
+.n-reward-codes figure.is-on { display: block; animation: n-up var(--dur) var(--ease); }
+.n-reward-codes img { width: 220px; height: 220px; object-fit: cover; margin: 0 auto; border-radius: var(--r); border: 1px solid var(--line); background: #fff; }
+.n-reward-codes figcaption { margin-top: 10px; font-size: var(--text-xs); color: var(--muted); }
+:root[data-theme="cyber"] .n-reward-tabs, :root[data-theme="cyber"] .n-reward-tabs button, :root[data-theme="cyber"] .n-share-menu { border-radius: var(--r-md); }

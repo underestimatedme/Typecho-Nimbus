@@ -36,7 +36,7 @@ if ($archive->is('index')) {
 
 $config = [
     'version' => NIMBUS_VERSION,
-    'assets' => preg_replace('/\?v=.*$/', '', View::asset('')),
+    'assets' => rtrim(preg_replace('/\?v=.*$/', '', View::asset('')), '/'),
     'index' => rtrim((string)$o->index, '/'),
     'site' => rtrim((string)$o->siteUrl, '/'),
     'admin' => (string)$o->adminUrl,

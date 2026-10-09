@@ -1,1 +1,23 @@
-/* components/toc — 待实现 */
+/* 目录 */
+.n-toc { min-width: 0; }
+.n-toc-in { position: sticky; top: 88px; padding: 20px 18px; border-radius: var(--r); background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); max-height: calc(100vh - 110px); overflow: auto; }
+.n-toc-nav ul { position: relative; }
+.n-toc-nav ul::before { content: ""; position: absolute; left: 0; top: 4px; bottom: 4px; width: 2px; background: var(--line); border-radius: 2px; }
+.n-toc-nav li a { position: relative; display: block; padding: 5px 0 5px 14px; font-size: var(--text-sm); color: var(--muted); line-height: 1.5; transition: color var(--dur-fast), translate var(--dur-fast) var(--ease); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.n-toc-nav li a::before { content: ""; position: absolute; left: 0; top: 4px; bottom: 4px; width: 2px; border-radius: 2px; background: var(--accent); transform: scaleY(0); transition: transform var(--dur-fast) var(--ease); }
+.n-toc-nav li a:hover { color: var(--fg-strong); }
+.n-toc-nav li a.is-active { color: var(--accent-text); font-weight: 600; translate: 3px 0; }
+.n-toc-nav li a.is-active::before { transform: scaleY(1); }
+.n-toc-l2 a { padding-left: 26px !important; font-size: var(--text-xs) !important; }
+.n-toc-l3 a { padding-left: 38px !important; font-size: var(--text-xs) !important; }
+.n-toc-progress { margin-top: 12px; height: 3px; border-radius: 2px; background: var(--chip); overflow: hidden; }
+.n-toc-progress i { display: block; height: 100%; width: 0; background: var(--accent-grad); transition: width .15s linear; }
+.n-toc-fab { display: none; position: fixed; right: 28px; bottom: 86px; z-index: var(--z-nav); width: 48px; height: 48px; border-radius: 50%; background: var(--accent-grad); color: var(--on-accent); box-shadow: 0 10px 30px -8px var(--accent-glow); font-size: 20px; place-items: center; }
+@media (max-width: 1000px) {
+  .n-toc { position: fixed; inset: 0; z-index: var(--z-modal); background: rgba(0, 0, 0, .5); opacity: 0; pointer-events: none; transition: opacity var(--dur-fast); }
+  .n-toc.is-open { opacity: 1; pointer-events: auto; }
+  .n-toc-in { position: absolute; right: 0; top: 0; bottom: 0; width: min(320px, 85vw); max-height: none; border-radius: 0; translate: 100% 0; transition: translate var(--dur) var(--ease); }
+  .n-toc.is-open .n-toc-in { translate: 0 0; }
+  .n-toc-fab { display: grid; }
+}
+@media (max-width: 640px) { .n-toc-fab { right: 16px; bottom: 72px; width: 44px; height: 44px; } }
