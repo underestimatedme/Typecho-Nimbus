@@ -71,3 +71,9 @@ html[data-motion="off"] .n-reveal { opacity: 1; translate: 0 0; }
 .n-vt-theme::view-transition-old(root) { animation: none; }
 .n-vt-theme::view-transition-new(root) { animation: n-vt-reveal .6s var(--ease-in-out); }
 @keyframes n-vt-reveal { from { clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 50%)); } to { clip-path: circle(150% at var(--vt-x, 50%) var(--vt-y, 50%)); } }
+
+/* 页面切换过渡 */
+.n-vt-page::view-transition-old(root) { animation: n-vt-out .22s var(--ease-in-out) forwards; }
+.n-vt-page::view-transition-new(root) { animation: n-vt-in .32s var(--ease) both; }
+@keyframes n-vt-out { to { opacity: 0; translate: 0 -8px; } }
+@keyframes n-vt-in { from { opacity: 0; translate: 0 14px; } }
