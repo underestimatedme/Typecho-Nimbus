@@ -10,16 +10,19 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 use Nimbus\View;
 use Nimbus\Options;
+$isFront = $this->is('index') && (int)$this->request->get('page', 1) <= 1;
 View::partial('header', ['archive' => $this]);
+if ($isFront && Options::bool('HeroEnable')) View::partial('hero', ['archive' => $this]);
 ?>
 <div class="n-container">
   <div class="n-wrap" data-side="<?= View::e((string)Options::get('SidebarPosition', 'right')) ?>">
     <section class="n-main">
-      <?php while ($this->next()): ?>
-      <h2><a href="<?php $this->permalink(); ?>"><?php $this->title(); ?></a></h2>
-      <?php endwhile; ?>
+      <?php if (!$this->is('index')) View::partial('list-head', ['archive' => $this]); ?>
+      <?php if ($isFront) View::partial('top-carousel', ['archive' => $this]); ?>
+      <?php View::partial('post-list', ['archive' => $this]); ?>
+      <?php View::partial('pagination', ['archive' => $this]); ?>
     </section>
-    <aside class="n-side"></aside>
+    <?php View::partial('sidebar', ['archive' => $this]); ?>
   </div>
 </div>
 <?php View::partial('footer', ['archive' => $this]); ?>

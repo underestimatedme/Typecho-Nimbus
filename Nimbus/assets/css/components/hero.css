@@ -1,1 +1,47 @@
-/* components/hero — 待实现 */
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+.n-hero { position: relative; height: var(--hero-h, 600px); min-height: 360px; display: grid; place-items: center; overflow: hidden; color: #fff; text-align: center; isolation: isolate; }
+.n-hero-bg { position: absolute; inset: -8%; background: center / cover no-repeat; will-change: transform; animation: n-kenburns 24s ease-in-out infinite alternate; z-index: 0; }
+.n-hero::after { content: ""; position: absolute; inset: 0; background: var(--hero-overlay); z-index: 1; }
+.n-orb { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .55; mix-blend-mode: screen; animation: n-drift 16s ease-in-out infinite alternate; z-index: 1; pointer-events: none; }
+.n-orb-a { width: 420px; height: 420px; left: 8%; top: 10%; background: var(--orb-a); }
+.n-orb-b { width: 360px; height: 360px; right: 10%; bottom: 0; background: var(--orb-b); animation-delay: -8s; }
+.n-hero-in { position: relative; z-index: 2; padding: 0 var(--space-5); max-width: 900px; }
+.n-hero-kicker { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; letter-spacing: 3px; text-transform: uppercase; padding: 6px 14px; border-radius: var(--r-pill); border: 1px solid rgba(255, 255, 255, .3); background: rgba(255, 255, 255, .1); backdrop-filter: blur(6px); margin-bottom: 22px; opacity: 0; animation: n-up .8s var(--ease) .2s forwards; }
+.n-hero-kicker i { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 10px #4ade80; animation: n-pulse 1.6s infinite; }
+.n-hero-title { font-family: var(--font-title); font-size: clamp(36px, 6vw, 64px); letter-spacing: .12em; font-weight: 900; line-height: 1.15; text-shadow: 0 10px 40px rgba(0, 0, 0, .45); opacity: 0; animation: n-up 1s var(--ease) .35s forwards; }
+.n-hero-title em { font-style: normal; background: var(--title-grad); -webkit-background-clip: text; background-clip: text; color: transparent; background-size: 200% 100%; animation: n-shimmer 6s linear infinite; }
+.n-hero-sub { margin-top: 22px; font-size: 16px; letter-spacing: 3px; font-weight: 500; min-height: 1.6em; opacity: 0; animation: n-up .8s var(--ease) .6s forwards; }
+.n-caret { display: inline-block; width: 2px; height: 1em; vertical-align: -2px; margin-left: 3px; background: currentColor; animation: n-blink 1s steps(2) infinite; }
+.n-hero-down { position: absolute; bottom: 26px; left: 50%; translate: -50% 0; z-index: 3; width: 26px; height: 42px; border: 2px solid rgba(255, 255, 255, .55); border-radius: 14px; }
+.n-hero-down::after { content: ""; position: absolute; left: 50%; top: 8px; width: 4px; height: 8px; margin-left: -2px; border-radius: 2px; background: #fff; animation: n-wheel 1.6s ease-in-out infinite; }
+.n-hero-wave { position: absolute; bottom: -1px; left: 0; right: 0; width: 100%; height: 70px; z-index: 3; }
+.n-hero-wave path { fill: var(--bg); transition: fill var(--dur); }
+
+/* 装饰动画受动效档位控制 */
+html[data-motion="reduced"] .n-hero-bg, html[data-motion="off"] .n-hero-bg { animation: none; }
+html[data-motion="reduced"] .n-orb, html[data-motion="off"] .n-orb { animation: none; }
+html[data-motion="off"] .n-hero-kicker, html[data-motion="off"] .n-hero-title, html[data-motion="off"] .n-hero-sub { opacity: 1; animation: none; }
+
+/* 赛博朋克 */
+:root[data-theme="cyber"] .n-hero-bg { filter: saturate(1.3) contrast(1.1) hue-rotate(-10deg); }
+:root[data-theme="cyber"] .n-hero-title { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .1em; }
+:root[data-theme="cyber"] .n-hero-title em { background: none; color: #fff; text-shadow: 0 0 10px var(--accent), 0 0 30px var(--accent-glow); animation: n-glitch 4s infinite; }
+:root[data-theme="cyber"] .n-hero-sub { font-family: var(--font-mono); letter-spacing: 1px; color: var(--accent); }
+:root[data-theme="cyber"] .n-hero-sub::before { content: "> "; }
+:root[data-theme="cyber"] .n-hero-kicker { border-radius: 4px; border-color: color-mix(in srgb, var(--accent) 50%, transparent); font-family: var(--font-mono); }
+:root[data-theme="cyber"] .n-hero-wave { display: none; }
+:root[data-theme="cyber"] .n-hero::after { background: var(--hero-overlay), linear-gradient(to top, var(--bg), transparent 30%); }
+
+@media (max-width: 640px) {
+  .n-hero { height: min(var(--hero-h, 600px), 78vh); }
+  .n-hero-sub { font-size: 14px; letter-spacing: 2px; }
+  .n-orb { filter: blur(40px); width: 240px; height: 240px; }
+}
+@keyframes n-kenburns { from { transform: scale(1) translateY(0); } to { transform: scale(1.08) translateY(-2%); } }
+@keyframes n-drift { to { transform: translate(60px, -40px) scale(1.15); } }
+@keyframes n-shimmer { to { background-position: 200% 0; } }
+@keyframes n-blink { to { opacity: 0; } }
+@keyframes n-wheel { 50% { transform: translateY(14px); opacity: .3; } }
+@keyframes n-glitch { 0%, 92%, 100% { text-shadow: 0 0 10px var(--accent), 0 0 30px var(--accent-glow); transform: none; } 93% { text-shadow: 3px 0 var(--neon), -3px 0 var(--accent); transform: translateX(2px); } 95% { text-shadow: -3px 0 var(--neon), 3px 0 var(--accent); transform: translateX(-2px) skewX(3deg); } 97% { text-shadow: 2px 0 var(--neon), -2px 0 var(--accent); transform: none; } }

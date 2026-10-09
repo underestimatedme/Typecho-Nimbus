@@ -14,7 +14,8 @@ export function apply(theme, origin) {
     root.style.setProperty('--vt-y', origin.y + 'px');
     root.classList.add('n-vt-theme');
     const t = document.startViewTransition(run);
-    t.finished.finally(() => root.classList.remove('n-vt-theme'));
+    t.finished.catch(() => {}).finally(() => root.classList.remove("n-vt-theme"));
+    t.ready.catch(() => {});
   } else {
     run();
   }
