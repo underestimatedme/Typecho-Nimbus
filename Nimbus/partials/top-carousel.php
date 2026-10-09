@@ -16,7 +16,7 @@ $builtin = preg_replace('/\?v=.*$/', '', View::asset('img/thumbs'));
     <div class="n-slide-bg" style="background-image:url('<?= View::e(Post::thumbFrom(null, $p['text'], $pool, (int)$p['cid'], $builtin)) ?>')"></div>
     <div class="n-slide-in">
       <span class="n-slide-tag"><?= View::icon('star') ?>置顶</span>
-      <h3 class="n-slide-title"><?= View::e($p['title']) ?></h3>
+      <h3 class="n-slide-title"><?= View::e(View::t($p['title'])) ?></h3>
       <p class="n-slide-desc"><?= View::e(Post::excerptFrom(null, $p['text'], 80)) ?></p>
     </div>
   </a>

@@ -14,3 +14,7 @@ test('readingTime min 1', fn() => assert_eq(1, Post::readingTime(10)));
 test('readingTime ceil', fn() => assert_eq(3, Post::readingTime(900)));
 test('filterCids keeps order and drops missing', fn() => assert_eq([['cid' => 3], ['cid' => 1]], Post::filterCids([['cid' => 1], ['cid' => 3], ['cid' => 9]], ['3', '1', '7'])));
 test('excerptFrom drops code blocks', fn() => assert_eq('正文', Post::excerptFrom(null, '<p>正文</p><pre><code>$x = 1;</code></pre>', 100)));
+test('seo json-ld cannot break out of script', function () {
+    $json = json_encode(['d' => '</script><script>alert(1)</script>'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_HEX_APOS);
+    assert_true(strpos($json, '</script') === false);
+});

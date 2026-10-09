@@ -28,8 +28,9 @@ $sub = (string)Options::get('SiteSubtitle', '');
 if ($archive->is('index')) {
     $docTitle = $title . ($sub !== '' ? ' — ' . $sub : '');
 } else {
-    $archiveTitle = (string)$archive->getArchiveTitle(['category' => '分类 %s', 'search' => '搜索 %s', 'tag' => '标签 %s', 'author' => '作者 %s'], '', '');
-    if ($archive->is('single')) $archiveTitle = (string)$archive->title;
+    $archiveTitle = View::t((string)$archive->getArchiveTitle());
+    if ($archive->is('search')) $archiveTitle = '搜索 ' . (string)$archive->getKeywords();
+    if ($archive->is('single')) $archiveTitle = View::t($archive->title);
     if ($page === 'error') $archiveTitle = '页面不存在';
     $docTitle = ($archiveTitle !== '' ? $archiveTitle . ' — ' : '') . $title;
 }

@@ -36,7 +36,14 @@ export function init(root = document) {
         const r = await fetch(api + '/search?q=' + encodeURIComponent(kw), { headers: { Accept: 'application/json' } });
         const data = await r.json();
         const list = Array.isArray(data.data) ? data.data : [];
-        results.innerHTML = list.length ? list.map((p, i) => `<a href="${p.url}" class="${i === 0 ? 'is-active' : ''}">${p.title}<small>${p.excerpt || ''}</small></a>`).join('') : '<div class="n-search-hint">没有找到相关文章，回车使用站内搜索</div>';
+        results.innerHTML = '';
+        if (!list.length) { results.innerHTML = '<div class="n-search-hint">没有找到相关文章，回车使用站内搜索</div>'; }
+        list.forEach((p, i) => {
+          const a = document.createElement('a'); a.href = String(p.url || '#'); if (i === 0) a.className = 'is-active';
+          a.appendChild(document.createTextNode(String(p.title || '')));
+          const sm = document.createElement('small'); sm.textContent = String(p.excerpt || ''); a.appendChild(sm);
+          results.appendChild(a);
+        });
         results.hidden = false;
       } catch (err) { results.hidden = true; }
     }, 200);

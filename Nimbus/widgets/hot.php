@@ -10,7 +10,7 @@ if (empty($posts)) return;
   <h4 class="n-widget-title"><?= View::icon('star') ?>热门文章</h4>
   <ul class="n-hot">
     <?php foreach ($posts as $i => $p): ?>
-    <li><a href="<?= View::e($p['permalink']) ?>"><i><?= $i + 1 ?></i><span><?= View::e($p['title']) ?></span></a></li>
+    <li><a href="<?= View::e($p['permalink']) ?>"><i><?= $i + 1 ?></i><span><?= View::e(View::t($p['title'])) ?></span></a></li>
     <?php endforeach; ?>
   </ul>
 </section>

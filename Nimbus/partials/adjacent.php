@@ -11,7 +11,7 @@ if (!$adj['prev'] && !$adj['next']) return;
   <?php if ($p): ?>
   <a class="n-adj n-adj-<?= $k ?>" href="<?= View::e($p['permalink']) ?>">
     <i style="background-image:url('<?= View::e($p['thumb']) ?>')"></i>
-    <span class="n-adj-in"><small><?= $k === 'prev' ? View::icon('arrow-left') : '' ?><?= $label ?><?= $k === 'next' ? View::icon('arrow-right') : '' ?></small><b><?= View::e($p['title']) ?></b></span>
+    <span class="n-adj-in"><small><?= $k === 'prev' ? View::icon('arrow-left') : '' ?><?= $label ?><?= $k === 'next' ? View::icon('arrow-right') : '' ?></small><b><?= View::e(View::t($p['title'])) ?></b></span>
   </a>
   <?php else: ?><div class="n-adj n-adj-empty"></div><?php endif; ?>
   <?php endforeach; ?>

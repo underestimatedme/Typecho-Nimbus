@@ -61,6 +61,12 @@ final class View
         return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
     }
 
+    /** Typecho 存储标题时已做 htmlspecialchars；先解码得到原文（再用 e() 输出）。 */
+    public static function t(?string $title): string
+    {
+        return htmlspecialchars_decode((string)$title, ENT_QUOTES);
+    }
+
     /** 渲染 partials/{$name}.php，$vars 可用；$archive 一般传模板里的 $this。 */
     public static function partial(string $name, array $vars = []): void
     {

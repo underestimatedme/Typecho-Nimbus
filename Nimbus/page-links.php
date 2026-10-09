@@ -12,7 +12,7 @@ View::partial('header', ['archive' => $this]);
 <div class="n-container">
   <div class="n-wrap" data-side="<?= View::e((string)Options::get('SidebarPosition', 'right')) ?>">
     <section class="n-main n-links-page">
-      <header class="n-list-head n-reveal"><div class="n-kicker">友链</div><h1><?= View::e($this->title) ?></h1><p>共 <?= count($links) ?> 位朋友</p></header>
+      <header class="n-list-head n-reveal"><div class="n-kicker">友链</div><h1><?= View::e(View::t($this->title)) ?></h1><p>共 <?= count($links) ?> 位朋友</p></header>
       <?php if (!empty($links)): ?>
       <div class="n-links">
         <?php foreach ($links as $i => $l): ?>

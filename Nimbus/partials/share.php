@@ -2,7 +2,7 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 use Nimbus\View;
 $url = (string)$post->permalink;
-$title = (string)$post->title;
+$title = View::t($post->title);
 ?>
 <div class="n-share" data-share data-url="<?= View::e($url) ?>" data-title="<?= View::e($title) ?>">
   <button type="button" class="n-btn n-share-btn" data-share-toggle aria-label="分享"><?= View::icon('share') ?>分享</button>

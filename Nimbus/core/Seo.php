@@ -10,7 +10,7 @@ final class Seo
     {
         $o = \Helper::options();
         $isSingle = $archive->is('single');
-        $title = $isSingle ? (string)$archive->title : (string)$o->title;
+        $title = $isSingle ? View::t($archive->title) : (string)$o->title;
         $desc = $isSingle ? Post::excerpt($archive, 160) : (string)$o->description;
         $url = $isSingle ? (string)$archive->permalink : (string)$o->siteUrl;
         $image = $isSingle ? Post::thumb($archive) : (string)Options::get('LogoImage', '');
@@ -48,7 +48,7 @@ final class Seo
                 'potentialAction' => ['@type' => 'SearchAction', 'target' => rtrim((string)$o->index, '/') . '/search/{search_term_string}/', 'query-input' => 'required name=search_term_string'],
             ];
         }
-        $out[] = '<script type="application/ld+json">' . json_encode($ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>';
+        $out[] = '<script type="application/ld+json">' . json_encode($ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_HEX_APOS) . '</script>';
         return implode("\n", $out) . "\n";
     }
 }

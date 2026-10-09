@@ -16,8 +16,10 @@ function swap(doc, url) {
   const cfg = doc.getElementById('n-config'), oc = document.getElementById('n-config');
   if (cfg && oc) oc.textContent = cfg.textContent;
   // 导航（实色 / 透明）与 Hero 位于 main 之外，整体替换 header
-  const newNav = doc.querySelector('#n-nav'), oldNav = qs('#n-nav');
-  if (newNav && oldNav) oldNav.replaceWith(newNav);
+  [['#n-nav'], ['[data-nav-float]'], ['#n-drawer']].forEach(([sel]) => {
+    const n = doc.querySelector(sel), o = qs(sel);
+    if (n && o) o.replaceWith(n);
+  });
   oldMain.replaceWith(newMain);
   // 执行新内容里的内联脚本
   newMain.querySelectorAll('script').forEach((s) => { const n = document.createElement('script'); [...s.attributes].forEach((a) => n.setAttribute(a.name, a.value)); n.textContent = s.textContent; s.replaceWith(n); });
@@ -76,5 +78,5 @@ export function init() {
     e.preventDefault();
     navigate(a.href, true);
   });
-  window.addEventListener('popstate', (e) => { if (e.state && e.state.nimbus) navigate(location.href, false); });
+  window.addEventListener('popstate', () => navigate(location.href, false));
 }

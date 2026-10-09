@@ -2,7 +2,7 @@
    页面栅格
    ========================================================================== */
 #n-main { position: relative; z-index: 2; }
-.n-wrap { display: grid; grid-template-columns: minmax(0, 1fr) var(--side-w); gap: var(--gap); align-items: start; padding: var(--space-6) 0 var(--space-8); }
+.n-wrap { display: grid; grid-template-columns: minmax(0, 1fr) var(--side-w); gap: var(--gap); align-items: stretch; padding: var(--space-6) 0 var(--space-8); }
 .n-wrap[data-side="left"] { grid-template-columns: var(--side-w) minmax(0, 1fr); }
 .n-wrap[data-side="left"] > .n-side { order: -1; }
 .n-wrap[data-side="none"] { grid-template-columns: minmax(0, 1fr); max-width: var(--content-w); margin-inline: auto; }

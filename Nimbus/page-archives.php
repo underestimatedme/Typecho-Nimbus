@@ -18,7 +18,7 @@ View::partial('header', ['archive' => $this]);
 <div class="n-container">
   <div class="n-wrap" data-side="<?= View::e((string)Options::get('SidebarPosition', 'right')) ?>">
     <section class="n-main n-archives">
-      <header class="n-list-head n-reveal"><div class="n-kicker">归档</div><h1><?= View::e($this->title) ?></h1><p>共 <?= $count ?> 篇文章</p></header>
+      <header class="n-list-head n-reveal"><div class="n-kicker">归档</div><h1><?= View::e(View::t($this->title)) ?></h1><p>共 <?= $count ?> 篇文章</p></header>
       <?php if ($this->content && trim(strip_tags((string)$this->content)) !== ''): ?><div class="n-prose n-reveal" style="margin-bottom:var(--space-6)"><?= $this->content ?></div><?php endif; ?>
       <div class="n-timeline">
         <?php foreach ($groups as $y => $months): ?>
@@ -29,7 +29,7 @@ View::partial('header', ['archive' => $this]);
             <h3 class="n-month-title"><?= $m ?> 月</h3>
             <ul>
               <?php foreach ($items as $it): ?>
-              <li><time><?= $it['day'] ?></time><a href="<?= View::e($it['permalink']) ?>"><?= View::e($it['title']) ?></a><?php if ($it['comments'] > 0): ?><span class="n-month-c"><?= View::icon('comment') ?><?= $it['comments'] ?></span><?php endif; ?></li>
+              <li><time><?= $it['day'] ?></time><a href="<?= View::e($it['permalink']) ?>"><?= View::e(View::t($it['title'])) ?></a><?php if ($it['comments'] > 0): ?><span class="n-month-c"><?= View::icon('comment') ?><?= $it['comments'] ?></span><?php endif; ?></li>
               <?php endforeach; ?>
             </ul>
           </div>

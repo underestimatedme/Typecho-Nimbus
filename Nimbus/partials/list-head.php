@@ -4,10 +4,10 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 use Nimbus\View;
 if ($archive->is('archive', '404')) return;
 $kicker = '';
-$title = (string)$archive->getArchiveTitle(['category' => '%s', 'tag' => '%s', 'search' => '%s', 'author' => '%s', 'date' => '%s'], '', '');
+$title = View::t((string)$archive->getArchiveTitle());
 if ($archive->is('category')) $kicker = '分类';
 elseif ($archive->is('tag')) $kicker = '标签';
-elseif ($archive->is('search')) { $kicker = '搜索'; $title = (string)$archive->keywords; }
+elseif ($archive->is('search')) { $kicker = '搜索'; $title = (string)$archive->getKeywords(); }
 elseif ($archive->is('author')) $kicker = '作者';
 elseif ($archive->is('date')) $kicker = '归档';
 else return;

@@ -31,7 +31,7 @@ export function init(root = document) {
     if (!h) return;
     e.preventDefault();
     window.scrollTo({ top: h.offsetTop - 90, behavior: 'smooth' });
-    history.replaceState(null, '', '#' + a.dataset.tocLink);
+    history.replaceState(history.state, '', '#' + a.dataset.tocLink);
     toc.classList.remove('is-open');
   })));
   const fab = qs('[data-toc-fab]');
