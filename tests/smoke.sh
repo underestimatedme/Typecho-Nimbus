@@ -25,6 +25,8 @@ check "/index.php/category/tech/" 200 'data-page="index"'
 check "/index.php/archives.html" 200 'data-page="page"'
 check "/index.php/links.html" 200 'data-page="page"'
 check "/index.php/search/test/" 200 'data-page="index"'
+check "/index.php/messages.html" 200 'n-comments-wall'
+check "/index.php/timeline.html" 200 'data-river'
 check "/index.php/not-exist-page/" 404 'data-page="error"'
 # NimbusKit（插件启用时）
 if curl -s "$BASE/" | grep -q '"api":"http'; then
@@ -36,6 +38,8 @@ if curl -s "$BASE/" | grep -q '"api":"http'; then
   check "/index.php/moments.html" 200 'class="n-moments"'
   check "/index.php/albums.html" 200 'class="n-albums"'
   check "/index.php/albums.html?album=1" 200 'class="n-photos"'
+  check "/index.php/bookmarks.html" 200 'data-bookmarks' 'class="n-bm n-reveal"'
+  check "/index.php/projects.html" 200 'class="n-projects"'
 fi
 [ $fail -eq 0 ] && echo "smoke ok"
 exit $fail

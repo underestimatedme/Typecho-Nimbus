@@ -61,6 +61,21 @@ final class View
         return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
     }
 
+    /** 评论区布局：thread（默认）或 wall（留言板卡片墙）。由模板在 need('comments.php') 前设置。 */
+    public static $commentLayout = 'thread';
+
+    /** 由字符串稳定生成的色相（首字母头像配色）。 */
+    public static function hue(string $s): int
+    {
+        return (int)(hexdec(substr(md5($s), 0, 4)) % 360);
+    }
+
+    public static function initial(string $s): string
+    {
+        $s = trim($s);
+        return $s === '' ? '?' : mb_strtoupper(mb_substr($s, 0, 1));
+    }
+
     /** Typecho 存储标题时已做 htmlspecialchars；先解码得到原文（再用 e() 输出）。 */
     public static function t(?string $title): string
     {

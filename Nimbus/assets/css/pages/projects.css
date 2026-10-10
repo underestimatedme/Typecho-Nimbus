@@ -1,0 +1,15 @@
+/* 项目 */
+.n-projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 22px; }
+.n-project { display: flex; flex-direction: column; border-radius: var(--r); overflow: hidden; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), border-color var(--dur-fast); }
+.n-project:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); border-color: var(--line-hover); }
+.n-project-cover { position: relative; aspect-ratio: 16 / 9; overflow: hidden; display: grid; place-items: center; background: linear-gradient(135deg, hsl(var(--h) 75% 62%), hsl(calc(var(--h) + 50) 75% 55%)); }
+.n-project-cover img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-slow) var(--ease); }
+.n-project:hover .n-project-cover img { transform: scale(1.06); }
+.n-project-cover span { font-family: var(--font-title); font-size: 64px; font-weight: 700; color: rgba(255, 255, 255, .9); text-shadow: 0 10px 30px rgba(0, 0, 0, .25); }
+.n-project-body { flex: 1; display: flex; flex-direction: column; gap: 10px; padding: 18px 20px 20px; }
+.n-project-body h3 { font-family: var(--font-title); font-size: var(--text-lg); color: var(--fg-strong); }
+.n-project-body p { font-size: var(--text-sm); line-height: 1.7; color: var(--fg-soft); flex: 1; }
+.n-project-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.n-project-tags span { font-family: var(--font-mono); font-size: 11px; letter-spacing: .5px; text-transform: uppercase; padding: 3px 9px; border-radius: 6px; background: var(--accent-soft); color: var(--accent-text); }
+.n-project-links { display: flex; gap: 8px; margin-top: 4px; }
+:root[data-theme="cyber"] .n-project-tags span { border-radius: 3px; }

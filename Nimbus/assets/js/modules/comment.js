@@ -42,7 +42,7 @@ function moveForm(respond, li, cancel) {
   if (!respond.dataset.home) { respond.dataset.home = '1'; respond._home = respond.parentNode; respond._next = respond.nextSibling; }
   if (li) { li.appendChild(respond); } else if (respond._home) { respond._home.insertBefore(respond, respond._next); }
   const title = qs('[data-respond-title]', respond);
-  if (title) title.textContent = li ? '回复 ' + (qs('.n-comment-name', li) || {}).textContent : '发表评论';
+  if (title) { if (!title.dataset.default) title.dataset.default = title.textContent; title.textContent = li ? '回复 ' + (qs('.n-comment-name', li) || {}).textContent : title.dataset.default; }
   if (cancel) cancel.style.display = li ? '' : 'none';
   const ta = qs('[data-comment-text]', respond); ta && setTimeout(() => ta.focus(), 50);
 }

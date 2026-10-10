@@ -16,22 +16,26 @@ if (!function_exists('threadedComments')) {
 $comments = $this->comments();
 $total = (int)$this->commentsNum;
 $allow = $this->allow('comment');
+$wall = View::$commentLayout === 'wall';
+$noun = $wall ? '留言' : '评论';
 ?>
-<section class="n-comments" id="comments">
+<section class="n-comments<?= $wall ? ' n-comments-wall' : '' ?>" id="comments">
   <div class="n-comments-head">
-    <h3 class="n-section-title"><?= View::icon('comment') ?><?= $total > 0 ? $total . ' 条评论' : '评论' ?></h3>
+    <h3 class="n-section-title"><?= View::icon('comment') ?><?= $total > 0 ? $total . ' 条' . $noun : $noun ?></h3>
   </div>
+  <?php ob_start(); ?>
   <?php if ($comments->have()): ?>
   <?php $comments->listComments(['before' => '<ol class="n-comment-list" id="n-comment-list">', 'after' => '</ol>', 'commentStatus' => '您的评论正在等待审核']); ?>
   <?php $comments->pageNav('‹', '›', 1, '…', ['wrapTag' => 'nav', 'wrapClass' => 'n-pagination n-comment-nav', 'itemTag' => 'span', 'textTag' => 'span', 'currentClass' => 'is-current']); ?>
   <?php elseif ($allow): ?>
-  <div class="n-comments-empty"><?= View::icon('smile') ?><p>还没有评论，来说点什么吧。</p></div>
+  <div class="n-comments-empty"><?= View::icon('smile') ?><p>还没有<?= $noun ?>，来说点什么吧。</p></div>
   <?php endif; ?>
+  <?php $nimbusList = (string)ob_get_clean(); ob_start(); ?>
 
   <?php if ($allow): ?>
   <div class="n-respond" id="<?php $this->respondId(); ?>" data-respond>
     <div class="n-respond-head">
-      <h4 class="n-respond-title" data-respond-title>发表评论</h4>
+      <h4 class="n-respond-title" data-respond-title>发表<?= $noun ?></h4>
       <?php $comments->cancelReply('取消回复'); ?>
     </div>
     <form class="n-comment-form" id="n-comment-form" method="post" action="<?php $this->commentUrl(); ?>" data-comment-form data-ajax="<?= Kit::has('ajaxComment') ? '1' : '0' ?>">
@@ -61,4 +65,5 @@ $allow = $this->allow('comment');
   <?php else: ?>
   <div class="n-comments-closed"><?= View::icon('lock') ?><span>评论已关闭</span></div>
   <?php endif; ?>
+<?php $nimbusForm = (string)ob_get_clean(); echo $wall ? $nimbusForm . $nimbusList : $nimbusList . $nimbusForm; ?>
 </section>

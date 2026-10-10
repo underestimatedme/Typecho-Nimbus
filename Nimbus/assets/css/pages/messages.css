@@ -1,0 +1,13 @@
+/* 留言板：表单置顶 + 卡片墙 */
+.n-messages-intro { margin-bottom: var(--space-5); }
+.n-comments-wall { margin-top: 0; }
+.n-comments-wall .n-respond { margin: 0 0 var(--space-6); }
+.n-comments-wall .n-comment-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; align-items: start; }
+.n-comments-wall .n-comment-list > .n-comment { padding: 18px; border: 1px solid var(--line); border-radius: var(--r); background: var(--card); box-shadow: var(--shadow); transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
+.n-comments-wall .n-comment-list > .n-comment:hover { transform: translateY(-3px) rotate(-.3deg); box-shadow: var(--shadow-hover); }
+.n-comments-wall .n-comment-list > .n-comment:nth-child(3n+2):hover { transform: translateY(-3px) rotate(.3deg); }
+.n-comments-wall .n-comment-children { padding-left: 0; margin-top: 12px; border-top: 1px dashed var(--line); }
+.n-comments-wall .n-comment-children::before { display: none; }
+.n-comments-wall .n-comment-children .n-comment { padding: 10px 0 0; }
+.n-comments-wall .n-comment-children .n-comment-children { padding-left: 14px; border-top: 0; }
+.n-comments-wall .n-comment-list > .n-comment > .n-respond { grid-column: 1 / -1; }

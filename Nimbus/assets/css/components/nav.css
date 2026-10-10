@@ -68,3 +68,11 @@
   .n-logo { font-size: 19px; }
 }
 @keyframes n-flicker { 0%, 96%, 100% { opacity: 1; } 97% { opacity: .5; } 98% { opacity: 1; } 99% { opacity: .7; } }
+
+/* 菜单项放不下时收进「更多」 */
+.n-nav-menu { min-width: 0; flex: 1; display: flex; justify-content: center; }
+.n-menu { flex-wrap: nowrap; }
+.n-menu-item { flex-shrink: 0; }
+.n-menu-more > a { cursor: pointer; }
+.n-menu-more .n-submenu { left: auto; right: 0; }
+.n-menu-more[hidden] { display: none; }

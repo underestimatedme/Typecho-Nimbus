@@ -87,6 +87,24 @@ final class Kit
         return is_array($v) ? $v : null;
     }
 
+    public static function bookmarks(): ?array
+    {
+        $v = self::call('bookmarks');
+        return is_array($v) ? $v : null;
+    }
+
+    public static function projects(): ?array
+    {
+        $v = self::call('projects');
+        return is_array($v) ? $v : null;
+    }
+
+    public static function stats(): ?array
+    {
+        $v = self::call('stats');
+        return is_array($v) ? $v : null;
+    }
+
     public static function version(): ?string
     {
         return self::enabled() && defined('NimbusKit_Api::VERSION') ? (string)\NimbusKit_Api::VERSION : null;

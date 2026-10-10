@@ -5,6 +5,7 @@ import * as progress from './modules/progress.js';
 import * as search from './modules/search.js';
 import * as reveal from './modules/reveal.js';
 import * as count from './modules/count.js';
+import * as menuFit from './modules/menu-fit.js';
 
 function readConfig() {
   const el = document.getElementById('n-config');
@@ -19,6 +20,7 @@ async function boot(root = document) {
   if (cfg.debug) console.table(cfg);
   theme.init(root);
   nav.init();
+  menuFit.init();
   progress.init();
   search.init(root);
   reveal.init(root);

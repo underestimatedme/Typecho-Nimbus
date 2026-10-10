@@ -52,7 +52,7 @@ html[data-motion="off"] .n-reveal { opacity: 1; translate: 0 0; }
 
 /* 通用标题栏（分类页 / 搜索页） */
 .n-list-head { margin: var(--space-6) 0 var(--space-5); }
-.n-list-head .n-kicker { font-size: var(--text-xs); letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+.n-list-head .n-kicker { display: inline-flex; align-items: center; gap: 6px; font-size: var(--text-xs); letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
 .n-list-head h1 { font: 700 var(--text-2xl)/1.3 var(--font-title); color: var(--fg-strong); margin-top: 4px; }
 .n-list-head p { color: var(--muted); font-size: var(--text-sm); margin-top: 6px; }
 
