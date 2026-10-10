@@ -99,7 +99,8 @@ bash tests/lint.sh          # php -l + PHP 7.4 语法检查
 php tests/run.php           # 单元测试
 node --test tests/js/*.test.mjs
 bash tests/css-vars.sh      # 皮肤变量完整性
-bash tests/smoke.sh         # 页面渲染冒烟测试
+bash tests/smoke.sh         # 页面渲染冒烟测试（插件启用时也检查插件接口）
+bash tests/multi-db.sh      # 在临时 MySQL / PostgreSQL 上安装并测试（需本机装有两者）
 ```
 
 ## 致谢
