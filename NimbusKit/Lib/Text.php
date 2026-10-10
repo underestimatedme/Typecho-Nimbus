@@ -93,15 +93,34 @@ final class Text
     }
 
     /** 日期键：20261011 */
-    public static function dayKey(int $ts): int
+    /** 站点时区下的日期键（$tz 为 Typecho 的时区偏移秒数）。 */
+    public static function dayKey(int $ts, int $tz = 0): int
     {
-        return (int)date('Ymd', $ts);
+        return (int)gmdate('Ymd', $ts + $tz);
+    }
+
+    /** 去掉回复可见内容；未闭合的 [hide] 一直隐藏到末尾（如被 <!--more--> 截断的摘要）。 */
+    public static function dropHidden(string $text): string
+    {
+        $s = (string)preg_replace('/\[hide[^\]]*\].*?\[\/hide\]/su', '', $text);
+        return (string)preg_replace('/\[hide[^\]]*\].*$/su', '', $s);
+    }
+
+    /**
+     * Typecho 自带搜索的匹配规则（关键词中的空格当作任意字符，不区分大小写）。
+     */
+    public static function likeMatch(string $haystack, string $keywords): bool
+    {
+        $parts = array_values(array_filter(explode(' ', $keywords), 'strlen'));
+        if (!$parts) return false;
+        $re = '/' . implode('.*', array_map(function ($p) { return preg_quote($p, '/'); }, $parts)) . '/isu';
+        return (bool)preg_match($re, $haystack);
     }
 
     /** 去掉 HTML / Markdown 标记的纯文本。 */
     public static function plain(string $text): string
     {
-        $s = preg_replace('/\[hide[^\]]*\].*?\[\/hide\]/su', '', $text); // 回复可见内容不进入摘要与搜索
+        $s = self::dropHidden($text); // 回复可见内容不进入摘要与搜索
         $s = preg_replace('/<!--.*?-->/s', '', (string)$s);
         $s = preg_replace('/```.*?```/s', ' ', (string)$s);
         $s = strip_tags((string)$s);

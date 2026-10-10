@@ -7,7 +7,7 @@ $title = View::t($post->title);
 $poster = [
     'excerpt' => \Nimbus\Post::excerpt($post, 110),
     'author' => (string)$post->author->screenName,
-    'date' => date('Y-m-d', (int)$post->created),
+    'date' => View::date('Y-m-d', (int)$post->created),
     'cover' => \Nimbus\Post::thumb($post),
     'site' => (string)\Helper::options()->title,
 ];

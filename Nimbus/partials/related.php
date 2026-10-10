@@ -16,7 +16,7 @@ $builtin = preg_replace('/\?v=.*$/', '', View::asset('img/thumbs'));
     <?php foreach ($items as $r): ?>
     <a class="n-related-item" href="<?= View::e($r['permalink']) ?>">
       <i style="background-image:url('<?= View::e(Post::thumbFrom(null, $r['text'], $pool, (int)$r['cid'], $builtin)) ?>')"></i>
-      <span><b><?= View::e(View::t($r['title'])) ?></b><time><?= date('Y-m-d', (int)$r['created']) ?></time></span>
+      <span><b><?= View::e(View::t($r['title'])) ?></b><time><?= View::date('Y-m-d', (int)$r['created']) ?></time></span>
     </a>
     <?php endforeach; ?>
   </div>

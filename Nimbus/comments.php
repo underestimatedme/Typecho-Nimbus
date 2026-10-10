@@ -49,7 +49,7 @@ $noun = $wall ? I18n::t('留言') : I18n::t('评论');
         <img src="<?= View::e($ghUser['avatar'] . '&s=64') ?>" alt="" width="32" height="32" loading="lazy">
         <span><?= I18n::t('以 {name} 的身份评论', ['name' => '<b>' . View::e($ghUser['name']) . '</b> <em>@' . View::e($ghUser['login']) . '</em>']) ?></span>
         <a href="<?= View::e($gh['logout']) ?>" data-no-router><?= I18n::e('退出') ?></a>
-        <input type="hidden" name="author" value="<?= View::e($ghUser['name']) ?>">
+        <input type="hidden" name="author" value="<?= View::e($ghUser['formAuthor'] ?? ('github-' . (int)$ghUser['id'])) ?>">
         <input type="hidden" name="mail" value="<?= View::e($ghUser['mail']) ?>">
         <input type="hidden" name="url" value="<?= View::e($ghUser['url']) ?>">
       </div>

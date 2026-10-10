@@ -121,6 +121,26 @@ final class GitHubAuth
             ->addResponder(function () use ($html) { echo $html; })->respond();
     }
 
+    /**
+     * 表单里的隐藏昵称固定为 github-{id}（总能通过 Typecho 的昵称校验）；入库前换成 GitHub 显示名。
+     * 显示名与本站注册用户重名时加上 @login，避免冒充站长、也避免误拒。
+     */
+    public static function formAuthor(array $gh): string
+    {
+        return 'github-' . (int)$gh['id'];
+    }
+
+    private static function safeName(string $name, string $login): string
+    {
+        $taken = function (string $n): bool {
+            $db = \Typecho\Db::get();
+            return (bool)$db->fetchRow($db->select('uid')->from('table.users')->where('name = ? OR screenName = ?', $n, $n)->limit(1));
+        };
+        if ($name !== '' && !$taken($name)) return $name;
+        $alt = ($name !== '' && $name !== $login ? $name . ' ' : '') . '@' . $login;
+        return $taken($alt) ? '@' . $login . ' (GitHub)' : $alt;
+    }
+
     /** Widget_Feedback::comment 过滤器：用签名 cookie 中的身份覆盖昵称、邮箱、网址。 */
     public static function filterComment(array $comment, $content, $last = null): array
     {
@@ -128,7 +148,7 @@ final class GitHubAuth
         if (!empty($comment['authorId'])) return $comment; // 已登录的 Typecho 用户
         $gh = self::current();
         if ($gh) {
-            $comment['author'] = (string)$gh['name'];
+            $comment['author'] = self::safeName((string)$gh['name'], (string)$gh['login']);
             $comment['mail'] = (string)$gh['mail'];
             $comment['url'] = (string)$gh['url'];
         } elseif (self::enabled() && Config::get('githubOnly') === '1') {

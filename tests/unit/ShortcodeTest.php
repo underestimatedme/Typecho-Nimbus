@@ -62,3 +62,8 @@ test('按钮留在段落里（不拆成正文网格的直接子元素）', funct
     $h = \Nimbus\Shortcode::render('<h2>按钮</h2><p>[button url="https://typecho.org"]官网[/button] [button url="/" type="ghost"]首页[/button]</p>', ['canSeeHidden' => false, 'host' => 'example.com']);
     assert_true((bool)preg_match('#<p><a class="n-btn n-sc-btn n-btn-primary"[^>]*>.*</a>\s*<a class="n-btn n-sc-btn n-btn-ghost"[^>]*>.*</a></p>#su', $h), $h);
 });
+test('未闭合的 [hide]（摘要被截断）不泄露', function () {
+    $s = \Nimbus\Shortcode::strip('<p>公开</p><p>[hide]秘密开头');
+    assert_true(strpos($s, '秘密') === false, $s);
+    assert_true(strpos(\Nimbus\Shortcode::dropHidden('a [hide]b'), 'b') === false);
+});

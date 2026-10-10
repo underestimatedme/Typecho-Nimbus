@@ -145,7 +145,7 @@ final class Store
     private static function incrementDaily(): void
     {
         $db = self::db();
-        $day = Text::dayKey(self::now() ?: time());
+        $day = Text::dayKey(self::now() ?: time(), (int)\Helper::options()->timezone);
         try {
             $n = $db->query($db->update('table.nimbus_daily')->expression('views', 'views + 1')->where('day = ?', $day));
             if (!$n) $db->query($db->insert('table.nimbus_daily')->rows(['day' => $day, 'views' => 1]));
@@ -160,7 +160,7 @@ final class Store
         $db = self::db();
         $end = self::now() ?: time();
         $keys = [];
-        for ($i = $days - 1; $i >= 0; $i--) $keys[Text::dayKey($end - $i * 86400)] = 0;
+        for ($i = $days - 1; $i >= 0; $i--) $keys[Text::dayKey($end - $i * 86400, (int)\Helper::options()->timezone)] = 0;
         try {
             $rows = $db->fetchAll($db->select('day', 'views')->from('table.nimbus_daily')->where('day >= ?', (int)array_key_first($keys)));
             foreach ($rows as $r) if (isset($keys[(int)$r['day']])) $keys[(int)$r['day']] = (int)$r['views'];

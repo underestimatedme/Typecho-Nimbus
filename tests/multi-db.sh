@@ -33,7 +33,7 @@ run_checks() { # $1 port $2 label
   r=$(curl -s "$API/search?q=Typecho"); echo "$r" | grep -q '"ok":true' && ok "search" "$2" || bad "search $r" "$2"
   r=$(curl -s "$API/search?q=typecho"); echo "$r" | grep -q '"url"' && ok "search case-insensitive" "$2" || bad "search case-insensitive $r" "$2"
   c=$(curl -s -o "$W/sm.xml" -w '%{http_code}' "$B/index.php/sitemap.xml"); { [ "$c" = 200 ] && grep -q '<urlset' "$W/sm.xml"; } && ok "sitemap" "$2" || bad "sitemap $c" "$2"
-  for u in / archives/1/ moments.html albums.html "albums.html?album=1" links.html bookmarks.html projects.html stats.html messages.html timeline.html; do
+  for u in / archives/1/ moments.html albums.html "albums.html?album=1" links.html bookmarks.html projects.html stats.html stats.html messages.html timeline.html timeline.html search/Typecho/; do
     c=$(curl -s -o "$W/p.html" -w '%{http_code}' "$B/index.php/$u")
     { [ "$c" = 200 ] && ! grep -qE 'Warning:|Fatal error|Notice:|Database Query Error' "$W/p.html"; } && ok "page /$u" "$2" || bad "page /$u ($c)" "$2"
   done

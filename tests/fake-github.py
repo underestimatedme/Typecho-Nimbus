@@ -1,11 +1,11 @@
 """本地假 GitHub OAuth 服务器（仅测试）：授权页直接同意并回跳，换 token，返回固定用户。
 用法：python3 tests/fake-github.py [端口]   默认 8098"""
-import json, sys
+import json, os, sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qs, urlencode
 
 CLIENT_ID, CLIENT_SECRET, CODE, TOKEN = 'test-client', 'test-secret', 'fake-code', 'gho_fake'
-USER = {'id': 583231, 'login': 'octocat', 'name': 'The <Octocat>', 'email': None, 'html_url': 'https://github.com/octocat'}
+USER = {'id': 583231, 'login': 'octocat', 'name': os.environ.get('FAKE_GH_NAME', 'The <Octocat> (Dev)'), 'email': None, 'html_url': 'https://github.com/octocat'}
 
 class H(BaseHTTPRequestHandler):
     def log_message(self, *a): pass

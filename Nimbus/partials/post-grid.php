@@ -13,7 +13,7 @@ $cat = isset($post->categories[0]) ? $post->categories[0] : null;
   <div class="n-card-body">
     <div class="n-meta">
       <?php if ($cat): ?><a class="n-chip" href="<?= View::e($cat['permalink']) ?>"><?= View::e($cat['name']) ?></a><?php endif; ?>
-      <time datetime="<?= date('c', (int)$post->created) ?>"><?= date('m-d', (int)$post->created) ?></time>
+      <time datetime="<?= View::date('c', (int)$post->created) ?>"><?= View::date('m-d', (int)$post->created) ?></time>
     </div>
     <h3 class="n-card-title"><a href="<?= View::e($post->permalink) ?>"><?= View::e(View::t($post->title)) ?></a></h3>
     <p class="n-card-excerpt"><?= View::e(Post::excerpt($post, 70)) ?></p>

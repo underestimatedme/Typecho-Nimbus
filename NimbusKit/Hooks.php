@@ -18,6 +18,7 @@ final class Hooks
     /** @param mixed $w Widget\Feedback 或 Widget\Comments\Edit（已压入新评论行） */
     public static function finishComment($w)
     {
+        if ($w instanceof \Widget\Feedback || $w instanceof \Widget_Feedback) Api::rememberComment((int)$w->coid);
         if (Config::get('mailEnable') !== '1') return;
         try {
             self::queueMail(self::row($w), (string)$w->permalink, null);

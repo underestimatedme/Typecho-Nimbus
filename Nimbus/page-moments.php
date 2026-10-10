@@ -37,7 +37,7 @@ View::partial('header', ['archive' => $this]);
         <article class="n-moment n-reveal" id="moment-<?= (int)$m['id'] ?>">
           <i class="n-moment-av" style="background-image:url('<?= View::e($avatar) ?>')"></i>
           <div class="n-moment-card">
-            <div class="n-moment-head"><b><?= View::e($name) ?></b><time datetime="<?= date('c', $m['created']) ?>" title="<?= date('Y-m-d H:i', $m['created']) ?>"><?= View::e(View::timeAgo($m['created'])) ?></time></div>
+            <div class="n-moment-head"><b><?= View::e($name) ?></b><time datetime="<?= View::date('c', $m['created']) ?>" title="<?= View::date('Y-m-d H:i', $m['created']) ?>"><?= View::e(View::timeAgo($m['created'])) ?></time></div>
             <?php if ($m['content'] !== ''): ?><div class="n-moment-text"><?= $m['content'] ?></div><?php endif; ?>
             <?php if ($n > 0): ?>
             <div class="n-moment-imgs n-imgs-<?= $n === 1 ? '1' : ($n === 2 || $n === 4 ? '2' : '3') ?>" data-gallery>

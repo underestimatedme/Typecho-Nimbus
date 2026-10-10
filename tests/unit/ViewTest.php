@@ -8,3 +8,12 @@ test('icon unknown returns empty', fn() => assert_eq('', View::icon('nope')));
 test('social icons exist', function () { foreach (['github', 'weibo', 'bilibili', 'twitter', 'email', 'rss', 'qq', 'wechat', 'telegram', 'zhihu', 'link'] as $n) assert_true(View::icon($n) !== '', "icon $n"); });
 test('t decodes stored title entities', fn() => assert_eq('C++ & Rust "笔记"', View::t('C++ &amp; Rust &quot;笔记&quot;')));
 test('e(t()) escapes exactly once', fn() => assert_eq('C++ &amp; Rust', View::e(View::t('C++ &amp; Rust'))));
+test('View::date 按站点时区格式化', function () {
+    \Nimbus\View::$tz = 8 * 3600;
+    $ts = gmmktime(20, 30, 0, 10, 10, 2026);
+    assert_eq('2026-10-11 04:30', \Nimbus\View::date('Y-m-d H:i', $ts));
+    assert_eq('2026-10-11T04:30:00+08:00', \Nimbus\View::date('c', $ts));
+    \Nimbus\View::$tz = -5 * 3600 - 1800;
+    assert_eq('2026-10-10 15:00', \Nimbus\View::date('Y-m-d H:i', $ts));
+    \Nimbus\View::$tz = null;
+});

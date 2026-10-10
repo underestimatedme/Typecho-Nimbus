@@ -104,7 +104,7 @@
 | `[video src="…" poster="…"]` | HTML5 视频 |
 | `[bilibili bv="BV1xx411c7mD" page="1"]` | B 站视频 |
 | `[github repo="typecho/typecho"]` | GitHub 仓库卡片（浏览器读取 GitHub 接口，缓存 6 小时） |
-| `[hide]…[/hide]` | 回复可见：登录用户，或记住的邮箱在本文有已通过评论的访客才能看到；RSS、摘要、搜索结果中都不出现 |
+| `[hide]…[/hide]` | 回复可见：本文作者与「贡献者」以上的登录用户可见；访客在本文评论并通过审核后，在同一浏览器可见（装了 NimbusKit 时用签名 cookie 校验，未装时校验邮箱与评论 IP）。RSS、摘要、搜索结果中都不出现 |
 
 安装 NimbusKit 后，友链页优先显示插件后台管理的友链。
 
@@ -140,6 +140,7 @@ bash tests/css-vars.sh      # 皮肤变量完整性
 bash tests/smoke.sh         # 页面渲染冒烟测试（插件启用时也检查插件接口）
 bash tests/multi-db.sh      # 在临时 MySQL / PostgreSQL 上安装并测试（需本机装有两者）
 bash tests/github-flow.sh   # GitHub 登录评论端到端测试（本地假 GitHub 服务器）
+bash tests/hide-flow.sh     # 回复可见端到端测试（伪造 cookie、评论解锁、原生搜索）
 ```
 
 ## 致谢

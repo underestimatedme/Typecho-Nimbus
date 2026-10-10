@@ -12,8 +12,8 @@ $posts = \Typecho_Widget::widget('Widget_Contents_Post_Recent', 'pageSize=10000'
 $groups = [];
 $count = 0;
 while ($posts->next()) {
-    $y = date('Y', (int)$posts->created); $m = (int)date('n', (int)$posts->created);
-    $groups[$y][$m][] = ['title' => $posts->title, 'permalink' => $posts->permalink, 'day' => date('d', (int)$posts->created), 'created' => (int)$posts->created, 'comments' => (int)$posts->commentsNum];
+    $y = View::date('Y', (int)$posts->created); $m = (int)View::date('n', (int)$posts->created);
+    $groups[$y][$m][] = ['title' => $posts->title, 'permalink' => $posts->permalink, 'day' => View::date('d', (int)$posts->created), 'created' => (int)$posts->created, 'comments' => (int)$posts->commentsNum];
     $count++;
 }
 View::partial('header', ['archive' => $this]);

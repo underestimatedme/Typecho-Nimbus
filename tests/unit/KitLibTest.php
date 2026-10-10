@@ -101,3 +101,27 @@ test('groupBookmarks orders groups by min sort and items within', function () {
 test('tags split on commas, keep spaces inside names, dedupe', fn() => assert_eq(['Next.js', 'PHP', 'Vue 3'], Text::tags('Next.js, PHP，PHP、Vue 3')));
 test('dayKey', fn() => assert_eq((int)date('Ymd', 1700000000), Text::dayKey(1700000000)));
 test('plain text drops hidden content (search/excerpt)', fn() => assert_eq('公开', Text::plain('公开[hide]秘密 ZXQ[/hide]')));
+test('签名评论列表：往返、篡改、追加去重与上限', function () {
+    $T = 'TypechoPlugin\NimbusKit\Lib\Token';
+    $s = $T::sign('k', 'cm', ['c' => [1, 2], 'exp' => 200]);
+    assert_eq([1, 2], $T::verify('k', 'cm', $s, 100)['c']);
+    assert_eq(null, $T::verify('k', 'gh', $s, 100));
+    assert_eq(null, $T::verify('x', 'cm', $s, 100));
+    assert_eq(null, $T::verify('k', 'cm', $s, 300));
+    [$b, $m] = explode('.', $s);
+    $forged = rtrim(strtr(base64_encode('{"c":[999],"exp":999}'), '+/', '-_'), '=') . '.' . $m;
+    assert_eq(null, $T::verify('k', 'cm', $forged, 100));
+    assert_eq([2, 3, 1], $T::addComment([1, 2, 3], 1));
+    assert_eq(60, count($T::addComment(range(1, 80), 81)));
+});
+test('Text：未闭合 hide、搜索匹配规则、站点时区日期键', function () {
+    $X = 'TypechoPlugin\NimbusKit\Lib\Text';
+    assert_eq('前文 后文', $X::dropHidden('前文 [hide]秘密[/hide]后文'));
+    assert_eq('摘要 ', $X::dropHidden('摘要 [hide]秘密在 more 之前'));
+    assert_true($X::likeMatch('Nimbus 主题 Typecho', 'nimbus typecho'));
+    assert_true(!$X::likeMatch('Typecho Nimbus', 'nimbus typecho'));
+    assert_true(!$X::likeMatch('abc', ''));
+    $ts = gmmktime(20, 0, 0, 10, 10, 2026);
+    assert_eq(20261010, $X::dayKey($ts, 0));
+    assert_eq(20261011, $X::dayKey($ts, 8 * 3600));
+});

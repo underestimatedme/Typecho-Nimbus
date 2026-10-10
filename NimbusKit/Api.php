@@ -101,12 +101,65 @@ final class Api
         return $label === '' ? '' : Lang::t($label);
     }
 
+    const COMMENTED = 'nimbus_cm';
+
+    /** 本浏览器提交过的评论 coid（签名 cookie，防伪造）；用于「回复可见」。 */
+    public static function commentedIds(): array
+    {
+        $v = isset($_COOKIE[self::COMMENTED]) ? (string)$_COOKIE[self::COMMENTED] : '';
+        if ($v === '') return [];
+        $d = \TypechoPlugin\NimbusKit\Lib\Token::verify((string)\Helper::options()->secret, 'cm', $v, time());
+        return $d && isset($d['c']) && is_array($d['c']) ? array_values(array_filter(array_map('intval', $d['c']))) : [];
+    }
+
+    public static function rememberComment(int $coid): void
+    {
+        if ($coid <= 0) return;
+        $ids = \TypechoPlugin\NimbusKit\Lib\Token::addComment(self::commentedIds(), $coid);
+        $val = \TypechoPlugin\NimbusKit\Lib\Token::sign((string)\Helper::options()->secret, 'cm', ['c' => $ids, 'exp' => time() + 31536000]);
+        $_COOKIE[self::COMMENTED] = $val;
+        setcookie(self::COMMENTED, $val, ['expires' => time() + 31536000, 'path' => \Typecho\Cookie::getPath() ?: '/', 'secure' => stripos((string)\Helper::options()->siteUrl, 'https://') === 0, 'httponly' => true, 'samesite' => 'Lax']);
+    }
+
+    /**
+     * Typecho 自带搜索：排除「只在回复可见内容里命中」的文章。
+     * 挂在 Widget_Archive::handleInit 上（searchHandle 钩子会被 Typecho 误判为「插件已接管搜索」，导致页面出错）。
+     * @param mixed $archive
+     * @param \Typecho\Db\Query $select
+     */
+    public static function searchHandle($archive, $select): void
+    {
+        if (!in_array((string)\Typecho\Router::$current, ['search', 'search_page'], true)) return;
+        $kw = self::searchKeywords();
+        if ($kw === '') return;
+        $db = \Typecho\Db::get();
+        $op = $db->getAdapter()->getDriver() == 'pgsql' ? 'ILIKE' : 'LIKE';
+        $q = '%' . str_replace(' ', '%', $kw) . '%';
+        $rows = $db->fetchAll($db->select('cid', 'title', 'text')->from('table.contents')
+            ->where('type = ?', 'post')->where("text {$op} ?", '%[hide%')->where("title {$op} ? OR text {$op} ?", $q, $q));
+        $drop = [];
+        foreach ($rows as $r) {
+            if (\TypechoPlugin\NimbusKit\Lib\Text::likeMatch((string)$r['title'], $kw)) continue;
+            if (\TypechoPlugin\NimbusKit\Lib\Text::likeMatch(\TypechoPlugin\NimbusKit\Lib\Text::dropHidden((string)$r['text']), $kw)) continue;
+            $drop[] = (int)$r['cid'];
+        }
+        // 查询构造器会把 NOT 当列名加引号，改为逐条排除
+        foreach ($drop as $cid) $select->where('table.contents.cid <> ?', $cid);
+    }
+
+    private static function searchKeywords(): string
+    {
+        $req = \Typecho\Request::getInstance();
+        if (preg_match('#/search/([^/]+)#', (string)$req->getPathInfo(), $m)) return trim(urldecode($m[1]));
+        return trim((string)$req->get('s', ''));
+    }
+
     /** GitHub 登录状态：未配置返回 null。 */
     public static function github(string $back = ''): ?array
     {
         if (!GitHubAuth::enabled()) return null;
         return [
-            'user' => GitHubAuth::current(),
+            'user' => ($u = GitHubAuth::current()) ? $u + ['formAuthor' => GitHubAuth::formAuthor($u)] : null,
             'only' => Config::get('githubOnly') === '1',
             'login' => GitHubAuth::endpoint('github-login', $back),
             'logout' => GitHubAuth::endpoint('github-logout', $back),

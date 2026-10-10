@@ -39,7 +39,10 @@ final class Shortcode
     public static function strip(string $html): string
     {
         [$html, $vault] = self::protect($html);
-        $html = (string)preg_replace('#\[hide[^\]]*\].*?\[/hide\]#su', I18n::t('（此处内容需要评论后可见，请访问原文）'), $html);
+        $tip = I18n::t('（此处内容需要评论后可见，请访问原文）');
+        $html = (string)preg_replace('#\[hide[^\]]*\].*?\[/hide\]#su', $tip, $html);
+        // 未闭合的 [hide]（例如摘要在 <!--more--> 处截断）一直隐藏到末尾
+        $html = (string)preg_replace('#\[hide[^\]]*\].*$#su', $tip, $html);
         $html = (string)preg_replace('#\[(?:' . implode('|', self::SINGLE) . ')[^\]]*\]#u', '', $html);
         $html = (string)preg_replace('#\[/?(?:' . implode('|', array_diff(self::PAIRED, ['hide'])) . ')(?:\s[^\]]*)?\]#u', '', $html);
         return self::restore($html, $vault);
@@ -48,7 +51,8 @@ final class Shortcode
     /** 去掉文本中的隐藏内容（用于摘要、搜索）。 */
     public static function dropHidden(string $text): string
     {
-        return (string)preg_replace('#\[hide[^\]]*\].*?\[/hide\]#su', '', $text);
+        $text = (string)preg_replace('#\[hide[^\]]*\].*?\[/hide\]#su', '', $text);
+        return (string)preg_replace('#\[hide[^\]]*\].*$#su', '', $text);
     }
 
     // ---------------- Typecho 钩子 ----------------
@@ -80,20 +84,32 @@ final class Shortcode
         return strpos($html, '[') === false ? $html : self::strip($html);
     }
 
-    /** 是否可以看到回复可见内容：已登录，或记住的邮箱在本文有已通过的评论。 */
+    /**
+     * 是否可以看到回复可见内容：
+     * - 本文作者，或「贡献者」及以上的登录用户；
+     * - 装了 NimbusKit：本浏览器提交过的评论（签名 cookie，无法伪造）中有一条在本文已通过审核；
+     * - 未装插件：记住的邮箱在本文有已通过的评论，且评论 IP 与当前访客一致（邮箱 cookie 可被伪造，IP 作为第二道校验）。
+     */
     public static function canSee($widget): bool
     {
         $cid = $widget ? (int)$widget->cid : 0;
         if (isset(self::$allowed[$cid])) return self::$allowed[$cid];
         $ok = false;
         try {
-            if (\Widget\User::alloc()->hasLogin()) {
+            $user = \Widget\User::alloc();
+            if ($user->hasLogin() && ($user->pass('contributor', true) || ($widget && (int)$widget->authorId === (int)$user->uid))) {
                 $ok = true;
             } elseif ($cid > 0) {
-                $mail = (string)\Typecho\Cookie::get('__typecho_remember_mail', '');
-                if ($mail !== '') {
-                    $db = \Typecho\Db::get();
-                    $ok = (bool)$db->fetchRow($db->select('coid')->from('table.comments')->where('cid = ? AND mail = ? AND status = ?', $cid, $mail, 'approved')->limit(1));
+                $db = \Typecho\Db::get();
+                $ids = Kit::commentedIds();
+                if ($ids !== null) {
+                    $ok = $ids && (bool)$db->fetchRow($db->select('coid')->from('table.comments')
+                        ->where('cid = ? AND status = ?', $cid, 'approved')->where('coid IN ?', array_slice($ids, -60))->limit(1));
+                } else {
+                    $mail = (string)\Typecho\Cookie::get('__typecho_remember_mail', '');
+                    $ip = (string)\Typecho\Request::getInstance()->getIp();
+                    $ok = $mail !== '' && $ip !== '' && (bool)$db->fetchRow($db->select('coid')->from('table.comments')
+                        ->where('cid = ? AND mail = ? AND ip = ? AND status = ?', $cid, $mail, $ip, 'approved')->limit(1));
                 }
             }
         } catch (\Throwable $e) {

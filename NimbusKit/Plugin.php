@@ -38,6 +38,7 @@ class Plugin implements PluginInterface
         // AJAX 响应放在最后（权重 99），保证其他插件的 finishComment 钩子都已执行
         \Typecho\Plugin::factory('Widget_Feedback')->finishComment_99 = Hooks::class . '::ajaxRespond';
         \Typecho\Plugin::factory('Widget_Feedback')->comment = GitHubAuth::class . '::filterComment';
+        \Typecho\Plugin::factory('Widget_Archive')->handleInit = Api::class . '::searchHandle';
         \Typecho\Plugin::factory('Widget_Comments_Edit')->finishComment = Hooks::class . '::finishComment';
         \Typecho\Plugin::factory('Widget_Comments_Edit')->mark = Hooks::class . '::mark';
         return _t('NimbusKit 已启用：数据表已就绪，可在「管理 → Nimbus」中管理说说、友链与相册。');

@@ -31,7 +31,8 @@ final class Admin
     {
         if (!$isInit) $settings = self::normalize($settings, $_POST);
         $db = \Typecho_Db::get();
-        $name = 'theme:' . (string)\Helper::options()->theme;
+        // 启用主题时 options->theme 仍是旧主题名，按主题目录名保存
+        $name = 'theme:' . basename(dirname(__DIR__));
         $exists = $db->fetchRow($db->select('name')->from('table.options')->where('name = ? AND user = 0', $name)->limit(1));
         if ($exists) $db->query($db->update('table.options')->rows(['value' => serialize($settings)])->where('name = ? AND user = 0', $name));
         else $db->query($db->insert('table.options')->rows(['name' => $name, 'user' => 0, 'value' => serialize($settings)]));

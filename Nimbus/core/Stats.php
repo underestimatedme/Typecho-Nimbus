@@ -93,12 +93,18 @@ final class Stats
         $opt = \Helper::options();
         $tz = (int)$opt->timezone;
         $now = (int)$opt->time ?: time();
-        $posts = $db->fetchAll($db->select('cid', 'created', 'text')->from('table.contents')
+        $posts = $db->fetchAll($db->select('cid', 'created')->from('table.contents')
             ->where('type = ? AND status = ?', 'post', 'publish')->where('created < ?', $now)
             ->where("password IS NULL OR password = ''"));
         $postTs = array_map(function ($r) { return (int)$r['created']; }, $posts);
-        $words = 0;
-        foreach ($posts as $p) $words += self::words(Shortcode::strip((string)$p['text']));
+        // 统计字数需要读取全部正文，结果按文章指纹缓存
+        $words = (int)Cache::remember('words', Cache::postsKey(), function () use ($db, $now) {
+            $sum = 0;
+            $rows = $db->fetchAll($db->select('text')->from('table.contents')->where('type = ? AND status = ?', 'post', 'publish')
+                ->where('created < ?', $now)->where("password IS NULL OR password = ''"));
+            foreach ($rows as $p) $sum += self::words(Shortcode::strip((string)$p['text']));
+            return $sum;
+        });
         $comments = $db->fetchAll($db->select('table.comments.created')->from('table.comments')
             ->join('table.contents', 'table.contents.cid = table.comments.cid')
             ->where('table.comments.status = ?', 'approved')->where('table.contents.status = ?', 'publish')

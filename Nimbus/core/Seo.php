@@ -33,8 +33,8 @@ final class Seo
                 'headline' => $title,
                 'description' => $desc,
                 'url' => $url,
-                'datePublished' => date('c', (int)$archive->created),
-                'dateModified' => date('c', (int)$archive->modified),
+                'datePublished' => View::date('c', (int)$archive->created),
+                'dateModified' => View::date('c', (int)$archive->modified),
                 'author' => ['@type' => 'Person', 'name' => (string)$archive->author->screenName],
                 'publisher' => ['@type' => 'Organization', 'name' => (string)$o->title],
             ];

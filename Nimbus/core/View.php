@@ -125,6 +125,25 @@ final class View
         return isset(self::$icons[$name]);
     }
 
+    /** @var int|null 测试注入的时区偏移（秒） */
+    public static $tz = null;
+
+    /** 按站点时区格式化时间（Typecho 不设置 PHP 默认时区，直接用 date() 会得到服务器时区）。 */
+    public static function date(string $format, ?int $ts = null): string
+    {
+        $ts = $ts ?? time();
+        $off = self::$tz;
+        if ($off === null) {
+            try { $off = (int)\Helper::options()->timezone; } catch (\Throwable $e) { $off = 0; }
+        }
+        $sign = $off < 0 ? '-' : '+';
+        $abs = abs($off);
+        $tzName = sprintf('%s%02d:%02d', $sign, intdiv($abs, 3600), intdiv($abs % 3600, 60));
+        $d = new \DateTime('@' . $ts);
+        $d->setTimezone(new \DateTimeZone($tzName));
+        return $d->format($format);
+    }
+
     /** 相对时间（用于评论）。 */
     public static function timeAgo(int $ts): string
     {
@@ -133,7 +152,7 @@ final class View
         if ($d < 3600) return I18n::t('{n} 分钟前', ['n' => floor($d / 60)]);
         if ($d < 86400) return I18n::t('{n} 小时前', ['n' => floor($d / 3600)]);
         if ($d < 86400 * 30) return I18n::t('{n} 天前', ['n' => floor($d / 86400)]);
-        return date('Y-m-d', $ts);
+        return self::date('Y-m-d', $ts);
     }
 
     /** 数字缩写：1234 → 1.2k */

@@ -69,6 +69,14 @@ final class Kit
         return is_array($v) ? $v : [];
     }
 
+    /** 本浏览器提交过的评论 coid；插件未装或过旧返回 null（主题改用邮箱 + IP 校验）。 */
+    public static function commentedIds(): ?array
+    {
+        if (!self::enabled() || !method_exists('NimbusKit_Api', 'commentedIds')) return null;
+        $v = self::call('commentedIds');
+        return is_array($v) ? array_map('intval', $v) : [];
+    }
+
     /** 评论者 IP 属地（省份 / 国家）；未启用或无数据文件返回 null。 */
     public static function region(string $ip): ?string
     {

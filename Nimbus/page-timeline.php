@@ -10,12 +10,19 @@ use Nimbus\I18n;
 use Nimbus\Post;
 use Nimbus\Options;
 
-$posts = \Typecho_Widget::widget('Widget_Contents_Post_Recent', 'pageSize=10000');
-$items = [];
-while ($posts->next()) {
-    $cat = isset($posts->categories[0]) ? $posts->categories[0]['name'] : '';
-    $items[] = ['title' => View::t($posts->title), 'url' => $posts->permalink, 'created' => (int)$posts->created, 'cat' => $cat, 'excerpt' => Post::excerpt($posts, 70), 'thumb' => Post::hasOwnImage($posts) ? Post::thumb($posts) : '', 'comments' => (int)$posts->commentsNum];
-}
+$o = \Helper::options();
+// 全部文章逐条取分类、字段与摘要开销大，结果按文章指纹缓存（文章或相关设置变化时自动重建）
+$cacheKey = \Nimbus\Cache::postsKey([(string)$o->index, (string)$o->siteUrl, json_encode(is_array($o->routingTable) ? ($o->routingTable['post'] ?? '') : ''), (string)Options::get('ThumbPool', ''), (string)Options::get('ExcerptLength', '')]);
+$items = \Nimbus\Cache::remember('timeline', $cacheKey, function () {
+    $posts = \Typecho_Widget::widget('Widget_Contents_Post_Recent@nimbus-timeline', 'pageSize=10000');
+    $items = [];
+    while ($posts->next()) {
+        $cat = isset($posts->categories[0]) ? $posts->categories[0]['name'] : '';
+        $items[] = ['title' => View::t($posts->title), 'url' => $posts->permalink, 'created' => (int)$posts->created, 'cat' => $cat, 'excerpt' => Post::excerpt($posts, 70), 'thumb' => Post::hasOwnImage($posts) ? Post::thumb($posts) : '', 'comments' => (int)$posts->commentsNum];
+    }
+    return $items;
+});
+if (!is_array($items)) $items = [];
 View::partial('header', ['archive' => $this]);
 ?>
 <div class="n-container">
@@ -28,13 +35,13 @@ View::partial('header', ['archive' => $this]);
       <button type="button" class="n-river-nav n-river-prev" data-river-prev aria-label="<?= I18n::e('向前') ?>"><?= View::icon('arrow-left') ?></button>
       <div class="n-river" data-river tabindex="0" aria-label="<?= I18n::e('文章时间线，可左右滚动') ?>">
         <div class="n-river-track">
-          <?php $lastYear = null; foreach ($items as $i => $it): $y = date('Y', $it['created']); ?>
+          <?php $lastYear = null; foreach ($items as $i => $it): $y = View::date('Y', $it['created']); ?>
           <?php if ($y !== $lastYear): $lastYear = $y; ?><div class="n-river-year"><span><?= $y ?></span></div><?php endif; ?>
           <a class="n-river-item<?= $i % 2 ? ' is-down' : '' ?>" href="<?= View::e($it['url']) ?>">
             <i class="n-river-dot" aria-hidden="true"></i>
             <span class="n-river-card">
               <?php if ($it['thumb'] !== ''): ?><span class="n-river-thumb" style="background-image:url('<?= View::e($it['thumb']) ?>')"></span><?php endif; ?>
-              <time datetime="<?= date('c', $it['created']) ?>"><?= date('Y.n.j', $it['created']) ?></time>
+              <time datetime="<?= View::date('c', $it['created']) ?>"><?= View::date('Y.n.j', $it['created']) ?></time>
               <b><?= View::e($it['title']) ?></b>
               <em><?= View::e($it['excerpt']) ?></em>
               <span class="n-river-meta"><?php if ($it['cat'] !== ''): ?><span class="n-chip"><?= View::e($it['cat']) ?></span><?php endif; ?><span><?= View::icon('comment') ?><?= $it['comments'] ?></span></span>

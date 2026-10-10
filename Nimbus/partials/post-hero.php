@@ -19,7 +19,7 @@ $cat = isset($post->categories[0]) ? $post->categories[0] : null;
     <?php if ($isPost): ?>
     <div class="n-post-meta n-post-hero-meta">
       <span><?= View::icon('user') ?><?= View::e($post->author->screenName) ?></span>
-      <time datetime="<?= date('c', (int)$post->created) ?>"><?= View::icon('calendar') ?><?= date('Y-m-d', (int)$post->created) ?></time>
+      <time datetime="<?= View::date('c', (int)$post->created) ?>"><?= View::icon('calendar') ?><?= View::date('Y-m-d', (int)$post->created) ?></time>
       <?php if (Options::bool('ShowWordCount')): ?><span><?= View::icon('edit') ?><?= I18n::e('{n} 字', ['n' => $words]) ?></span><?php endif; ?>
       <?php if (Options::bool('ShowReadingTime')): ?><span><?= View::icon('clock') ?><?= I18n::e('{n} 分钟', ['n' => Post::readingTime($words)]) ?></span><?php endif; ?>
       <?php if ($views !== null): ?><span><?= View::icon('eye') ?><b data-views><?= View::num($views) ?></b></span><?php endif; ?>

@@ -53,6 +53,8 @@
 2. Homepage URL 填站点地址；Authorization callback URL 填插件设置页提示的地址（形如 `https://你的站点/index.php/nimbus-api/github-callback`，开启伪静态时没有 `index.php`）。
 3. 把生成的 Client ID 与 Client Secret 填进插件设置并保存，评论区就会出现「GitHub 登录」按钮。
 
+评论表单里的隐藏昵称是 `github-{id}`，入库时换成 GitHub 显示名；显示名与本站注册用户重名时会变成「显示名 @login」。
+
 安全设计：登录请求带签名和 10 分钟有效期，并与当前浏览器绑定；登录后只回跳到本站地址；GitHub 的访问令牌只在服务端用一次、不保存。身份保存在签名 cookie（30 天）里，评论时由服务端覆盖昵称、邮箱、网址。没有公开邮箱的用户使用 `{id}+{login}@users.noreply.github.com`，主题会直接显示其 GitHub 头像。
 
 ## IP 属地

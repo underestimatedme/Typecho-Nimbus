@@ -28,7 +28,7 @@ case "$FINAL" in "$POST"*) ok "登录后回跳到文章";; *) bad "登录后回�
 grep -q 'nimbus_gh' "$J1" && ok "写入签名身份 cookie" || bad "写入签名身份 cookie"
 PAGE=$(curl -s -b "$J1" "$POST")
 echo "$PAGE" | grep -q '@octocat' && ok "表单显示登录身份" || bad "表单显示登录身份"
-echo "$PAGE" | grep -q 'The Octocat' && ! echo "$PAGE" | grep -q 'The &lt;Octocat' && ok "昵称已清洗" || bad "昵称已清洗"
+echo "$PAGE" | grep -q 'The Octocat (Dev)' && ! echo "$PAGE" | grep -q 'The &lt;Octocat' && ok "昵称已清洗" || bad "昵称已清洗"
 
 # 3. 提交评论时篡改昵称邮箱，服务端以 GitHub 身份为准
 TOK=$(echo "$PAGE" | grep -o 'name="_" value="[^"]*"' | head -1 | sed 's/.*value="//;s/"$//')
@@ -37,7 +37,7 @@ TEXT="gh-flow-$(date +%s)"
 R=$(curl -s -b "$J1" -e "$POST" --data-urlencode "author=Hacker" --data-urlencode "mail=evil@example.com" --data-urlencode "url=https://evil.example.com" --data-urlencode "text=$TEXT" --data-urlencode "_=$TOK" -d nimbus_ajax=1 "$ACTION")
 echo "$R" | grep -q '"ok":true' && ok "GitHub 用户评论成功" || bad "GitHub 用户评论成功（$R）"
 ROW=$(sqlite3 "$DB" "select author||'|'||mail||'|'||url from typecho_comments where text='$TEXT'")
-[ "$ROW" = "The Octocat|583231+octocat@users.noreply.github.com|https://github.com/octocat" ] && ok "评论身份不可伪造" || bad "评论身份不可伪造（$ROW）"
+[ "$ROW" = "The Octocat (Dev)|583231+octocat@users.noreply.github.com|https://github.com/octocat" ] && ok "评论身份不可伪造（含括号的显示名也能评论）" || bad "评论身份不可伪造（$ROW）"
 
 # 4. 开放重定向：外站 back 回到首页
 LOC=$(curl -s -o /dev/null -w '%{redirect_url}' "$BASE/index.php/nimbus-api/github-login?back=https://evil.com/")
@@ -66,9 +66,21 @@ C=$(curl -s -o /tmp/nimbus-gh-r.txt -w '%{http_code}' -b "$J3" -e "$POST" --data
 R=$(curl -s -b "$J1" -e "$POST" --data-urlencode "author=x" --data-urlencode "mail=x@example.com" --data-urlencode "text=$TEXT-2" --data-urlencode "_=$TOK" -d nimbus_ajax=1 "$ACTION")
 echo "$R" | grep -q '"ok":true' && ok "GitHub 用户仍可评论" || bad "GitHub 用户仍可评论（$R）"
 
-# 8. 退出
+# 8. 显示名与本站注册用户重名时加 @login，不能冒充站长
+php tests/kit-config.php "$DB" githubOnly=0 >/dev/null
+kill $GHPID 2>/dev/null; sleep 0.3
+FAKE_GH_NAME=admin python3 tests/fake-github.py $GH & GHPID=$!; sleep 0.5
+J4=$(mktemp)
+curl -s -o /dev/null -L -c "$J4" -b "$J4" "$BASE/index.php/nimbus-api/github-login?back=/"
+P4=$(curl -s -c "$J4" -b "$J4" "$POST"); TOK4=$(echo "$P4" | grep -o 'name="_" value="[^"]*"' | head -1 | sed 's/.*value="//;s/"$//')
+R=$(curl -s -b "$J4" -e "$POST" --data-urlencode "author=x" --data-urlencode "mail=x@example.com" --data-urlencode "text=$TEXT-3" --data-urlencode "_=$TOK4" -d nimbus_ajax=1 "$ACTION")
+A=$(sqlite3 "$DB" "select author from typecho_comments where text='$TEXT-3'")
+[ "$A" = "admin @octocat" ] && ok "与站长重名时改为「admin @octocat」" || bad "与站长重名时改为「admin @octocat」（$A / $R）"
+rm -f "$J4"
+
+# 9. 退出
 curl -s -o /dev/null -c "$J1" -b "$J1" "$BASE/index.php/nimbus-api/github-logout?back=/"
-curl -s -b "$J1" "$POST" | grep -q '@octocat' && bad "退出后清除身份" || ok "退出后清除身份"
+curl -s -b "$J1" "$POST" | grep -q "n-gh-who" && bad "退出后清除身份" || ok "退出后清除身份"
 
 sqlite3 "$DB" "delete from typecho_comments where text like '%gh-flow-%'"
 sqlite3 "$DB" "update typecho_contents set commentsNum=(select count(*) from typecho_comments c where c.cid=typecho_contents.cid and c.status='approved')"
