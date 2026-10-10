@@ -98,6 +98,6 @@ echo \Nimbus\Assets::preloadTags($page, $nimbusPreload);
 </head>
 <body class="n-page-<?= $page ?>" data-page="<?= $page ?>" data-cid="<?= $cid ?>">
 <div class="n-progress" id="n-progress" aria-hidden="true"></div>
-<?php $nimbusHeroNav = ($archive->is('index') && Options::bool('HeroEnable') && (int)$archive->request->get('page', 1) <= 1) || \Nimbus\Post::immersive($archive); ?>
+<?php $nimbusHeroNav = ($archive->is('index') && (Options::bool('HeroEnable') || (string)Options::get('HomeStyle', 'magazine') === 'magazine') && (int)$archive->request->get('page', 1) <= 1) || \Nimbus\Post::immersive($archive); ?>
 <?php View::partial('nav', ['archive' => $archive, 'solid' => !$nimbusHeroNav]); ?>
 <main id="n-main" class="n-main-wrap" data-page="<?= $page ?>" data-cid="<?= $cid ?>">

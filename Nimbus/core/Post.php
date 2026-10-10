@@ -253,6 +253,19 @@ final class Post
         return false;
     }
 
+    /** 数据库行（filter 后的数组）对应的缩略图：自定义字段 thumb → 正文首图 → 缩略图池 → 内置图。 */
+    public static function rowThumb(array $row): string
+    {
+        $field = null;
+        try {
+            $db = \Typecho_Db::get();
+            $f = $db->fetchRow($db->select('str_value')->from('table.fields')->where('cid = ? AND name = ?', (int)$row['cid'], 'thumb')->limit(1));
+            if ($f) $field = (string)$f['str_value'];
+        } catch (\Throwable $e) {
+        }
+        return self::thumbFrom($field, (string)($row['text'] ?? ''), Options::list('ThumbPool'), (int)$row['cid'], preg_replace('/\?v=.*$/', '', View::asset('img/thumbs')));
+    }
+
     /** 自定义字段字符串，不存在返回 null。 */
     public static function field($post, string $name): ?string
     {

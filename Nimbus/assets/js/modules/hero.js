@@ -60,7 +60,7 @@ export function init(root = document) {
     lines = lines.filter((s) => typeof s === 'string' && s.trim());
     if (lines.length) run(sub.querySelector('span'), lines, ++runId);
   }
-  const bg = qs('.n-hero-bg', hero);
+  const bg = qs('.n-hero-bg, .n-cover-img', hero);
   if (bg && decorAllowed()) {
     const h = hero.offsetHeight;
     let ticking = false;

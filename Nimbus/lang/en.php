@@ -64,6 +64,11 @@ return [
     '折线图' => 'Line chart', '柱状图' => 'Bar chart', '环形图' => 'Donut chart', '发文热力图' => 'Posting heatmap', '：' => ': ', '{date}：{n} 篇' => '{date}: {n} posts',
     // 日期
     '{m}月' => '{m}', '{m} 月' => 'Month {m}', '{y} 年 {m} 月' => '{y}-{m}', '一' => 'M', '二' => 'T', '三' => 'W', '四' => 'T', '五' => 'F', '六' => 'S', '日' => 'S',
+    // 杂志风首页
+    '欢迎来到 {site}' => 'Welcome to {site}', '随便看看' => 'Surprise me', '条评论' => 'comments', '天在写' => 'days writing', '个标签' => 'tags',
+    '最新文章' => 'Latest stories', '最新' => 'New', '精选' => 'Featured', '关于我' => 'About me', '写作节奏' => 'Writing pulse', '篇 / 近一年' => 'posts / past year',
+    '共 {n} 篇 · {c} 条评论' => '{n} posts · {c} comments', '最新说说' => 'Latest moment', '正在播放' => 'Now playing', '听一首歌' => 'Play a song', '此刻' => 'Right now',
+    '记录、思考，与世界温柔相处' => 'Writing, thinking, and being gentle with the world', '慢慢写，慢慢读' => 'Write slowly, read slowly', '全部归档' => 'All archives',
     // 侧栏
     '站点信息' => 'Site info', '运行天数' => 'Days online', '{n} 天' => '{n} days', '文章数' => 'Posts', '评论数' => 'Comments', '分类数' => 'Categories', '标签数' => 'Tags', '最后更新' => 'Last update', '最新评论' => 'Recent comments',
     // IP 属地（数据为中文，常见地区给出英文）

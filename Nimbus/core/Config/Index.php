@@ -8,6 +8,7 @@ final class Index
     public static function items(): array
     {
         return [
+            ['name' => 'HomeStyle', 'type' => 'radio', 'label' => '首页风格', 'description' => '杂志：全屏封面（极光背景、最新文章卡片堆、分类滚动条）+ 精选 Bento 网格 + 通栏文章网格，首页不显示侧栏；经典：Hero + 置顶轮播 + 文章列表 + 侧栏。两种风格都使用下面的 Hero 标题、副标题与背景图。', 'default' => 'magazine', 'options' => ['magazine' => '杂志', 'classic' => '经典']],
             ['name' => 'HeroEnable', 'type' => 'radio', 'label' => '首页 Hero 区', 'description' => '关闭后首页从导航下方直接显示文章列表。', 'default' => '1', 'options' => ['1' => '开启', '0' => '关闭']],
             ['name' => 'HeroImages', 'type' => 'textarea', 'label' => 'Hero 背景图', 'description' => '每行一个图片 URL，多行时随机展示。留空使用主题内置图。', 'default' => ''],
             ['name' => 'HeroHeight', 'type' => 'text', 'label' => 'Hero 高度', 'description' => 'CSS 高度值，如 600px 或 70vh。', 'default' => '600px'],

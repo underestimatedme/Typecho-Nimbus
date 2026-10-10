@@ -33,6 +33,16 @@ final class Widgets
     }
 
     /** 站长用户信息（作者卡回落）。 */
+    /** 使用某个自定义模板的第一个已发布页面的链接（找不到返回空串）。 */
+    public static function pageUrl($archive, string $template): string
+    {
+        static $cache = [];
+        if (isset($cache[$template])) return $cache[$template];
+        $db = \Typecho_Db::get();
+        $row = $db->fetchRow($db->select()->from('table.contents')->where('type = ? AND status = ? AND template = ?', 'page', 'publish', $template)->order('order', \Typecho_Db::SORT_ASC)->limit(1));
+        return $cache[$template] = $row ? (string)$archive->filter($row)['permalink'] : '';
+    }
+
     public static function owner(): array
     {
         static $owner = null;
