@@ -23,6 +23,7 @@ final class Config
         'notifyAdmin' => '1',
         'notifyReply' => '1',
         'dropOnDeactivate' => '0',
+        'ipRegion' => '1',
         'githubClientId' => '',
         'githubClientSecret' => '',
         'githubOnly' => '0',

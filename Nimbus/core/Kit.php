@@ -69,6 +69,14 @@ final class Kit
         return is_array($v) ? $v : [];
     }
 
+    /** 评论者 IP 属地（省份 / 国家）；未启用或无数据文件返回 null。 */
+    public static function region(string $ip): ?string
+    {
+        if ($ip === '') return null;
+        $v = self::call('region', [$ip]);
+        return is_string($v) ? $v : null;
+    }
+
     /** GitHub 登录状态（未配置或插件过旧返回 null）。@return array{user:?array,only:bool,login:string,logout:string}|null */
     public static function github(string $back = ''): ?array
     {

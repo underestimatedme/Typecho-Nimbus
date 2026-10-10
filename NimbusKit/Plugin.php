@@ -101,6 +101,8 @@ class Plugin implements PluginInterface
         $form->addInput(new TextInput('adminMail', null, '', _t('站长收件地址'), _t('留空使用文章作者的邮箱。')));
         $form->addInput(new Radio('notifyAdmin', ['1' => '是', '0' => '否'], '1', _t('新评论通知站长')));
         $form->addInput(new Radio('notifyReply', ['1' => '是', '0' => '否'], '1', _t('回复通知被回复者'), _t('只在回复已通过审核时发送。')));
+        $has = is_file(Api::regionFile());
+        $form->addInput(new Radio('ipRegion', ['1' => '显示', '0' => '不显示'], '1', _t('评论者 IP 属地'), ($has ? _t('已检测到数据文件。') : _t('未检测到数据文件，此功能暂不可用。')) . _t('从 ip2region 项目（github.com/lionsoul2014/ip2region，Apache-2.0）下载 IPv4 数据文件 ip2region.xdb，放到 usr/plugins/NimbusKit/data/ 目录。只显示省份（国外显示国家），不显示具体 IP。')));
         $cb = rtrim((string)\Helper::options()->index, '/') . '/nimbus-api/github-callback';
         $form->addInput(new TextInput('githubClientId', null, '', _t('GitHub 登录 · Client ID'), _t('在 GitHub「Settings → Developer settings → OAuth Apps」新建应用，回调地址（Authorization callback URL）填写：') . htmlspecialchars($cb, ENT_QUOTES, 'UTF-8') . _t('。Client ID 与 Secret 都填写后，评论区出现「GitHub 登录」按钮。')));
         $form->addInput(new Password('githubClientSecret', null, '', _t('GitHub 登录 · Client Secret'), _t('只保存在服务端，不会下发给浏览器。')));

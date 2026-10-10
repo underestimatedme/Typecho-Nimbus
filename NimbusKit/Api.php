@@ -77,6 +77,26 @@ final class Api
         return ['daily' => Store::daily(30), 'totals' => Store::totals(), 'top' => Store::topPosts('views', 10)];
     }
 
+    /** @var \TypechoPlugin\NimbusKit\Lib\Ip2Region|false|null */
+    private static $ipdb = null;
+
+    public static function regionFile(): string
+    {
+        return __DIR__ . '/data/ip2region.xdb';
+    }
+
+    /** IP 属地展示名（内网为「本地」）；功能关闭或数据文件缺失返回 null。 */
+    public static function region(string $ip): ?string
+    {
+        if (Config::get('ipRegion') !== '1') return null;
+        if (self::$ipdb === null) {
+            try { self::$ipdb = new \TypechoPlugin\NimbusKit\Lib\Ip2Region(self::regionFile()); } catch (\Throwable $e) { self::$ipdb = false; }
+        }
+        if (self::$ipdb === false) return null;
+        if (\TypechoPlugin\NimbusKit\Lib\Ip2Region::isLocal($ip)) return '本地';
+        return \TypechoPlugin\NimbusKit\Lib\Ip2Region::label(self::$ipdb->search($ip));
+    }
+
     /** GitHub 登录状态：未配置返回 null。 */
     public static function github(string $back = ''): ?array
     {

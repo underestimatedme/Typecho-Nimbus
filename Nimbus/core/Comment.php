@@ -72,6 +72,8 @@ final class Comment
         else echo '<span class="n-comment-name">' . View::e($c->author) . '</span>';
         if ($isAuthor) echo '<span class="n-comment-badge">博主</span>';
         if ($ua['browser'] !== '' || $ua['os'] !== '') echo '<span class="n-comment-ua">' . View::e(trim($ua['os'] . ' · ' . $ua['browser'], ' ·')) . '</span>';
+        $region = Kit::region((string)$c->ip);
+        if ($region !== null && $region !== '') echo '<span class="n-comment-region" title="IP 属地">' . View::icon('pin') . View::e($region) . '</span>';
         echo '<time datetime="' . date('c', (int)$c->created) . '" title="' . date('Y-m-d H:i', (int)$c->created) . '">' . View::e(View::timeAgo((int)$c->created)) . '</time>';
         echo '</div>';
         if ($waiting) echo '<div class="n-comment-waiting">' . View::e((string)$options->commentStatus) . '</div>';

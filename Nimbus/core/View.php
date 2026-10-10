@@ -53,6 +53,7 @@ final class View
         'wechat' => '<path d="M9 4C5.1 4 2 6.7 2 10c0 1.8.9 3.4 2.4 4.5L4 17l2.7-1.4c.7.2 1.5.4 2.3.4"/><path d="M15 8c3.9 0 7 2.5 7 5.5 0 1.6-.9 3-2.3 4L20 20l-2.5-1.2c-.8.2-1.6.3-2.5.3-3.9 0-7-2.5-7-5.6S11.1 8 15 8z"/>',
         'telegram' => '<path d="m21 4-4 16-6-4-3 3v-5l9-8-11 7-4-2z"/>',
         'zhihu' => '<path d="M4 5h9M8 5v6c0 3-1 5-3 7M5 11h8M10 11l3 7M15 5h5v12h-5zM17 17l-2 3"/>',
+        'pin' => '<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
         'play' => '<path d="M7 4.5v15l12-7.5z" fill="currentColor"/>',
         'pause' => '<path d="M7 4h3v16H7zM14 4h3v16h-3z" fill="currentColor"/>',
         'skip-back' => '<path d="M19 20 9 12l10-8z" fill="currentColor"/><path d="M5 19V5"/>',
