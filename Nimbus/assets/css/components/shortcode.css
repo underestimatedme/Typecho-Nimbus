@@ -20,7 +20,7 @@
 .n-sc-tabs.is-ready .n-sc-tab-panel { display: none; }
 .n-sc-tabs.is-ready .n-sc-tab-panel.is-on { display: block; animation: n-up var(--dur) var(--ease); }
 .n-sc-tabs:not(.is-ready) .n-sc-tab-panel::before { content: attr(data-title); display: block; font-weight: 600; margin-bottom: 6px; color: var(--fg-strong); }
-.n-prose .n-sc-btn { text-decoration: none; color: var(--on-accent); }
+.n-prose .n-sc-btn { text-decoration: none; color: var(--on-accent); margin: 4px 6px 4px 0; vertical-align: middle; }
 .n-prose .n-sc-btn.n-btn-ghost { color: var(--accent-text); border: 1px solid var(--line-hover); }
 .n-sc-video { width: 100%; border-radius: var(--r); background: #000; box-shadow: var(--shadow); }
 .n-sc-embed { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow); background: #000; }

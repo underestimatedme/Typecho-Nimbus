@@ -58,3 +58,7 @@ test('strip mode for feeds keeps text and drops hidden', function () {
     $h = Shortcode::strip('[tip]提示[/tip][hide]秘密ZXQ[/hide][bilibili bv="BV1xx411c7mD"]');
     assert_true(strpos($h, '提示') !== false && strpos($h, 'ZXQ') === false && strpos($h, '[') === false, $h);
 });
+test('按钮留在段落里（不拆成正文网格的直接子元素）', function () {
+    $h = \Nimbus\Shortcode::render('<h2>按钮</h2><p>[button url="https://typecho.org"]官网[/button] [button url="/" type="ghost"]首页[/button]</p>', ['canSeeHidden' => false, 'host' => 'example.com']);
+    assert_true((bool)preg_match('#<p><a class="n-btn n-sc-btn n-btn-primary"[^>]*>.*</a>\s*<a class="n-btn n-sc-btn n-btn-ghost"[^>]*>.*</a></p>#su', $h), $h);
+});

@@ -39,7 +39,7 @@ final class Shortcode
     public static function strip(string $html): string
     {
         [$html, $vault] = self::protect($html);
-        $html = (string)preg_replace('#\[hide[^\]]*\].*?\[/hide\]#su', '（此处内容需要评论后可见，请访问原文）', $html);
+        $html = (string)preg_replace('#\[hide[^\]]*\].*?\[/hide\]#su', I18n::t('（此处内容需要评论后可见，请访问原文）'), $html);
         $html = (string)preg_replace('#\[(?:' . implode('|', self::SINGLE) . ')[^\]]*\]#u', '', $html);
         $html = (string)preg_replace('#\[/?(?:' . implode('|', array_diff(self::PAIRED, ['hide'])) . ')(?:\s[^\]]*)?\]#u', '', $html);
         return self::restore($html, $vault);
@@ -123,7 +123,8 @@ final class Shortcode
     /** 把 Markdown 段落包裹拆开：<p>[tip]</p> → [tip]，<p>[tip]正文 → [tip]<p>正文 */
     private static function unwrap(string $html): string
     {
-        $names = implode('|', array_merge(self::PAIRED, self::SINGLE));
+        // button 是行内元素，留在段落里；其余为块级，拆开 Markdown 包上的 <p>
+        $names = implode('|', array_diff(array_merge(self::PAIRED, self::SINGLE), ['button']));
         $html = (string)preg_replace('#<p>\s*(\[(?:' . $names . ')(?:\s[^\]]*)?\s*/?\])\s*(?:<br\s*/?>)?\s*#u', '$1<p>', $html);
         $html = (string)preg_replace('#\s*(?:<br\s*/?>)?\s*(\[/(?:' . $names . ')\])\s*</p>#u', '</p>$1', $html);
         $html = (string)preg_replace('#(\[/(?:' . $names . ')\])\s*(?:<br\s*/?>)\s*#u', '$1', $html);
@@ -166,10 +167,10 @@ final class Shortcode
                 $icon = ['info' => 'info', 'success' => 'check', 'warning' => 'alert', 'danger' => 'alert'][$type];
                 return '<div class="n-sc-tip is-' . $type . '" role="note">' . View::icon($icon, 'n-sc-tip-ico') . '<div class="n-sc-tip-body">' . self::para($inner) . '</div></div>';
             case 'collapse':
-                $title = $a['title'] ?? '展开查看';
+                $title = $a['title'] ?? I18n::t('展开查看');
                 return '<details class="n-sc-collapse"' . (array_key_exists('open', $a) ? ' open' : '') . '><summary>' . $e($title) . View::icon('chevron-down', 'n-sc-caret') . '</summary><div class="n-sc-collapse-body">' . self::para($inner) . '</div></details>';
             case 'tab':
-                return '<div class="n-sc-tab-panel" data-title="' . $e($a['title'] ?? '标签') . '">' . self::para($inner) . '</div>';
+                return '<div class="n-sc-tab-panel" data-title="' . $e($a['title'] ?? I18n::t('标签')) . '">' . self::para($inner) . '</div>';
             case 'tabs':
                 preg_match_all('#<div class="n-sc-tab-panel" data-title="([^"]*)">#', $inner, $m);
                 if (empty($m[1])) return $inner;
@@ -180,13 +181,13 @@ final class Shortcode
             case 'button':
                 $url = self::url($a['url'] ?? '');
                 $type = ($a['type'] ?? 'primary') === 'ghost' ? 'n-btn-ghost' : 'n-btn-primary';
-                $text = trim(strip_tags($inner)) ?: '链接';
+                $text = trim(strip_tags($inner)) ?: I18n::t('链接');
                 if ($url === '') return '<span class="n-btn n-sc-btn ' . $type . '">' . $e($text) . '</span>';
                 $ext = preg_match('#^https?://([^/:]+)#i', $url, $hm) && strtolower($hm[1]) !== $host;
                 return '<a class="n-btn n-sc-btn ' . $type . '" href="' . $e($url) . '"' . ($ext ? ' target="_blank" rel="noopener"' : '') . '>' . $e($text) . View::icon('arrow-right') . '</a>';
             case 'hide':
-                if ($see) return '<div class="n-sc-hide is-open"><div class="n-sc-hide-tip">' . View::icon('lock') . '以下为评论后可见的内容</div>' . self::para($inner) . '</div>';
-                return '<div class="n-sc-hide">' . View::icon('lock', 'n-sc-hide-ico') . '<span>此处内容需要<a href="#comments">评论</a>后可见</span></div>';
+                if ($see) return '<div class="n-sc-hide is-open"><div class="n-sc-hide-tip">' . View::icon('lock') . I18n::e('以下为评论后可见的内容') . '</div>' . self::para($inner) . '</div>';
+                return '<div class="n-sc-hide">' . View::icon('lock', 'n-sc-hide-ico') . '<span>' . I18n::t('此处内容需要{link}后可见', ['link' => '<a href="#comments">' . I18n::e('评论') . '</a>']) . '</span></div>';
         }
         return $inner;
     }
@@ -208,7 +209,7 @@ final class Shortcode
             case 'github':
                 $repo = (string)($a['repo'] ?? '');
                 if (!preg_match('#^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$#', $repo) || strpos($repo, '..') !== false) return '';
-                return '<a class="n-sc-gh" href="https://github.com/' . $e($repo) . '" target="_blank" rel="noopener" data-gh-repo="' . $e($repo) . '" data-no-router>' . View::icon('github', 'n-sc-gh-ico') . '<span class="n-sc-gh-body"><b>' . $e($repo) . '</b><em data-gh-desc>GitHub 仓库</em><span class="n-sc-gh-meta"><span data-gh-lang></span><span>' . View::icon('star') . '<i data-gh-stars>—</i></span><span>' . View::icon('share') . '<i data-gh-forks>—</i></span></span></span></a>';
+                return '<a class="n-sc-gh" href="https://github.com/' . $e($repo) . '" target="_blank" rel="noopener" data-gh-repo="' . $e($repo) . '" data-no-router>' . View::icon('github', 'n-sc-gh-ico') . '<span class="n-sc-gh-body"><b>' . $e($repo) . '</b><em data-gh-desc>' . I18n::e('GitHub 仓库') . '</em><span class="n-sc-gh-meta"><span data-gh-lang></span><span>' . View::icon('star') . '<i data-gh-stars>—</i></span><span>' . View::icon('share') . '<i data-gh-forks>—</i></span></span></span></a>';
         }
         return '';
     }
