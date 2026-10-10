@@ -13,3 +13,10 @@
 .n-hidden{display:none!important}
 .typecho-option textarea.n-admin-item{min-height:96px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
 .n-admin-preview{display:block;margin-top:6px;max-height:80px;max-width:240px;border-radius:8px;border:1px solid #e5e7eb;background:#fff}
+.n-admin-io{display:flex;gap:8px;margin-left:auto}
+.n-admin-io button,.n-admin-io label{appearance:none;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.12);color:#fff;font-size:12px;padding:5px 12px;border-radius:999px;cursor:pointer;line-height:1.4}
+.n-admin-io button:hover,.n-admin-io label:hover{background:rgba(255,255,255,.25)}
+.n-admin-io+.n-admin-link{margin-left:12px}
+.n-admin-note{margin:10px 0 0;padding:10px 14px;border-radius:10px;background:#ecfdf5;color:#065f46;font-size:13px;line-height:1.6}
+.n-admin-note.is-bad{background:#fef2f2;color:#991b1b}
+ul.typecho-option.n-admin-changed{box-shadow:inset 3px 0 0 #3b82f6;background:#eff6ff;border-radius:8px}

@@ -13,3 +13,11 @@ test('Admin escapes description before handing to Typecho', function () {
     $src = file_get_contents(NIMBUS_DIR . '/core/Admin.php');
     assert_true(strpos($src, "\$desc = View::e(") !== false);
 });
+test('多选项保存：读取提交值、过滤未知选项、保留全部取消占位', function () {
+    $s = \Nimbus\Admin::normalize(['CyberEffects' => null, 'Motion' => 'full'], ['CyberEffects' => ['-', 'rain', 'evil<script>', 'trail', 'rain']]);
+    assert_eq(['-', 'rain', 'trail'], $s['CyberEffects']);
+    assert_eq('full', $s['Motion']);
+    assert_eq(['-'], \Nimbus\Admin::normalize([], ['CyberEffects' => ['-']])['CyberEffects']);
+    assert_eq(null, \Nimbus\Admin::normalize(['CyberEffects' => null], [])['CyberEffects']);
+    assert_eq(null, \Nimbus\Admin::normalize(['CyberEffects' => null], ['CyberEffects' => 'rain'])['CyberEffects']);
+});

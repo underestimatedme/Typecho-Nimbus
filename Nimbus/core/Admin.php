@@ -8,6 +8,35 @@ final class Admin
 {
     const GROUPS = ['Site', 'Index', 'Post', 'Sidebar', 'Appearance', 'Media', 'Advanced'];
 
+    /**
+     * 多选项：Typecho 只有在已保存值是数组时才接受请求里的数组，首次保存会丢失；这里直接读取提交值，
+     * 只保留声明过的选项（以及占位值「-」，表示全部取消）。
+     * @param array<string,mixed> $settings
+     * @param array<string,mixed> $post
+     */
+    public static function normalize(array $settings, array $post): array
+    {
+        foreach (self::GROUPS as $g) {
+            $cls = 'Nimbus\\Config\\' . $g;
+            foreach ($cls::items() as $it) {
+                if ($it['type'] !== 'checkbox' || !isset($post[$it['name']]) || !is_array($post[$it['name']])) continue;
+                $allowed = array_merge(array_map('strval', array_keys($it['options'] ?? [])), ['-']);
+                $settings[$it['name']] = array_values(array_unique(array_intersect(array_map('strval', $post[$it['name']]), $allowed)));
+            }
+        }
+        return $settings;
+    }
+
+    public static function save(array $settings, bool $isInit): void
+    {
+        if (!$isInit) $settings = self::normalize($settings, $_POST);
+        $db = \Typecho_Db::get();
+        $name = 'theme:' . (string)\Helper::options()->theme;
+        $exists = $db->fetchRow($db->select('name')->from('table.options')->where('name = ? AND user = 0', $name)->limit(1));
+        if ($exists) $db->query($db->update('table.options')->rows(['value' => serialize($settings)])->where('name = ? AND user = 0', $name));
+        else $db->query($db->insert('table.options')->rows(['name' => $name, 'user' => 0, 'value' => serialize($settings)]));
+    }
+
     public static function render($form): void
     {
         $url = \Helper::options()->themeUrl . '/assets';

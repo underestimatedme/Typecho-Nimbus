@@ -11,6 +11,12 @@ function themeConfig($form)
     \Nimbus\Admin::render($form);
 }
 
+/** 保存主题设置（修正 Typecho 对从未保存过的多选项一律存为空值的问题）。 */
+function themeConfigHandle(array $settings, bool $isInit)
+{
+    \Nimbus\Admin::save($settings, $isInit);
+}
+
 function themeFields($layout)
 {
     \Nimbus\Config\Fields::render($layout);
