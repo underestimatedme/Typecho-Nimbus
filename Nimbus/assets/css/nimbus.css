@@ -27,6 +27,7 @@
 @import url("components/comment.css") layer(components);
 @import url("components/shortcode.css") layer(components);
 @import url("components/player.css") layer(components);
+@import url("components/poster.css") layer(components);
 @import url("pages/post.css") layer(pages);
 @import url("pages/archive.css") layer(pages);
 @import url("pages/links.css") layer(pages);

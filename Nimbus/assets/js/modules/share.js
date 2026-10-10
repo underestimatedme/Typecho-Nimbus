@@ -19,6 +19,11 @@ export function init(root = document) {
     t && unbind.push(on(t, 'click', (e) => { e.stopPropagation(); box.classList.toggle('is-open'); }));
     const c = qs('[data-share-copy]', box);
     c && unbind.push(on(c, 'click', () => { copy(box.dataset.url); box.classList.remove('is-open'); }));
+    const p = qs('[data-share-poster]', box);
+    p && unbind.push(on(p, 'click', () => {
+      box.classList.remove('is-open');
+      import('./poster.js').then((m) => m.open(box)).catch(() => toast('海报生成失败'));
+    }));
   });
   unbind.push(on(document, 'click', () => qsa('.n-share.is-open').forEach((b) => b.classList.remove('is-open'))));
   qsa('[data-copy-link]', root).forEach((a) => unbind.push(on(a, 'click', (e) => { e.preventDefault(); copy(a.href); })));
