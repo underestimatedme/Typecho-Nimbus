@@ -13,3 +13,7 @@ test('ua parse', function () {
     assert_eq('Edge', $r['browser']); assert_eq('Windows', $r['os']);
     assert_eq('', Comment::parseUa('')['browser']);
 });
+test('GitHub noreply 邮箱使用 GitHub 头像', function () {
+    assert_eq('https://avatars.githubusercontent.com/u/583231?s=80&v=4', \Nimbus\Comment::avatarUrl('583231+octocat@users.noreply.github.com', 80, 'https://cravatar.cn/avatar'));
+    assert_true(strpos(\Nimbus\Comment::avatarUrl('octocat@users.noreply.github.com', 80, 'https://cravatar.cn/avatar'), 'cravatar.cn') !== false);
+});

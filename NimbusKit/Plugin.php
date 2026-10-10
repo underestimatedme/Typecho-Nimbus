@@ -7,6 +7,7 @@ use Typecho\Widget\Helper\Form\Element\Text as TextInput;
 use Typecho\Widget\Helper\Form\Element\Password;
 use Typecho\Widget\Helper\Form\Element\Radio;
 use Typecho\Widget\Helper\Form\Element\Checkbox;
+use Typecho\Widget\Helper\Form\Element\Hidden;
 use Utils\Helper;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -36,6 +37,7 @@ class Plugin implements PluginInterface
         \Typecho\Plugin::factory('Widget_Feedback')->finishComment = Hooks::class . '::finishComment';
         // AJAX 响应放在最后（权重 99），保证其他插件的 finishComment 钩子都已执行
         \Typecho\Plugin::factory('Widget_Feedback')->finishComment_99 = Hooks::class . '::ajaxRespond';
+        \Typecho\Plugin::factory('Widget_Feedback')->comment = GitHubAuth::class . '::filterComment';
         \Typecho\Plugin::factory('Widget_Comments_Edit')->finishComment = Hooks::class . '::finishComment';
         \Typecho\Plugin::factory('Widget_Comments_Edit')->mark = Hooks::class . '::mark';
         return _t('NimbusKit 已启用：数据表已就绪，可在「管理 → Nimbus」中管理说说、友链与相册。');
@@ -99,6 +101,12 @@ class Plugin implements PluginInterface
         $form->addInput(new TextInput('adminMail', null, '', _t('站长收件地址'), _t('留空使用文章作者的邮箱。')));
         $form->addInput(new Radio('notifyAdmin', ['1' => '是', '0' => '否'], '1', _t('新评论通知站长')));
         $form->addInput(new Radio('notifyReply', ['1' => '是', '0' => '否'], '1', _t('回复通知被回复者'), _t('只在回复已通过审核时发送。')));
+        $cb = rtrim((string)\Helper::options()->index, '/') . '/nimbus-api/github-callback';
+        $form->addInput(new TextInput('githubClientId', null, '', _t('GitHub 登录 · Client ID'), _t('在 GitHub「Settings → Developer settings → OAuth Apps」新建应用，回调地址（Authorization callback URL）填写：') . htmlspecialchars($cb, ENT_QUOTES, 'UTF-8') . _t('。Client ID 与 Secret 都填写后，评论区出现「GitHub 登录」按钮。')));
+        $form->addInput(new Password('githubClientSecret', null, '', _t('GitHub 登录 · Client Secret'), _t('只保存在服务端，不会下发给浏览器。')));
+        $form->addInput(new Radio('githubOnly', ['0' => '否', '1' => '是'], '0', _t('仅允许 GitHub 用户评论'), _t('开启后，未登录 GitHub 的访客无法评论（已登录的站长不受影响）。')));
+        $form->addInput(new Hidden('githubBase', null, 'https://github.com'));
+        $form->addInput(new Hidden('githubApi', null, 'https://api.github.com'));
         $form->addInput(new Radio('dropOnDeactivate', ['0' => '保留数据', '1' => '删除全部数据'], '0', _t('禁用插件时'), _t('选择「删除」后，禁用插件会清空说说、友链、相册、浏览量与点赞，无法恢复。')));
     }
 

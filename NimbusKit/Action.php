@@ -25,6 +25,15 @@ class Action extends \Widget\Base
                 case 'search':
                     $this->search();
                     break;
+                case 'github-login':
+                    GitHubAuth::login($this->request, $this->response);
+                    break;
+                case 'github-callback':
+                    GitHubAuth::callback($this->request, $this->response);
+                    break;
+                case 'github-logout':
+                    GitHubAuth::logout($this->request, $this->response);
+                    break;
                 default:
                     $this->fail('not found', 404);
             }

@@ -40,15 +40,32 @@ $noun = $wall ? '留言' : '评论';
     </div>
     <form class="n-comment-form" id="n-comment-form" method="post" action="<?php $this->commentUrl(); ?>" data-comment-form data-ajax="<?= Kit::has('ajaxComment') ? '1' : '0' ?>">
       <input type="hidden" name="_" value="<?= View::e($this->security->getToken($this->request->getRequestUrl())) ?>">
+      <?php $gh = $this->user->hasLogin() ? null : Kit::github($this->permalink . '#comments'); $ghUser = $gh['user'] ?? null; $gated = $gh && $gh['only'] && !$ghUser; ?>
       <?php if ($this->user->hasLogin()): ?>
       <p class="n-comment-logged">以 <b><?= View::e($this->user->screenName) ?></b> 的身份评论 · <a href="<?php $this->options->logoutUrl(); ?>" data-no-router>退出</a></p>
+      <?php elseif ($ghUser): ?>
+      <div class="n-gh-who">
+        <img src="<?= View::e($ghUser['avatar'] . '&s=64') ?>" alt="" width="32" height="32" loading="lazy">
+        <span>以 <b><?= View::e($ghUser['name']) ?></b> <em>@<?= View::e($ghUser['login']) ?></em> 的身份评论</span>
+        <a href="<?= View::e($gh['logout']) ?>" data-no-router>退出</a>
+        <input type="hidden" name="author" value="<?= View::e($ghUser['name']) ?>">
+        <input type="hidden" name="mail" value="<?= View::e($ghUser['mail']) ?>">
+        <input type="hidden" name="url" value="<?= View::e($ghUser['url']) ?>">
+      </div>
+      <?php elseif ($gh && $gh['only']): ?>
+      <div class="n-gh-gate">
+        <p>本站仅允许 GitHub 用户<?= $noun ?>，登录后即可发表。</p>
+        <a class="n-btn n-btn-primary n-gh-btn" href="<?= View::e($gh['login']) ?>" data-no-router><?= View::icon('github') ?>使用 GitHub 登录</a>
+      </div>
       <?php else: ?>
+      <?php if ($gh): ?><div class="n-gh-bar"><a class="n-btn n-btn-sm n-gh-btn" href="<?= View::e($gh['login']) ?>" data-no-router><?= View::icon('github') ?>GitHub 登录</a><span>或直接填写昵称与邮箱</span></div><?php endif; ?>
       <div class="n-comment-fields">
         <label><span>昵称<i>*</i></span><input type="text" name="author" value="<?php $this->remember('author'); ?>" required placeholder="怎么称呼你"></label>
         <label><span>邮箱<i>*</i></span><input type="email" name="mail" value="<?php $this->remember('mail'); ?>" <?= $this->options->commentsRequireMail ? 'required' : '' ?> placeholder="不会公开"></label>
         <label><span>网址</span><input type="url" name="url" value="<?php $this->remember('url'); ?>" <?= $this->options->commentsRequireURL ? 'required' : '' ?> placeholder="https://"></label>
       </div>
       <?php endif; ?>
+      <?php if (!$gated): ?>
       <div class="n-comment-editor">
         <textarea name="text" id="n-comment-text" rows="5" required placeholder="说点什么…（支持 Markdown）" data-comment-text><?php $this->remember('text'); ?></textarea>
         <div class="n-comment-preview" data-comment-preview hidden></div>
@@ -60,6 +77,7 @@ $noun = $wall ? '留言' : '评论';
         <button type="submit" class="n-btn n-btn-primary" data-comment-submit><?= View::icon('arrow-right') ?>发表</button>
       </div>
       <div class="n-emoji-panel" data-emoji-panel hidden></div>
+      <?php endif; ?>
     </form>
   </div>
   <?php else: ?>

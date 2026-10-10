@@ -23,6 +23,11 @@ final class Config
         'notifyAdmin' => '1',
         'notifyReply' => '1',
         'dropOnDeactivate' => '0',
+        'githubClientId' => '',
+        'githubClientSecret' => '',
+        'githubOnly' => '0',
+        'githubBase' => 'https://github.com',
+        'githubApi' => 'https://api.github.com',
     ];
     /** @var array|null */
     private static $cache = null;

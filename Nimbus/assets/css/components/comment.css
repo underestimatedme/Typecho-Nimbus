@@ -78,3 +78,17 @@ a.n-comment-name:hover { color: var(--accent-text); }
 .n-comment.is-new > .n-comment-main { animation: n-new-comment 2.4s var(--ease); border-radius: 12px; }
 @keyframes n-shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
 @keyframes n-new-comment { 0% { background: var(--accent-soft); box-shadow: 0 0 0 8px var(--accent-soft); } 100% { background: transparent; box-shadow: 0 0 0 8px transparent; } }
+/* GitHub 登录 */
+.n-gh-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: var(--text-xs); color: var(--muted); }
+.n-gh-btn { gap: 6px; }
+.n-gh-btn:not(.n-btn-primary) { background: #24292f; color: #fff; border-color: transparent; }
+.n-gh-btn:not(.n-btn-primary):hover { background: #32383f; color: #fff; }
+:root[data-theme="dusk"] .n-gh-btn:not(.n-btn-primary), :root[data-theme="cyber"] .n-gh-btn:not(.n-btn-primary) { background: #f6f8fa; color: #24292f; }
+.n-gh-who { display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 8px; margin-bottom: 12px; border-radius: var(--r-pill); background: var(--chip); font-size: var(--text-sm); color: var(--fg-soft); width: fit-content; max-width: 100%; }
+.n-gh-who img { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 0 2px var(--card); }
+.n-gh-who span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.n-gh-who b { color: var(--fg-strong); }
+.n-gh-who em { font-style: normal; color: var(--muted); }
+.n-gh-who a { color: var(--accent-text); font-size: var(--text-xs); flex-shrink: 0; }
+.n-gh-gate { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 28px 16px; border-radius: var(--r); border: 1px dashed var(--line); text-align: center; color: var(--muted); font-size: var(--text-sm); }
+.n-gh-gate p { margin: 0; }

@@ -8,6 +8,10 @@ final class Comment
 {
     public static function avatarUrl(string $mail, int $size, string $mirror): string
     {
+        // GitHub 登录评论使用 {id}+{login}@users.noreply.github.com，直接用 GitHub 头像
+        if (preg_match('/^(\d{1,12})\+[A-Za-z0-9-]{1,39}@users\.noreply\.github\.com$/i', trim($mail), $m)) {
+            return 'https://avatars.githubusercontent.com/u/' . $m[1] . '?s=' . $size . '&v=4';
+        }
         $hash = md5(strtolower(trim($mail)));
         return rtrim($mirror, '/') . '/' . $hash . '?s=' . $size . '&d=identicon';
     }

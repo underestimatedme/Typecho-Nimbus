@@ -77,6 +77,18 @@ final class Api
         return ['daily' => Store::daily(30), 'totals' => Store::totals(), 'top' => Store::topPosts('views', 10)];
     }
 
+    /** GitHub 登录状态：未配置返回 null。 */
+    public static function github(string $back = ''): ?array
+    {
+        if (!GitHubAuth::enabled()) return null;
+        return [
+            'user' => GitHubAuth::current(),
+            'only' => Config::get('githubOnly') === '1',
+            'login' => GitHubAuth::endpoint('github-login', $back),
+            'logout' => GitHubAuth::endpoint('github-logout', $back),
+        ];
+    }
+
     public static function likesFeature(): bool
     {
         return Config::feature('likes');

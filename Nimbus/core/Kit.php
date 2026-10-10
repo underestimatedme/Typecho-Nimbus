@@ -69,6 +69,13 @@ final class Kit
         return is_array($v) ? $v : [];
     }
 
+    /** GitHub 登录状态（未配置或插件过旧返回 null）。@return array{user:?array,only:bool,login:string,logout:string}|null */
+    public static function github(string $back = ''): ?array
+    {
+        $v = self::call('github', [$back]);
+        return is_array($v) ? $v : null;
+    }
+
     public static function has(string $feature): bool
     {
         return in_array($feature, self::features(), true);
