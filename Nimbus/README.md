@@ -88,7 +88,8 @@ URL 加 `?nimbus_theme=cyber` 可强制并记住某个皮肤，便于分享。
 ## 开发与测试
 
 ```bash
-bash tests/dev-site.sh      # 建本地 Typecho 测试站（SQLite）并灌入示例数据
+bash tests/serve.sh         # 启动本地测试站 http://localhost:8099（首次自动安装 Typecho 并灌入示例数据）
+bash tests/dev-site.sh      # 仅重建 / 补齐测试站与示例数据
 bash tests/lint.sh          # php -l + PHP 7.4 语法检查
 php tests/run.php           # 单元测试
 node --test tests/js/*.test.mjs

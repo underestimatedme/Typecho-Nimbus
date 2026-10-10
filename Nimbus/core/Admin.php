@@ -46,18 +46,20 @@ final class Admin
     {
         $opts = isset($it['options']) ? $it['options'] : null;
         $default = isset($it['default']) ? $it['default'] : '';
-        $desc = isset($it['description']) ? $it['description'] : '';
+        // Typecho 把说明当 HTML 输出；统一转义，避免说明里的 <script> 等吞掉后续表单
+        $desc = View::e(isset($it['description']) ? $it['description'] : '');
+        $label = View::e($it['label']);
         switch ($it['type']) {
             case 'textarea':
-                return new \Typecho_Widget_Helper_Form_Element_Textarea($it['name'], null, $default, $it['label'], $desc);
+                return new \Typecho_Widget_Helper_Form_Element_Textarea($it['name'], null, $default, $label, $desc);
             case 'radio':
-                return new \Typecho_Widget_Helper_Form_Element_Radio($it['name'], $opts, $default, $it['label'], $desc);
+                return new \Typecho_Widget_Helper_Form_Element_Radio($it['name'], $opts, $default, $label, $desc);
             case 'select':
-                return new \Typecho_Widget_Helper_Form_Element_Select($it['name'], $opts, $default, $it['label'], $desc);
+                return new \Typecho_Widget_Helper_Form_Element_Select($it['name'], $opts, $default, $label, $desc);
             case 'checkbox':
-                return new \Typecho_Widget_Helper_Form_Element_Checkbox($it['name'], $opts, $default === '' ? [] : (array)$default, $it['label'], $desc);
+                return new \Typecho_Widget_Helper_Form_Element_Checkbox($it['name'], $opts, $default === '' ? [] : (array)$default, $label, $desc);
             default:
-                return new \Typecho_Widget_Helper_Form_Element_Text($it['name'], null, $default, $it['label'], $desc);
+                return new \Typecho_Widget_Helper_Form_Element_Text($it['name'], null, $default, $label, $desc);
         }
     }
 }
