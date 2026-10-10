@@ -4,7 +4,7 @@
 
 - [`Nimbus/`](Nimbus/) — 主题本体，复制到 `usr/themes/Nimbus` 即可使用。详见 [Nimbus/README.md](Nimbus/README.md)。
 - [`NimbusKit/`](NimbusKit/) — 配套插件，复制到 `usr/plugins/NimbusKit`：浏览量、点赞、即时搜索、AJAX 评论、邮件通知、说说、友链、相册、Sitemap。详见 [NimbusKit/README.md](NimbusKit/README.md)。
-- [`docs/`](docs/) — 设计文档与用户手册。
+- [`docs/`](docs/) — 设计文档、用户手册与[路线图](docs/ROADMAP.md)。
 - [`tests/`](tests/) — 本地测试站脚本、单元测试、冒烟测试。
 
 ## 快速开始
