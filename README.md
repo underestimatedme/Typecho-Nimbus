@@ -3,7 +3,7 @@
 开源免费的 Typecho 主题。设计灵感来自 Cuteen，代码独立实现，MIT 许可。
 
 - [`Nimbus/`](Nimbus/) — 主题本体，复制到 `usr/themes/Nimbus` 即可使用。详见 [Nimbus/README.md](Nimbus/README.md)。
-- [`NimbusKit/`](NimbusKit/) — 配套插件，复制到 `usr/plugins/NimbusKit`：浏览量、点赞、即时搜索、AJAX 评论、邮件通知、说说、友链、相册、Sitemap。详见 [NimbusKit/README.md](NimbusKit/README.md)。
+- [`NimbusKit/`](NimbusKit/) — 配套插件，复制到 `usr/plugins/NimbusKit`：浏览量、点赞、即时搜索、AJAX 评论、邮件通知、说说、友链、相册、收藏夹、项目、GitHub 登录评论、IP 属地、Sitemap。详见 [NimbusKit/README.md](NimbusKit/README.md)。
 - [`docs/`](docs/) — 设计文档、用户手册与[路线图](docs/ROADMAP.md)。
 - [`tests/`](tests/) — 本地测试站脚本、单元测试、冒烟测试。
 

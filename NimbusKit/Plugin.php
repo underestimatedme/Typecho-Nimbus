@@ -13,7 +13,7 @@ use Utils\Helper;
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 
 /**
- * Nimbus 主题配套插件：浏览量、点赞、即时搜索、AJAX 评论、邮件通知、说说、友链、相册、Sitemap
+ * Nimbus 主题配套插件：浏览量、点赞、即时搜索、AJAX 评论、邮件通知、说说、友链、相册、收藏夹、项目、GitHub 登录、IP 属地、Sitemap
  *
  * @package NimbusKit
  * @author Nimbus Contributors
@@ -33,7 +33,7 @@ class Plugin implements PluginInterface
         Helper::addRoute('nimbus_api', '/nimbus-api/[endpoint]', Action::class, 'dispatch', 'index');
         Helper::addRoute('nimbus_sitemap', '/sitemap.xml', Action::class, 'sitemap', 'index');
         Helper::addAction('nimbus-kit', AdminAction::class);
-        Helper::addPanel(3, self::PANEL, 'Nimbus', '说说、友链、相册与统计', 'administrator');
+        Helper::addPanel(3, self::PANEL, 'Nimbus', '说说、友链、相册、收藏夹、项目与统计', 'administrator');
         \Typecho\Plugin::factory('Widget_Feedback')->finishComment = Hooks::class . '::finishComment';
         // AJAX 响应放在最后（权重 99），保证其他插件的 finishComment 钩子都已执行
         \Typecho\Plugin::factory('Widget_Feedback')->finishComment_99 = Hooks::class . '::ajaxRespond';
@@ -82,7 +82,7 @@ class Plugin implements PluginInterface
     public static function config(Form $form)
     {
         echo '<div style="margin:0 0 16px;padding:12px 16px;border-radius:10px;background:#eff6ff;color:#1e3a5f;line-height:1.7">'
-            . 'NimbusKit v' . Api::VERSION . '。说说、友链、相册与统计在「管理 → Nimbus」中管理，测试邮件也在那里发送。</div>';
+            . 'NimbusKit v' . Api::VERSION . '。说说、友链、相册、收藏夹、项目与统计在「管理 → Nimbus」中管理，测试邮件也在那里发送。</div>';
 
         $f = new Checkbox('features', [
             'views' => '浏览量统计', 'likes' => '点赞', 'search' => '即时搜索',

@@ -5,7 +5,7 @@
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 
-if (!defined('NIMBUS_VERSION')) define('NIMBUS_VERSION', '1.1.0');
+if (!defined('NIMBUS_VERSION')) define('NIMBUS_VERSION', '1.2.0');
 if (!defined('NIMBUS_DIR')) define('NIMBUS_DIR', dirname(__DIR__));
 
 if (version_compare(PHP_VERSION, '7.4.0', '<')) {

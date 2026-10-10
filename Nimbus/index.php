@@ -4,7 +4,7 @@
  *
  * @package Nimbus
  * @author Nimbus Contributors
- * @version 1.1.0
+ * @version 1.2.0
  * @link https://github.com/underestimatedme/Nimbus
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;

@@ -33,10 +33,12 @@ run_checks() { # $1 port $2 label
   r=$(curl -s "$API/search?q=Typecho"); echo "$r" | grep -q '"ok":true' && ok "search" "$2" || bad "search $r" "$2"
   r=$(curl -s "$API/search?q=typecho"); echo "$r" | grep -q '"url"' && ok "search case-insensitive" "$2" || bad "search case-insensitive $r" "$2"
   c=$(curl -s -o "$W/sm.xml" -w '%{http_code}' "$B/index.php/sitemap.xml"); { [ "$c" = 200 ] && grep -q '<urlset' "$W/sm.xml"; } && ok "sitemap" "$2" || bad "sitemap $c" "$2"
-  for u in / archives/1/ moments.html albums.html "albums.html?album=1" links.html; do
+  for u in / archives/1/ moments.html albums.html "albums.html?album=1" links.html bookmarks.html projects.html stats.html messages.html timeline.html; do
     c=$(curl -s -o "$W/p.html" -w '%{http_code}' "$B/index.php/$u")
     { [ "$c" = 200 ] && ! grep -qE 'Warning:|Fatal error|Notice:|Database Query Error' "$W/p.html"; } && ok "page /$u" "$2" || bad "page /$u ($c)" "$2"
   done
+  grep -q 'n-ch-line' <(curl -s "$B/index.php/stats.html") && ok "stats daily views chart" "$2" || bad "stats daily views chart" "$2"
+  grep -q 'GitHub' <(curl -s "$B/index.php/bookmarks.html") && grep -q 'n-project' <(curl -s "$B/index.php/projects.html") && ok "bookmarks/projects data" "$2" || bad "bookmarks/projects data" "$2"
   rm -f "$J"
 }
 
@@ -46,11 +48,13 @@ seed_sql() { # 示例数据，SQL 通用写法；$1 时间戳
 INSERT INTO typecho_nimbus_moments (content,images,created,status) VALUES ('多数据库测试','["https://picsum.photos/id/1015/400/400"]',$t,'publish');
 INSERT INTO typecho_nimbus_links (name,url,avatar,description,sort,status,created) VALUES ('Link','https://example.com','','d',1,'publish',0);
 INSERT INTO typecho_nimbus_albums (title,cover,description,photos,sort,created) VALUES ('Album','','','[{"url":"https://picsum.photos/id/1016/400/300","caption":"c"}]',1,0);
+INSERT INTO typecho_nimbus_bookmarks (group_name,name,url,icon,description,sort,status,created) VALUES ('开发','GitHub','https://github.com','','代码托管',1,'publish',0);
+INSERT INTO typecho_nimbus_projects (name,description,cover,url,repo,tags,sort,status,created) VALUES ('Nimbus','主题','','https://example.com','https://github.com/x/y','PHP, CSS',1,'publish',0);
 SQL
 }
 pages_sql() { # $1 时间戳 $2 order 列引用
   local t=$1 o=$2 a=$3
-  for row in "说说|moments|page-moments.php" "相册|albums|page-albums.php" "友链|links|page-links.php"; do
+  for row in "说说|moments|page-moments.php" "相册|albums|page-albums.php" "友链|links|page-links.php" "收藏夹|bookmarks|page-bookmarks.php" "项目|projects|page-projects.php" "统计|stats|page-stats.php" "留言板|messages|page-messages.php" "时间线|timeline|page-timeline.php"; do
     IFS='|' read -r title slug tpl <<< "$row"
     echo "INSERT INTO typecho_contents (title,slug,created,modified,text,$o,$a,template,type,status,parent) VALUES ('$title','$slug',$t,$t,'x',0,1,'$tpl','page','publish',0);"
   done

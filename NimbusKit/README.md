@@ -16,6 +16,11 @@
 | 说说 | 后台发布文字 + 多图动态，前台时间线展示 |
 | 友链 | 后台管理，友链页自动读取 |
 | 相册 | 后台管理相册与照片，前台网格 + 灯箱浏览 |
+| 收藏夹 | 后台分组管理常用站点，前台网址导航页（分组标签 + 即时过滤） |
+| 项目 | 后台管理项目（封面、技术栈、演示 / 源码链接），前台项目展示页 |
+| GitHub 登录评论 | 访客用 GitHub 账号登录后评论，昵称、头像、主页自动填写且不可伪造；可设「仅 GitHub 用户可评论」 |
+| IP 属地 | 评论头显示省份（国外显示国家），需自行放入 ip2region 数据文件 |
+| 浏览趋势 | 按天记录浏览量，供主题统计看板绘制近 30 天趋势 |
 | Sitemap | `/sitemap.xml`，含首页、文章、独立页、分类、标签 |
 
 ## 安装
@@ -25,9 +30,11 @@
 3. 后台「控制台 → 插件」启用。启用时自动建表，重复启用安全。
 4. 在插件设置里勾选要开启的功能、填写邮件配置。
 
-说说、友链、相册与统计在「管理 → Nimbus」中管理，测试邮件也在那里发送。
+说说、友链、相册、收藏夹、项目与统计在「管理 → Nimbus」中管理，测试邮件也在那里发送。
 
-前台展示说说和相册：新建独立页面，「自定义模板」分别选择「说说」「相册」（Nimbus 主题提供）。
+**从 1.0 升级**：覆盖目录后在「控制台 → 插件」禁用再启用一次 NimbusKit，以创建新表并注册新钩子。设置会自动保留。
+
+前台展示：新建独立页面，「自定义模板」选择「说说」「相册」「收藏夹」「项目」「统计」（Nimbus 主题提供）。
 
 ## 邮件配置示例
 
@@ -39,6 +46,18 @@
 | Outlook | smtp.office365.com | 587 | STARTTLS | 账号密码或应用密码 |
 
 邮件在评论响应发回浏览器之后才发送，不会拖慢评论提交；发送失败只写入 PHP 错误日志，不影响评论。
+
+## GitHub 登录评论
+
+1. 打开 GitHub「Settings → Developer settings → OAuth Apps → New OAuth App」。
+2. Homepage URL 填站点地址；Authorization callback URL 填插件设置页提示的地址（形如 `https://你的站点/index.php/nimbus-api/github-callback`，开启伪静态时没有 `index.php`）。
+3. 把生成的 Client ID 与 Client Secret 填进插件设置并保存，评论区就会出现「GitHub 登录」按钮。
+
+安全设计：登录请求带签名和 10 分钟有效期，并与当前浏览器绑定；登录后只回跳到本站地址；GitHub 的访问令牌只在服务端用一次、不保存。身份保存在签名 cookie（30 天）里，评论时由服务端覆盖昵称、邮箱、网址。没有公开邮箱的用户使用 `{id}+{login}@users.noreply.github.com`，主题会直接显示其 GitHub 头像。
+
+## IP 属地
+
+把 [ip2region](https://github.com/lionsoul2014/ip2region) 的 IPv4 数据文件 `ip2region.xdb` 放到 `usr/plugins/NimbusKit/data/`。只显示省份或国家，内网地址显示「本地」，不展示 IP 本身。数据文件不随插件分发，缺失时功能自动关闭。
 
 ## 接口
 
@@ -54,10 +73,12 @@
 
 ## 主题开发者
 
-主题通过静态门面 `NimbusKit_Api` 读取数据：`VERSION`、`features()`、`views($cid)`、`likes($cid)`、`hotPosts($limit)`、`links()`、`moments($page, $size)`、`albums()`。功能关闭时对应方法返回 `null`。
+主题通过静态门面 `NimbusKit_Api` 读取数据：`VERSION`、`features()`、`views($cid)`、`likes($cid)`、`hotPosts($limit)`、`links()`、`moments($page, $size)`、`albums()`、`bookmarks()`、`projects()`、`stats()`、`region($ip)`、`github($back)`。功能关闭时对应方法返回 `null`。
+
+前台 GitHub 登录相关端点：`github-login?back=`、`github-callback`、`github-logout?back=`。
 
 ## 数据与卸载
 
-数据表：`nimbus_stats`、`nimbus_like_log`、`nimbus_moments`、`nimbus_links`、`nimbus_albums`（带 Typecho 表前缀）。
+数据表：`nimbus_stats`、`nimbus_like_log`、`nimbus_moments`、`nimbus_links`、`nimbus_albums`、`nimbus_bookmarks`、`nimbus_projects`、`nimbus_daily`（带 Typecho 表前缀）。
 
 禁用插件默认**保留**数据。若要彻底清除，先在插件设置里把「禁用插件时」改为「删除全部数据」并保存，再禁用。
