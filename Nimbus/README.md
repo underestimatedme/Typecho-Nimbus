@@ -8,6 +8,10 @@
 | --- | --- | --- |
 | ![sky](../docs/screenshots/home-sky.png) | ![dusk](../docs/screenshots/home-dusk.png) | ![cyber](../docs/screenshots/home-cyber.png) |
 
+| 音乐 | 统计 | 时间线 | 收藏夹 |
+| --- | --- | --- | --- |
+| ![music](../docs/screenshots/music-dusk.png) | ![stats](../docs/screenshots/stats-sky.png) | ![timeline](../docs/screenshots/timeline-cyber.png) | ![bookmarks](../docs/screenshots/bookmarks-sky.png) |
+
 ## 特性
 
 - **三套皮肤**：晴空（白天）、暮色（夜间）、赛博朋克。一键切换，首屏无闪烁，可跟随系统。
