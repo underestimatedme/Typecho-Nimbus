@@ -2,6 +2,7 @@
 /** 图文交错卡片。变量：$post, $index */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 use Nimbus\View;
+use Nimbus\I18n;
 use Nimbus\Post;
 use Nimbus\Options;
 use Nimbus\Kit;
@@ -24,8 +25,8 @@ $cat = isset($post->categories[0]) ? $post->categories[0] : null;
     <div class="n-card-foot">
       <?php if ($views !== null): ?><span><?= View::icon('eye') ?><?= View::num($views) ?></span><?php endif; ?>
       <span><?= View::icon('comment') ?><?= (int)$post->commentsNum ?></span>
-      <?php if (Options::bool('ShowReadingTime')): ?><span><?= View::icon('clock') ?><?= Post::readingTime($words) ?> 分钟</span><?php endif; ?>
-      <span class="n-card-more">阅读全文<?= View::icon('arrow-right') ?></span>
+      <?php if (Options::bool('ShowReadingTime')): ?><span><?= View::icon('clock') ?><?= I18n::e('{n} 分钟', ['n' => Post::readingTime($words)]) ?></span><?php endif; ?>
+      <span class="n-card-more"><?= I18n::e('阅读全文') ?><?= View::icon('arrow-right') ?></span>
     </div>
   </div>
 </article>

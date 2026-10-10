@@ -1,5 +1,5 @@
 // 搜索弹窗：Ctrl/Cmd+K 打开；无 Kit 时跳转原生搜索路径；有 Kit 时即时搜索
-import { qs, qsa, on, config, debounce } from './util.js';
+import { qs, qsa, on, config, debounce, tr } from './util.js';
 let unbind = [];
 let bound = false;
 
@@ -38,7 +38,7 @@ export function init(root = document) {
         const data = await r.json();
         const list = Array.isArray(data.data) ? data.data : [];
         results.innerHTML = '';
-        if (!list.length) { results.innerHTML = '<div class="n-search-hint">没有找到相关文章，回车使用站内搜索</div>'; }
+        if (!list.length) { results.innerHTML = '<div class="n-search-hint">' + tr('没有找到相关文章，回车使用站内搜索') + '</div>'; }
         list.forEach((p, i) => {
           const a = document.createElement('a'); a.href = String(p.url || '#'); if (i === 0) a.className = 'is-active';
           a.appendChild(document.createTextNode(String(p.title || '')));

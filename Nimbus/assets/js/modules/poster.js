@@ -1,5 +1,5 @@
 // 分享海报：Canvas 绘制标题、摘要、作者、日期、站点名与二维码，弹窗预览并可下载 PNG
-import { toast } from './util.js';
+import { toast, tr } from './util.js';
 import { drawQr } from '../lib/qr.js';
 
 const W = 600, PAD = 40, SCALE = 2;
@@ -123,8 +123,8 @@ async function render(data, withCover) {
   ctx.fillStyle = c.muted; ctx.font = `14px ${fontSans}`;
   ctx.fillText(wrap(ctx, [data.author, data.date].filter(Boolean).join(' · '), qx - PAD - 40, 1)[0] || '', PAD + 16, qy + 46);
   ctx.fillStyle = c.muted; ctx.font = `13px ${fontSans}`;
-  ctx.fillText('长按或扫描二维码', PAD, qy + 86);
-  ctx.fillText('阅读全文 →', PAD, qy + 106);
+  ctx.fillText(tr('长按或扫描二维码'), PAD, qy + 86);
+  ctx.fillText(tr('阅读全文 →'), PAD, qy + 106);
   return canvas;
 }
 
@@ -138,8 +138,8 @@ function ensureDialog() {
   if (dlg && document.body.contains(dlg)) return dlg;
   dlg = document.createElement('dialog');
   dlg.className = 'n-modal n-poster';
-  dlg.setAttribute('aria-label', '分享海报');
-  dlg.innerHTML = '<div class="n-modal-in n-poster-in"><div class="n-poster-view" data-pv><span class="n-poster-loading">正在生成海报…</span></div><div class="n-poster-act"><a class="n-btn n-btn-primary" data-pd download>下载图片</a><button type="button" class="n-btn" data-pc>关闭</button></div><p class="n-poster-tip">手机上可长按图片保存或分享</p></div>';
+  dlg.setAttribute('aria-label', tr('分享海报'));
+  dlg.innerHTML = '<div class="n-modal-in n-poster-in"><div class="n-poster-view" data-pv><span class="n-poster-loading">' + tr('正在生成海报…') + '</span></div><div class="n-poster-act"><a class="n-btn n-btn-primary" data-pd download>' + tr('下载图片') + '</a><button type="button" class="n-btn" data-pc>' + tr('关闭') + '</button></div><p class="n-poster-tip">' + tr('手机上可长按图片保存或分享') + '</p></div>';
   document.body.appendChild(dlg);
   dlg.querySelector('[data-pc]').addEventListener('click', () => dlg.close());
   dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
@@ -153,14 +153,14 @@ export async function open(box) {
   const data = { url: box.dataset.url || location.href, title: box.dataset.title || document.title, ...extra };
   const d = ensureDialog();
   const view = d.querySelector('[data-pv]'), dl = d.querySelector('[data-pd]');
-  view.innerHTML = '<span class="n-poster-loading">正在生成海报…</span>';
+  view.innerHTML = '<span class="n-poster-loading">' + tr('正在生成海报…') + '</span>';
   dl.removeAttribute('href');
   if (!d.open) d.showModal();
   let blob;
   try { blob = await toBlob(await render(data, true)); }
   catch (e) {
     // 封面跨域导致画布被污染时，改用皮肤渐变重画
-    try { blob = await toBlob(await render(data, false)); } catch (e2) { toast('海报生成失败'); d.close(); return; }
+    try { blob = await toBlob(await render(data, false)); } catch (e2) { toast(tr('海报生成失败')); d.close(); return; }
   }
   if (lastUrl) URL.revokeObjectURL(lastUrl);
   lastUrl = URL.createObjectURL(blob);

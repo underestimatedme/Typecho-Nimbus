@@ -6,6 +6,7 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 use Nimbus\Options;
 use Nimbus\View;
+use Nimbus\I18n;
 use Nimbus\Seo;
 use Nimbus\Kit;
 
@@ -29,9 +30,9 @@ if ($archive->is('index')) {
     $docTitle = $title . ($sub !== '' ? ' — ' . $sub : '');
 } else {
     $archiveTitle = View::t((string)$archive->getArchiveTitle());
-    if ($archive->is('search')) $archiveTitle = '搜索 ' . (string)$archive->getKeywords();
+    if ($archive->is('search')) $archiveTitle = I18n::t('搜索 {q}', ['q' => (string)$archive->getKeywords()]);
     if ($archive->is('single')) $archiveTitle = View::t($archive->title);
-    if ($page === 'error') $archiveTitle = '页面不存在';
+    if ($page === 'error') $archiveTitle = I18n::t('页面不存在');
     $docTitle = ($archiveTitle !== '' ? $archiveTitle . ' — ' : '') . $title;
 }
 
@@ -56,7 +57,8 @@ $config = [
     'mermaid' => (string)Options::get('MermaidEnable', 'auto'),
     'pagination' => (string)Options::get('Pagination', 'normal'),
     'debug' => Options::bool('Debug'),
-    'i18n' => ['copy' => '复制', 'copied' => '已复制', 'loadMore' => '加载更多', 'loading' => '加载中…', 'noMore' => '没有更多了', 'search' => '搜索', 'expand' => '展开全部', 'collapse' => '收起', 'linkCopied' => '链接已复制', 'toc' => '目录'],
+    'lang' => I18n::lang(),
+    'i18n' => (object)I18n::js(),
 ];
 if ($archive->is('single')) {
     $config['hasMath'] = isset($nimbusContent['hasMath']) ? $nimbusContent['hasMath'] : false;
@@ -64,7 +66,7 @@ if ($archive->is('single')) {
 }
 $favicon = (string)Options::get('Favicon', '');
 ?><!DOCTYPE html>
-<html lang="zh-CN" data-theme="<?= View::e($themeLight) ?>" data-radius="<?= View::e((string)Options::get('Radius', 'md')) ?>" data-motion="<?= View::e((string)Options::get('Motion', 'full')) ?>" data-font="<?= View::e($fontScheme) ?>" data-width="<?= View::e((string)Options::get('LayoutWidth', 'fluid')) ?>" data-fx="<?= View::e(implode(' ', array_diff(Options::list('CyberEffects'), ['-']))) ?>"<?= Options::bool('Mourning') ? ' data-mourning' : '' ?>>
+<html lang="<?= I18n::htmlLang() ?>" data-theme="<?= View::e($themeLight) ?>" data-radius="<?= View::e((string)Options::get('Radius', 'md')) ?>" data-motion="<?= View::e((string)Options::get('Motion', 'full')) ?>" data-font="<?= View::e($fontScheme) ?>" data-width="<?= View::e((string)Options::get('LayoutWidth', 'fluid')) ?>" data-fx="<?= View::e(implode(' ', array_diff(Options::list('CyberEffects'), ['-']))) ?>"<?= Options::bool('Mourning') ? ' data-mourning' : '' ?>>
 <head>
 <meta charset="<?php $o->charset(); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">

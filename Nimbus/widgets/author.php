@@ -3,6 +3,7 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 use Nimbus\Options;
 use Nimbus\View;
+use Nimbus\I18n;
 use Nimbus\Post;
 use Nimbus\Widgets;
 use Nimbus\Comment;
@@ -26,9 +27,9 @@ foreach (Options::list('SocialLinks') as $line) {
   <div class="n-author-name"><?= View::e($name) ?></div>
   <?php if ($bio !== ''): ?><div class="n-author-bio"><?= View::e($bio) ?></div><?php endif; ?>
   <div class="n-author-stats">
-    <a href="<?= View::e((string)\Helper::options()->siteUrl) ?>"><b data-count="<?= $counts['posts'] ?>"><?= $counts['posts'] ?></b><span>文章</span></a>
-    <div><b data-count="<?= $counts['comments'] ?>"><?= $counts['comments'] ?></b><span>评论</span></div>
-    <div><b data-count="<?= $counts['tags'] ?>"><?= $counts['tags'] ?></b><span>标签</span></div>
+    <a href="<?= View::e((string)\Helper::options()->siteUrl) ?>"><b data-count="<?= $counts['posts'] ?>"><?= $counts['posts'] ?></b><span><?= I18n::e('文章') ?></span></a>
+    <div><b data-count="<?= $counts['comments'] ?>"><?= $counts['comments'] ?></b><span><?= I18n::e('评论') ?></span></div>
+    <div><b data-count="<?= $counts['tags'] ?>"><?= $counts['tags'] ?></b><span><?= I18n::e('标签') ?></span></div>
   </div>
   <?php if (!empty($social)): ?>
   <div class="n-author-social">

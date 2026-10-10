@@ -1,6 +1,6 @@
 // 音乐播放器（单例）：悬浮播放器 + 音乐页视图共享同一个 <audio>
 // 播放器位于 #n-main 之外，无刷新切换页面时不会被替换，也不会重复初始化
-import { qs, qsa, on, config, storage, prefersReduced } from './util.js';
+import { qs, qsa, on, config, storage, prefersReduced, tr } from './util.js';
 
 const KEY = 'nimbus-music';
 const S = { ready: false, loading: null, list: [], i: 0, audio: null, subs: new Set(), ctx: null, analyser: null, wired: false, sameOrigin: false, lrc: new Map(), page: null };
@@ -11,7 +11,7 @@ export const track = () => S.list[S.i] || null;
 
 function normalize(items) {
   return (Array.isArray(items) ? items : []).map((x) => ({
-    title: String(x.title || x.name || '未命名'), artist: String(x.artist || x.author || ''),
+    title: String(x.title || x.name || tr('未命名')), artist: String(x.artist || x.author || ''),
     url: String(x.url || ''), cover: String(x.cover || x.pic || ''), lrc: String(x.lrc || ''),
   })).filter((x) => /^(https?:)?\/\//.test(x.url) || x.url.startsWith('/'));
 }

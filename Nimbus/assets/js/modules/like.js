@@ -1,5 +1,5 @@
 // 点赞：乐观更新 + 爱心飞散动效；已赞状态记在 localStorage
-import { qsa, on, config, storage, toast, prefersReduced } from './util.js';
+import { qsa, on, config, storage, toast, prefersReduced, tr } from './util.js';
 let unbind = [];
 
 function burst(btn) {
@@ -40,13 +40,13 @@ export function init(root = document) {
       try {
         const r = await fetch(api + '/like', { method: 'POST', body: new URLSearchParams({ cid: id, type }), credentials: 'same-origin', headers: { Accept: 'application/json' } });
         const d = await r.json();
-        if (!d.ok) throw new Error(d.error || '点赞失败');
+        if (!d.ok) throw new Error(d.error || tr('点赞失败'));
         if (count) count.textContent = String(d.data.likes);
         storage.set(key, '1');
       } catch (e) {
         btn.classList.remove('is-on');
         if (count) count.textContent = String(before);
-        toast('点赞失败，请稍后再试');
+        toast(tr('点赞失败，请稍后再试'));
       } finally {
         delete btn.dataset.busy;
       }

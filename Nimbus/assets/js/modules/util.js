@@ -41,3 +41,10 @@ export function toast(text, ms = 1800) {
 }
 export function debounce(fn, ms = 150) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
 export function throttle(fn, ms = 100) { let last = 0, t; return (...a) => { const now = Date.now(); if (now - last >= ms) { last = now; fn(...a); } else { clearTimeout(t); t = setTimeout(() => { last = Date.now(); fn(...a); }, ms - (now - last)); } }; }
+// 界面文案：源码写中文原文，英文模式下从 NimbusConfig.i18n 查译文；{name} 为占位符
+export function tr(zh, args) {
+  const d = config().i18n || {};
+  let s = typeof d[zh] === 'string' ? d[zh] : zh;
+  if (args) Object.keys(args).forEach((k) => { s = s.split('{' + k + '}').join(String(args[k])); });
+  return s;
+}

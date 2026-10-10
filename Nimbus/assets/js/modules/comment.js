@@ -1,5 +1,5 @@
 // 评论：回复定位、表情面板、Markdown 预览、Ctrl+Enter、（Kit）AJAX 提交
-import { qs, qsa, on, config, toast } from './util.js';
+import { qs, qsa, on, config, toast, tr } from './util.js';
 let unbind = [], emojiLoaded = false;
 
 function mdPreview(src) {
@@ -35,14 +35,14 @@ async function buildEmoji(panel, ta) {
     names.forEach((n) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = n; b.addEventListener('click', () => show(n)); tabs.appendChild(b); });
     panel.append(tabs, grid);
     show(names[0]);
-  } catch (e) { panel.textContent = '表情加载失败'; }
+  } catch (e) { panel.textContent = tr('表情加载失败'); }
 }
 
 function moveForm(respond, li, cancel) {
   if (!respond.dataset.home) { respond.dataset.home = '1'; respond._home = respond.parentNode; respond._next = respond.nextSibling; }
   if (li) { li.appendChild(respond); } else if (respond._home) { respond._home.insertBefore(respond, respond._next); }
   const title = qs('[data-respond-title]', respond);
-  if (title) { if (!title.dataset.default) title.dataset.default = title.textContent; title.textContent = li ? '回复 ' + (qs('.n-comment-name', li) || {}).textContent : title.dataset.default; }
+  if (title) { if (!title.dataset.default) title.dataset.default = title.textContent; title.textContent = li ? tr('回复 {name}', { name: (qs('.n-comment-name', li) || {}).textContent }) : title.dataset.default; }
   if (cancel) cancel.style.display = li ? '' : 'none';
   const ta = qs('[data-comment-text]', respond); ta && setTimeout(() => ta.focus(), 50);
 }
@@ -99,18 +99,18 @@ export function init(root = document) {
         return;
       }
       const type = r.headers.get('content-type') || '';
-      let coid = null, message = '评论成功';
+      let coid = null, message = tr('评论成功');
       if (type.includes('json')) {
         let d;
         try { d = await r.json(); } catch (parseErr) { form.submit(); return; }
-        if (!d.ok) throw new Error(d.error || '提交失败');
+        if (!d.ok) throw new Error(d.error || tr('提交失败'));
         coid = d.data.coid; message = d.data.message || message;
       } else {
         // 没拿到 NimbusKit 的 JSON：说明评论没有成功写入（Typecho 报错页，或安全校验失败后被重定向回文章）
         const doc = new DOMParser().parseFromString(await r.text(), 'text/html');
         const box = r.ok ? null : (doc.querySelector('.container') || doc.body);
         const reason = box ? box.textContent.replace(/\s+/g, ' ').trim().slice(0, 160) : '';
-        throw new Error(reason || '评论没有提交成功，请刷新页面后重试');
+        throw new Error(reason || tr('评论没有提交成功，请刷新页面后重试'));
       }
       const page = await fetch(location.href.split('#')[0], { credentials: 'same-origin', headers: { 'X-Nimbus-Router': '1' } });
       const doc = new DOMParser().parseFromString(await page.text(), 'text/html');
@@ -125,10 +125,10 @@ export function init(root = document) {
         const li = coid ? document.getElementById('comment-' + coid) : null;
         if (li) { li.classList.add('is-new'); li.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
       }
-      if (unlock) { document.dispatchEvent(new CustomEvent('nimbus:page', { detail: { root: document } })); message += '，隐藏内容已解锁'; }
+      if (unlock) { document.dispatchEvent(new CustomEvent('nimbus:page', { detail: { root: document } })); message += tr('，隐藏内容已解锁'); }
       toast(message);
     } catch (err) {
-      showError(err.message || '提交失败，请重试');
+      showError(err.message || tr('提交失败，请重试'));
     } finally {
       if (btn && document.contains(btn)) { btn.classList.remove('is-loading'); btn.disabled = false; }
     }

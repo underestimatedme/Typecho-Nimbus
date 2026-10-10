@@ -1,5 +1,5 @@
 // 音乐页视图：大封面黑胶、频谱、LRC 歌词、歌单。与悬浮播放器共用 player.js 的同一个 <audio>
-import { qs, qsa, on, prefersReduced } from './util.js';
+import { qs, qsa, on, prefersReduced, tr } from './util.js';
 
 let view = null;
 
@@ -50,7 +50,7 @@ export async function init(root = document) {
     const got = await P.lyrics(t);
     if (my !== token) return;
     lines = got;
-    if (!lines.length) { const p = document.createElement('p'); p.className = 'n-mp-nolrc'; p.textContent = t.lrc ? '歌词加载失败' : '纯音乐，请欣赏'; lrcBox.appendChild(p); return; }
+    if (!lines.length) { const p = document.createElement('p'); p.className = 'n-mp-nolrc'; p.textContent = t.lrc ? tr('歌词加载失败') : tr('纯音乐，请欣赏'); lrcBox.appendChild(p); return; }
     lines.forEach((l) => { const p = document.createElement('p'); p.textContent = l.text; lrcBox.appendChild(p); });
   }
 
@@ -60,7 +60,7 @@ export async function init(root = document) {
     el.classList.toggle('is-playing', !a.paused);
     if (shownIndex !== S.i) {
       shownIndex = S.i;
-      title.textContent = t.title; artist.textContent = t.artist || '未知艺术家';
+      title.textContent = t.title; artist.textContent = t.artist || tr('未知艺术家');
       cover.style.backgroundImage = t.cover ? `url("${t.cover.replace(/"/g, '%22')}")` : '';
       cover.classList.toggle('is-empty', !t.cover);
       qsa('li', list).forEach((li, k) => li.classList.toggle('is-on', k === S.i));

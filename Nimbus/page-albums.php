@@ -6,6 +6,7 @@
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 use Nimbus\View;
+use Nimbus\I18n;
 use Nimbus\Kit;
 
 $albums = Kit::albums();
@@ -21,11 +22,11 @@ View::partial('header', ['archive' => $this]);
     <section class="n-main n-albums-page">
       <?php if ($current): ?>
         <header class="n-list-head n-reveal">
-          <a class="n-back" href="<?= View::e($base) ?>"><?= View::icon('arrow-left') ?>全部相册</a>
+          <a class="n-back" href="<?= View::e($base) ?>"><?= View::icon('arrow-left') ?><?= I18n::e('全部相册') ?></a>
           <h1><?= View::e($current['title']) ?></h1>
-          <p><?= count($current['photos']) ?> 张照片<?= $current['description'] !== '' ? ' · ' . View::e($current['description']) : '' ?></p>
+          <p><?= I18n::e('{n} 张照片', ['n' => count($current['photos'])]) ?><?= $current['description'] !== '' ? ' · ' . View::e($current['description']) : '' ?></p>
         </header>
-        <?php if (empty($current['photos'])): ?><div class="n-empty"><?= View::icon('image') ?><p>这个相册还没有照片。</p></div><?php endif; ?>
+        <?php if (empty($current['photos'])): ?><div class="n-empty"><?= View::icon('image') ?><p><?= I18n::e('这个相册还没有照片。') ?></p></div><?php endif; ?>
         <div class="n-photos" data-gallery>
           <?php foreach ($current['photos'] as $p): ?>
           <figure class="n-photo n-reveal">
@@ -35,18 +36,18 @@ View::partial('header', ['archive' => $this]);
           <?php endforeach; ?>
         </div>
       <?php else: ?>
-        <header class="n-list-head n-reveal"><div class="n-kicker">相册</div><h1><?= View::e(View::t($this->title)) ?></h1><p><?= $albums ? count($albums) . ' 个相册' : '用照片记录时光' ?></p></header>
+        <header class="n-list-head n-reveal"><div class="n-kicker"><?= I18n::e('相册') ?></div><h1><?= View::e(View::t($this->title)) ?></h1><p><?= $albums ? I18n::e('{n} 个相册', ['n' => count($albums)]) : I18n::e('用照片记录时光') ?></p></header>
         <?php if ($albums === null): ?>
-          <div class="n-empty"><?= View::icon('info') ?><p>相册功能需要启用配套插件 NimbusKit。</p></div>
+          <div class="n-empty"><?= View::icon('info') ?><p><?= I18n::e('相册功能需要启用配套插件 NimbusKit。') ?></p></div>
         <?php elseif (empty($albums)): ?>
-          <div class="n-empty"><?= View::icon('image') ?><p>还没有相册，去后台「管理 → Nimbus」新建一个吧。</p></div>
+          <div class="n-empty"><?= View::icon('image') ?><p><?= I18n::e('还没有相册，去后台「管理 → Nimbus」新建一个吧。') ?></p></div>
         <?php else: ?>
         <div class="n-albums">
           <?php foreach ($albums as $a): ?>
           <a class="n-album n-reveal" href="<?= View::e($link((int)$a['id'])) ?>">
             <i class="n-album-cover" style="background-image:url('<?= View::e($a['cover']) ?>')"></i>
             <span class="n-album-stack" aria-hidden="true"></span>
-            <span class="n-album-in"><b><?= View::e($a['title']) ?></b><small><?= count($a['photos']) ?> 张<?= $a['description'] !== '' ? ' · ' . View::e(mb_substr($a['description'], 0, 40)) : '' ?></small></span>
+            <span class="n-album-in"><b><?= View::e($a['title']) ?></b><small><?= I18n::e('{n} 张', ['n' => count($a['photos'])]) ?><?= $a['description'] !== '' ? ' · ' . View::e(mb_substr($a['description'], 0, 40)) : '' ?></small></span>
           </a>
           <?php endforeach; ?>
         </div>

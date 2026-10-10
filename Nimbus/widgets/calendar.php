@@ -2,6 +2,7 @@
 /** 当月日历，有文章的日期可点 */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 use Nimbus\View;
+use Nimbus\I18n;
 $o = \Helper::options();
 $offset = (int)$o->timezone;
 $now = time() + $offset;
@@ -20,9 +21,9 @@ $dateUrl = function (int $d) use ($year, $month, $o) {
 };
 ?>
 <section class="n-widget n-widget-calendar n-reveal">
-  <h4 class="n-widget-title"><?= View::icon('calendar') ?><?= $year ?> 年 <?= $month ?> 月</h4>
+  <h4 class="n-widget-title"><?= View::icon('calendar') ?><?= I18n::e('{y} 年 {m} 月', ['y' => $year, 'm' => $month]) ?></h4>
   <table class="n-calendar">
-    <thead><tr><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th><th>日</th></tr></thead>
+    <thead><tr><th><?= I18n::e('一') ?></th><th><?= I18n::e('二') ?></th><th><?= I18n::e('三') ?></th><th><?= I18n::e('四') ?></th><th><?= I18n::e('五') ?></th><th><?= I18n::e('六') ?></th><th><?= I18n::e('日') ?></th></tr></thead>
     <tbody>
       <tr>
       <?php for ($i = 0; $i < $startDow; $i++) echo '<td></td>'; $col = $startDow; ?>

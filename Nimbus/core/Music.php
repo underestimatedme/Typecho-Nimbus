@@ -37,7 +37,7 @@ final class Music
             $url = self::safeUrl($p[2] ?? '');
             if ($url === '') continue;
             $out[] = [
-                'title' => mb_substr($p[0] ?? '', 0, 100) ?: '未命名',
+                'title' => mb_substr($p[0] ?? '', 0, 100) ?: I18n::t('未命名'),
                 'artist' => mb_substr($p[1] ?? '', 0, 100),
                 'url' => $url,
                 'cover' => self::safeUrl($p[3] ?? ''),

@@ -1,15 +1,15 @@
 // 分享菜单、复制链接、打赏弹窗
-import { qs, qsa, on, toast, config } from './util.js';
+import { qs, qsa, on, toast, config, tr } from './util.js';
 let unbind = [];
 function copy(text) {
-  const done = () => toast((config().i18n || {}).linkCopied || '链接已复制');
+  const done = () => toast(tr('链接已复制'));
   if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text).then(done).catch(() => fallback(text, done));
   return fallback(text, done);
 }
 function fallback(text, done) {
   const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
   document.body.appendChild(ta); ta.select();
-  try { document.execCommand('copy'); done(); } catch (e) { toast('复制失败'); }
+  try { document.execCommand('copy'); done(); } catch (e) { toast(tr('复制失败')); }
   ta.remove();
 }
 export function init(root = document) {
@@ -22,7 +22,7 @@ export function init(root = document) {
     const p = qs('[data-share-poster]', box);
     p && unbind.push(on(p, 'click', () => {
       box.classList.remove('is-open');
-      import('./poster.js').then((m) => m.open(box)).catch(() => toast('海报生成失败'));
+      import('./poster.js').then((m) => m.open(box)).catch(() => toast(tr('海报生成失败')));
     }));
   });
   unbind.push(on(document, 'click', () => qsa('.n-share.is-open').forEach((b) => b.classList.remove('is-open'))));

@@ -35,7 +35,7 @@ final class Hooks
         $body = json_encode(['ok' => true, 'data' => [
             'coid' => (int)$feedback->coid,
             'status' => $status,
-            'message' => $status === 'approved' ? '评论成功' : '评论已提交，正在等待审核',
+            'message' => $status === 'approved' ? Lang::t('评论成功') : Lang::t('评论已提交，正在等待审核'),
         ]], JSON_UNESCAPED_UNICODE);
         \Typecho\Response::getInstance()
             ->setContentType('application/json')

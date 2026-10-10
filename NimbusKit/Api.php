@@ -63,7 +63,10 @@ final class Api
     /** @return array<int,array{name:string,items:array}> */
     public static function bookmarks(): array
     {
-        return \TypechoPlugin\NimbusKit\Lib\Text::groupBookmarks(Store::bookmarks());
+        $groups = \TypechoPlugin\NimbusKit\Lib\Text::groupBookmarks(Store::bookmarks());
+        foreach ($groups as &$g) if ($g['name'] === '未分组') $g['name'] = Lang::t('未分组');
+        unset($g);
+        return $groups;
     }
 
     public static function projects(): array
@@ -93,8 +96,9 @@ final class Api
             try { self::$ipdb = new \TypechoPlugin\NimbusKit\Lib\Ip2Region(self::regionFile()); } catch (\Throwable $e) { self::$ipdb = false; }
         }
         if (self::$ipdb === false) return null;
-        if (\TypechoPlugin\NimbusKit\Lib\Ip2Region::isLocal($ip)) return '本地';
-        return \TypechoPlugin\NimbusKit\Lib\Ip2Region::label(self::$ipdb->search($ip));
+        if (\TypechoPlugin\NimbusKit\Lib\Ip2Region::isLocal($ip)) return Lang::t('本地');
+        $label = \TypechoPlugin\NimbusKit\Lib\Ip2Region::label(self::$ipdb->search($ip));
+        return $label === '' ? '' : Lang::t($label);
     }
 
     /** GitHub 登录状态：未配置返回 null。 */

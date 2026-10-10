@@ -1,5 +1,5 @@
 // 代码块：Prism 高亮、头部（语言 / 复制）、折叠展开、行号
-import { qsa, config, loadScript, toast } from './util.js';
+import { qsa, config, loadScript, toast, tr } from './util.js';
 
 function copyText(text) {
   if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
@@ -15,23 +15,23 @@ function copyText(text) {
 function decorate(pre) {
   if (pre.dataset.decorated) return;
   pre.dataset.decorated = '1';
-  const cfg = config(), t = cfg.i18n || {};
+  const cfg = config();
   const code = pre.querySelector('code');
   const head = document.createElement('div');
   head.className = 'n-code-head';
-  head.innerHTML = '<span class="n-code-dots"><i></i><i></i><i></i></span><span class="n-code-lang">' + (pre.dataset.lang || 'code') + '</span><button type="button" class="n-code-copy"><svg class="n-ico" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span>' + (t.copy || '复制') + '</span></button>';
+  head.innerHTML = '<span class="n-code-dots"><i></i><i></i><i></i></span><span class="n-code-lang">' + (pre.dataset.lang || 'code') + '</span><button type="button" class="n-code-copy"><svg class="n-ico" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span>' + tr('复制') + '</span></button>';
   pre.prepend(head);
   const btn = head.querySelector('.n-code-copy');
   btn.addEventListener('click', () => {
     copyText(code ? code.textContent : pre.textContent).then(() => {
-      btn.classList.add('is-done'); btn.querySelector('span').textContent = t.copied || '已复制';
-      setTimeout(() => { btn.classList.remove('is-done'); btn.querySelector('span').textContent = t.copy || '复制'; }, 1600);
-    }).catch(() => toast('复制失败，请手动选择'));
+      btn.classList.add('is-done'); btn.querySelector('span').textContent = tr('已复制');
+      setTimeout(() => { btn.classList.remove('is-done'); btn.querySelector('span').textContent = tr('复制'); }, 1600);
+    }).catch(() => toast(tr('复制失败，请手动选择')));
   });
   if (pre.hasAttribute('data-fold')) {
     const ex = document.createElement('button');
-    ex.type = 'button'; ex.className = 'n-code-expand'; ex.textContent = (t.expand || '展开全部') + ' · ' + pre.dataset.lines + ' 行';
-    ex.addEventListener('click', () => { const open = pre.classList.toggle('is-open'); ex.textContent = open ? (t.collapse || '收起') : (t.expand || '展开全部') + ' · ' + pre.dataset.lines + ' 行'; });
+    ex.type = 'button'; ex.className = 'n-code-expand'; ex.textContent = tr('展开全部 · {n} 行', { n: pre.dataset.lines });
+    ex.addEventListener('click', () => { const open = pre.classList.toggle('is-open'); ex.textContent = open ? tr('收起') : tr('展开全部 · {n} 行', { n: pre.dataset.lines }); });
     pre.appendChild(ex);
   }
   if (cfg.codeLines !== false && code) pre.classList.add('line-numbers');

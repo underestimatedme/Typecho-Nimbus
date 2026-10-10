@@ -33,8 +33,8 @@ final class Comment
         if ($ua !== '') {
             if (preg_match('/Edg(?:e|A|iOS)?\/([\d.]+)/', $ua)) $browser = 'Edge';
             elseif (preg_match('/OPR\/|Opera/', $ua)) $browser = 'Opera';
-            elseif (preg_match('/MicroMessenger/', $ua)) $browser = '微信';
-            elseif (preg_match('/QQBrowser/', $ua)) $browser = 'QQ 浏览器';
+            elseif (preg_match('/MicroMessenger/', $ua)) $browser = I18n::t('微信');
+            elseif (preg_match('/QQBrowser/', $ua)) $browser = I18n::t('QQ 浏览器');
             elseif (preg_match('/UCBrowser/', $ua)) $browser = 'UC';
             elseif (preg_match('/Firefox\//', $ua)) $browser = 'Firefox';
             elseif (preg_match('/Chrome\//', $ua)) $browser = 'Chrome';
@@ -70,16 +70,16 @@ final class Comment
         echo '<div class="n-comment-head">';
         if ($url !== '') echo '<a class="n-comment-name" href="' . View::e($url) . '" target="_blank" rel="noopener nofollow" data-no-router>' . View::e($c->author) . '</a>';
         else echo '<span class="n-comment-name">' . View::e($c->author) . '</span>';
-        if ($isAuthor) echo '<span class="n-comment-badge">博主</span>';
+        if ($isAuthor) echo '<span class="n-comment-badge">' . I18n::e('博主') . '</span>';
         if ($ua['browser'] !== '' || $ua['os'] !== '') echo '<span class="n-comment-ua">' . View::e(trim($ua['os'] . ' · ' . $ua['browser'], ' ·')) . '</span>';
         $region = Kit::region((string)$c->ip);
-        if ($region !== null && $region !== '') echo '<span class="n-comment-region" title="IP 属地">' . View::icon('pin') . View::e($region) . '</span>';
+        if ($region !== null && $region !== '') echo '<span class="n-comment-region" title="' . I18n::e('IP 属地') . '">' . View::icon('pin') . View::e($region) . '</span>';
         echo '<time datetime="' . date('c', (int)$c->created) . '" title="' . date('Y-m-d H:i', (int)$c->created) . '">' . View::e(View::timeAgo((int)$c->created)) . '</time>';
         echo '</div>';
         if ($waiting) echo '<div class="n-comment-waiting">' . View::e((string)$options->commentStatus) . '</div>';
         echo '<div class="n-comment-content">' . $c->content . '</div>';
         echo '<div class="n-comment-foot">';
-        $c->reply('<svg class="n-ico" viewBox="0 0 24 24"><path d="M9 17l-5-5 5-5M4 12h11a5 5 0 0 1 0 10h-1"/></svg>回复');
+        $c->reply('<svg class="n-ico" viewBox="0 0 24 24"><path d="M9 17l-5-5 5-5M4 12h11a5 5 0 0 1 0 10h-1"/></svg>' . I18n::e('回复'));
         echo '</div>';
         echo '</div></div>';
         if ($c->children) {

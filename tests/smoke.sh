@@ -55,5 +55,14 @@ if curl -s "$BASE/" | grep -q '"api":"http'; then
   check "/index.php/bookmarks.html" 200 'data-bookmarks' 'class="n-bm n-reveal"'
   check "/index.php/projects.html" 200 'class="n-projects"'
 fi
+# 英文界面（临时切换前台语言，检查后恢复中文）
+DB="$(dirname "$0")/../.dev/typecho/usr/nimbus.db"
+if [ -f "$DB" ]; then
+  php "$(dirname "$0")/set-theme-opt.php" "$DB" Language=en >/dev/null
+  check "/index.php/archives/1/" 200 '<html lang="en"' 'Leave a comment' '"i18n":{"'
+  check "/index.php/stats.html" 200 'Writing heatmap'
+  php "$(dirname "$0")/set-theme-opt.php" "$DB" Language=zh >/dev/null
+  check "/index.php/archives/1/" 200 '<html lang="zh-CN"' '发表评论' '"i18n":{}'
+fi
 [ $fail -eq 0 ] && echo "smoke ok"
 exit $fail

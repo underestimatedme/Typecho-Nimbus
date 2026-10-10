@@ -6,6 +6,7 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 use Nimbus\Options;
 use Nimbus\View;
+use Nimbus\I18n;
 use Nimbus\Menu;
 
 $items = Menu::items();
@@ -36,16 +37,16 @@ $renderMenu = function (string $cls) use ($items, $current) {
 };
 $renderActs = function () use ($switchable) {
     $h = '<div class="n-nav-acts">';
-    $h .= '<button type="button" class="n-icon-btn" data-search-open aria-label="搜索" title="搜索 (Ctrl+K)">' . View::icon('search') . '</button>';
-    if ($switchable) $h .= '<button type="button" class="n-icon-btn n-theme-toggle" data-theme-toggle aria-label="切换亮暗模式" title="切换亮暗模式">' . View::icon('moon', 'n-ico-moon') . View::icon('sun', 'n-ico-sun') . '</button>';
-    $h .= '<button type="button" class="n-icon-btn n-drawer-open" data-drawer-open aria-label="打开菜单">' . View::icon('menu') . '</button>';
+    $h .= '<button type="button" class="n-icon-btn" data-search-open aria-label="' . I18n::e('搜索') . '" title="' . I18n::e('搜索') . ' (Ctrl+K)">' . View::icon('search') . '</button>';
+    if ($switchable) $h .= '<button type="button" class="n-icon-btn n-theme-toggle" data-theme-toggle aria-label="' . I18n::e('切换亮暗模式') . '" title="' . I18n::e('切换亮暗模式') . '">' . View::icon('moon', 'n-ico-moon') . View::icon('sun', 'n-ico-sun') . '</button>';
+    $h .= '<button type="button" class="n-icon-btn n-drawer-open" data-drawer-open aria-label="' . I18n::e('打开菜单') . '">' . View::icon('menu') . '</button>';
     return $h . '</div>';
 };
 ?>
 <header class="n-nav<?= $solid ? ' n-nav-solid' : '' ?>" id="n-nav" data-nav>
   <div class="n-container n-nav-in">
     <?= $renderLogo('n-logo') ?>
-    <nav class="n-nav-menu" aria-label="主导航"><?= $renderMenu('n-menu') ?></nav>
+    <nav class="n-nav-menu" aria-label="<?= I18n::e('主导航') ?>"><?= $renderMenu('n-menu') ?></nav>
     <?= $renderActs() ?>
   </div>
 </header>
@@ -54,13 +55,13 @@ $renderActs = function () use ($switchable) {
   <nav class="n-nav-menu"><?= $renderMenu('n-menu') ?></nav>
   <?= $renderActs() ?>
 </div>
-<dialog class="n-drawer" id="n-drawer" data-drawer aria-label="菜单">
+<dialog class="n-drawer" id="n-drawer" data-drawer aria-label="<?= I18n::e('菜单') ?>">
   <div class="n-drawer-in">
-    <div class="n-drawer-head"><?= $renderLogo('n-logo n-logo-sm') ?><button type="button" class="n-icon-btn" data-drawer-close aria-label="关闭"><?= View::icon('close') ?></button></div>
+    <div class="n-drawer-head"><?= $renderLogo('n-logo n-logo-sm') ?><button type="button" class="n-icon-btn" data-drawer-close aria-label="<?= I18n::e('关闭') ?>"><?= View::icon('close') ?></button></div>
     <?= $renderMenu('n-drawer-menu') ?>
     <div class="n-drawer-foot">
-      <button type="button" class="n-btn" data-search-open><?= View::icon('search') ?> 搜索</button>
-      <?php if ($switchable): ?><button type="button" class="n-btn" data-theme-toggle><?= View::icon('moon', 'n-ico-moon') ?><?= View::icon('sun', 'n-ico-sun') ?> 亮暗切换</button><?php endif; ?>
+      <button type="button" class="n-btn" data-search-open><?= View::icon('search') ?> <?= I18n::e('搜索') ?></button>
+      <?php if ($switchable): ?><button type="button" class="n-btn" data-theme-toggle><?= View::icon('moon', 'n-ico-moon') ?><?= View::icon('sun', 'n-ico-sun') ?> <?= I18n::e('亮暗切换') ?></button><?php endif; ?>
     </div>
   </div>
 </dialog>

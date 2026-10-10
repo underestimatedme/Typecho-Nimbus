@@ -78,12 +78,12 @@ final class GitHubAuth
         $nonce = isset($_COOKIE[self::NONCE]) ? (string)$_COOKIE[self::NONCE] : '';
         self::cookie(self::NONCE, '', 0);
         if (!self::enabled() || !$data || !isset($data['b'], $data['n']) || $nonce === '' || !hash_equals((string)$data['n'], $nonce)) {
-            self::page('登录请求已过期或无效，请返回重新点击「GitHub 登录」。', self::back(''));
+            self::page(Lang::t('登录请求已过期或无效，请返回重新点击「GitHub 登录」。'), self::back(''));
         }
         $back = self::back((string)$data['b']);
         if ((string)$req->get('error') !== '') self::redirect($back);
         $code = (string)$req->get('code');
-        if ($code === '' || strlen($code) > 200) self::page('GitHub 没有返回授权码。', $back);
+        if ($code === '' || strlen($code) > 200) self::page(Lang::t('GitHub 没有返回授权码。'), $back);
         $tok = Http::request('POST', rtrim((string)Config::get('githubBase'), '/') . '/login/oauth/access_token', ['Accept: application/json', 'Content-Type: application/x-www-form-urlencoded'], http_build_query([
             'client_id' => (string)Config::get('githubClientId'), 'client_secret' => (string)Config::get('githubClientSecret'),
             'code' => $code, 'redirect_uri' => self::endpoint('github-callback'),
@@ -92,13 +92,13 @@ final class GitHubAuth
         $access = is_array($t) ? (string)($t['access_token'] ?? '') : '';
         if ($access === '') {
             error_log('[NimbusKit] GitHub token exchange failed: HTTP ' . $tok['status']);
-            self::page('无法向 GitHub 换取登录凭据，请稍后再试。', $back);
+            self::page(Lang::t('无法向 GitHub 换取登录凭据，请稍后再试。'), $back);
         }
         $u = Http::request('GET', rtrim((string)Config::get('githubApi'), '/') . '/user', ['Accept: application/vnd.github+json', 'Authorization: Bearer ' . $access]);
         $id = $u['status'] === 200 ? GitHub::identity((array)json_decode($u['body'], true)) : null;
         if (!$id) {
             error_log('[NimbusKit] GitHub /user failed: HTTP ' . $u['status']);
-            self::page('读取 GitHub 账号信息失败，请稍后再试。', $back);
+            self::page(Lang::t('读取 GitHub 账号信息失败，请稍后再试。'), $back);
         }
         self::cookie(GitHub::COOKIE, GitHub::cookieValue(self::secret(), $id, time()), GitHub::COOKIE_TTL);
         self::redirect($back);
@@ -114,9 +114,9 @@ final class GitHubAuth
     private static function page(string $msg, string $back): void
     {
         $e = function ($s) { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); };
-        $html = '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GitHub 登录</title>'
+        $html = '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' . $e(Lang::t('GitHub 登录')) . '</title>'
             . '<div style="max-width:420px;margin:15vh auto;padding:28px;font:15px/1.7 system-ui,sans-serif;border:1px solid #e5e7eb;border-radius:14px;text-align:center">'
-            . '<p>' . $e($msg) . '</p><p><a href="' . $e($back) . '">返回</a></p></div>';
+            . '<p>' . $e($msg) . '</p><p><a href="' . $e($back) . '">' . $e(Lang::t('返回')) . '</a></p></div>';
         \Typecho\Response::getInstance()->setStatus(400)->setContentType('text/html')
             ->addResponder(function () use ($html) { echo $html; })->respond();
     }
@@ -132,7 +132,7 @@ final class GitHubAuth
             $comment['mail'] = (string)$gh['mail'];
             $comment['url'] = (string)$gh['url'];
         } elseif (self::enabled() && Config::get('githubOnly') === '1') {
-            throw new \Typecho\Widget\Exception(_t('请先使用 GitHub 登录后再发表评论'), 403);
+            throw new \Typecho\Widget\Exception(Lang::t('请先使用 GitHub 登录后再发表评论'), 403);
         }
         return $comment;
     }

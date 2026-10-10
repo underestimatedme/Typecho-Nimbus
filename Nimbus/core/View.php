@@ -129,10 +129,10 @@ final class View
     public static function timeAgo(int $ts): string
     {
         $d = time() - $ts;
-        if ($d < 60) return '刚刚';
-        if ($d < 3600) return floor($d / 60) . ' 分钟前';
-        if ($d < 86400) return floor($d / 3600) . ' 小时前';
-        if ($d < 86400 * 30) return floor($d / 86400) . ' 天前';
+        if ($d < 60) return I18n::t('刚刚');
+        if ($d < 3600) return I18n::t('{n} 分钟前', ['n' => floor($d / 60)]);
+        if ($d < 86400) return I18n::t('{n} 小时前', ['n' => floor($d / 3600)]);
+        if ($d < 86400 * 30) return I18n::t('{n} 天前', ['n' => floor($d / 86400)]);
         return date('Y-m-d', $ts);
     }
 

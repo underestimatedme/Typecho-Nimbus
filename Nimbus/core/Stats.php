@@ -73,7 +73,7 @@ final class Stats
         if (count($items) <= $top + 1) return $items;
         $rest = array_slice($items, $top);
         $sum = array_sum(array_map(function ($i) { return (int)$i['count']; }, $rest));
-        return array_merge(array_slice($items, 0, $top), [['name' => '其他', 'count' => $sum]]);
+        return array_merge(array_slice($items, 0, $top), [['name' => I18n::t('其他'), 'count' => $sum]]);
     }
 
     /** 字数：中日韩字符逐字计数，其余按单词计数。 */

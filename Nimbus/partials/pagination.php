@@ -3,6 +3,7 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 use Nimbus\Options;
 use Nimbus\View;
+use Nimbus\I18n;
 $mode = (string)Options::get('Pagination', 'normal');
 if ($archive->is('single') || $archive->is('archive', '404') || !$archive->have()) return;
 if ($mode === 'normal') {
@@ -17,8 +18,8 @@ if (preg_match('/href="([^"]+)"/', $html, $m)) $next = html_entity_decode($m[1],
 ?>
 <div class="n-load-wrap" data-load-wrap>
   <?php if ($next !== ''): ?>
-  <button type="button" class="n-btn n-load-more" data-load-more data-next="<?= View::e($next) ?>"<?= $mode === 'infinite' ? ' data-infinite' : '' ?>>加载更多</button>
+  <button type="button" class="n-btn n-load-more" data-load-more data-next="<?= View::e($next) ?>"<?= $mode === 'infinite' ? ' data-infinite' : '' ?>><?= I18n::e('加载更多') ?></button>
   <?php else: ?>
-  <span class="n-load-end">没有更多了</span>
+  <span class="n-load-end"><?= I18n::e('没有更多了') ?></span>
   <?php endif; ?>
 </div>

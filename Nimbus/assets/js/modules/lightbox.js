@@ -1,12 +1,12 @@
 // 灯箱：自写，支持上一张 / 下一张 / Esc / 点击遮罩
-import { qs, qsa, on } from './util.js';
+import { qs, qsa, on, tr } from './util.js';
 let unbind = [], dlg = null, items = [], cur = 0;
 
 function ensure() {
   if (dlg) return dlg;
   dlg = document.createElement('dialog');
   dlg.className = 'n-lightbox';
-  dlg.innerHTML = '<img alt=""><button type="button" class="n-lightbox-close" aria-label="关闭"><svg class="n-ico" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button><button type="button" class="n-lightbox-prev" aria-label="上一张"><svg class="n-ico" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><button type="button" class="n-lightbox-next" aria-label="下一张"><svg class="n-ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button><div class="n-lightbox-count"></div>';
+  dlg.innerHTML = '<img alt=""><button type="button" class="n-lightbox-close" aria-label="' + tr('关闭') + '"><svg class="n-ico" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button><button type="button" class="n-lightbox-prev" aria-label="' + tr('上一张') + '"><svg class="n-ico" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><button type="button" class="n-lightbox-next" aria-label="' + tr('下一张') + '"><svg class="n-ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button><div class="n-lightbox-count"></div>';
   document.body.appendChild(dlg);
   on(dlg, 'click', (e) => { if (e.target === dlg || e.target.tagName === 'IMG') close(); });
   on(qs('.n-lightbox-close', dlg), 'click', close);

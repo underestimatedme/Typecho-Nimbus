@@ -57,7 +57,7 @@ final class Menu
             $pages = [];
         }
         $items = self::build($pages, Options::json('CustomMenu'));
-        array_unshift($items, ['title' => '首页', 'url' => (string)\Helper::options()->siteUrl, 'icon' => 'home', 'children' => []]);
+        array_unshift($items, ['title' => I18n::t('首页'), 'url' => (string)\Helper::options()->siteUrl, 'icon' => 'home', 'children' => []]);
         return $items;
     }
 

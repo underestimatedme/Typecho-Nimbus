@@ -13,6 +13,7 @@ final class Site
             ['name' => 'Favicon', 'type' => 'text', 'label' => 'Favicon', 'description' => '站点图标 URL（ico / png / svg）。', 'default' => ''],
             ['name' => 'SiteSubtitle', 'type' => 'text', 'label' => '站点副标题', 'description' => '显示在浏览器标题的站点名之后，如 "— 云间小记"。', 'default' => ''],
             ['name' => 'SiteSince', 'type' => 'text', 'label' => '建站日期', 'description' => '格式 YYYY-MM-DD，用于站点信息小部件计算运行天数。', 'default' => ''],
+            ['name' => 'Language', 'type' => 'radio', 'label' => '前台语言', 'description' => '界面文字的语言（文章内容不受影响，后台设置页保持中文）。「跟随浏览器」按访客浏览器语言自动选择中文或英文；如果站点开启了页面缓存或 CDN 缓存 HTML，请选择固定语言。', 'default' => 'zh', 'options' => ['zh' => '中文', 'en' => 'English', 'auto' => '跟随浏览器']],
             ['name' => 'ICP', 'type' => 'text', 'label' => 'ICP 备案号', 'description' => '如 粤ICP备12345678号，自动链接到工信部网站。', 'default' => ''],
             ['name' => 'Police', 'type' => 'text', 'label' => '公安备案号', 'description' => '如 粤公网安备 44030502000000号，自动链接到公安备案查询。', 'default' => ''],
             ['name' => 'FooterHtml', 'type' => 'textarea', 'label' => '页脚自定义 HTML', 'description' => '显示在页脚版权信息下方，可放统计代码、额外声明。', 'default' => ''],

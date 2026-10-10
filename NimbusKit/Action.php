@@ -107,7 +107,7 @@ class Action extends \Widget\Base
         if (!Config::feature('search')) $this->fail('disabled', 404);
         $q = trim((string)$this->request->get('q'));
         $len = mb_strlen($q);
-        if ($len < 2 || $len > 40) $this->fail('关键词需为 2 到 40 个字');
+        if ($len < 2 || $len > 40) $this->fail(Lang::t('关键词需为 2 到 40 个字'));
         $this->ok(Store::search($q, 8));
     }
 

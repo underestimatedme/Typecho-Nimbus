@@ -40,7 +40,7 @@ final class Chart
         $y = function ($v) use ($max, $h, $t, $b) { return $t + ($h - $t - $b) * (1 - $v / $max); };
         $pts = [];
         foreach ($values as $i => $v) $pts[] = self::n($x($i)) . ',' . self::n($y($v));
-        $out = '<svg class="n-ch n-ch-line" viewBox="0 0 ' . $w . ' ' . $h . '" role="img" aria-label="' . View::e('折线图') . '">';
+        $out = '<svg class="n-ch n-ch-line" viewBox="0 0 ' . $w . ' ' . $h . '" role="img" aria-label="' . I18n::e('折线图') . '">';
         $out .= '<defs><linearGradient id="' . View::e($id) . '-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--accent);stop-opacity:.35"/><stop offset="1" style="stop-color:var(--accent);stop-opacity:0"/></linearGradient></defs>';
         for ($g = 0; $g <= 4; $g++) {
             $gy = self::n($t + ($h - $t - $b) * $g / 4);
@@ -56,7 +56,7 @@ final class Chart
         $out .= '<path class="n-ch-area" d="M' . self::n($x(0)) . ',' . $base . ' L' . implode(' L', $pts) . ' L' . self::n($x($cnt - 1)) . ',' . $base . ' Z" fill="url(#' . View::e($id) . '-g)"/>';
         $out .= '<polyline class="n-ch-stroke" pathLength="1" points="' . implode(' ', $pts) . '"/>';
         foreach ($values as $i => $v) {
-            $out .= '<circle class="n-ch-dot" style="--i:' . $i . '" cx="' . self::n($x($i)) . '" cy="' . self::n($y($v)) . '" r="3.5"><title>' . View::e($labels[$i] . '：' . $v . $unit) . '</title></circle>';
+            $out .= '<circle class="n-ch-dot" style="--i:' . $i . '" cx="' . self::n($x($i)) . '" cy="' . self::n($y($v)) . '" r="3.5"><title>' . View::e($labels[$i] . I18n::t('：') . $v . $unit) . '</title></circle>';
         }
         return $out . '</svg>';
     }
@@ -76,7 +76,7 @@ final class Chart
         $max = self::niceMax((int)max($all));
         $slot = ($w - $l - $r) / $cnt;
         $bw = min(16, $slot * 0.7 / count($series));
-        $out = '<svg class="n-ch n-ch-bars" viewBox="0 0 ' . $w . ' ' . $h . '" role="img" aria-label="' . View::e('柱状图') . '">';
+        $out = '<svg class="n-ch n-ch-bars" viewBox="0 0 ' . $w . ' ' . $h . '" role="img" aria-label="' . I18n::e('柱状图') . '">';
         for ($g = 0; $g <= 4; $g++) {
             $gy = self::n($t + ($h - $t - $b) * $g / 4);
             $out .= '<line class="n-ch-grid" x1="' . $l . '" x2="' . ($w - $r) . '" y1="' . $gy . '" y2="' . $gy . '"/>';
@@ -89,7 +89,7 @@ final class Chart
                 $v = (int)($s['values'][$i] ?? 0);
                 $bh = ($h - $t - $b) * $v / $max;
                 $bx = $cx - $bw * count($series) / 2 + $k * $bw + 1;
-                $out .= '<rect class="n-ch-bar ' . View::e($s['cls']) . '" style="--i:' . $i . '" x="' . self::n($bx) . '" y="' . self::n($h - $b - $bh) . '" width="' . self::n(max(1, $bw - 2)) . '" height="' . self::n($bh) . '" rx="3"><title>' . View::e($lab . ' ' . $s['name'] . '：' . $v) . '</title></rect>';
+                $out .= '<rect class="n-ch-bar ' . View::e($s['cls']) . '" style="--i:' . $i . '" x="' . self::n($bx) . '" y="' . self::n($h - $b - $bh) . '" width="' . self::n(max(1, $bw - 2)) . '" height="' . self::n($bh) . '" rx="3"><title>' . View::e($lab . ' ' . $s['name'] . I18n::t('：') . $v) . '</title></rect>';
             }
         }
         return $out . '</svg>';
@@ -104,13 +104,13 @@ final class Chart
         $total = array_sum(array_map(function ($i) { return (int)$i['count']; }, $items));
         if ($total <= 0) return '';
         $r = 70; $c = 2 * M_PI * $r; $acc = 0;
-        $svg = '<svg class="n-ch n-ch-donut" viewBox="0 0 200 200" role="img" aria-label="' . View::e('环形图') . '"><circle class="n-ch-ring" cx="100" cy="100" r="' . $r . '"/>';
+        $svg = '<svg class="n-ch n-ch-donut" viewBox="0 0 200 200" role="img" aria-label="' . I18n::e('环形图') . '"><circle class="n-ch-ring" cx="100" cy="100" r="' . $r . '"/>';
         $legend = '<ul class="n-ch-legend">';
         foreach ($items as $k => $it) {
             $frac = (int)$it['count'] / $total;
             $len = $frac * $c;
             $gap = count($items) > 1 ? min(3, $len * 0.3) : 0;
-            $svg .= '<circle class="n-ch-seg n-ch-c' . ($k % 8) . '" style="--i:' . $k . '" cx="100" cy="100" r="' . $r . '" stroke-dasharray="' . self::n(max(0.1, $len - $gap)) . ' ' . self::n($c) . '" stroke-dashoffset="' . self::n(-$acc) . '" transform="rotate(-90 100 100)"><title>' . View::e($it['name'] . '：' . $it['count']) . '</title></circle>';
+            $svg .= '<circle class="n-ch-seg n-ch-c' . ($k % 8) . '" style="--i:' . $k . '" cx="100" cy="100" r="' . $r . '" stroke-dasharray="' . self::n(max(0.1, $len - $gap)) . ' ' . self::n($c) . '" stroke-dashoffset="' . self::n(-$acc) . '" transform="rotate(-90 100 100)"><title>' . View::e($it['name'] . I18n::t('：') . $it['count']) . '</title></circle>';
             $acc += $len;
             $legend .= '<li><i class="n-ch-c' . ($k % 8) . '"></i><span>' . View::e($it['name']) . '</span><b>' . (int)$it['count'] . '</b><em>' . self::n(round($frac * 100, 1)) . '%</em></li>';
         }
@@ -124,19 +124,19 @@ final class Chart
         $cell = 11; $gap = 3; $top = 18; $left = 26;
         $weeks = count($data['weeks']);
         $w = $left + $weeks * ($cell + $gap); $h = $top + 7 * ($cell + $gap);
-        $out = '<svg class="n-ch n-ch-heat" viewBox="0 0 ' . $w . ' ' . $h . '" role="img" aria-label="' . View::e('发文热力图') . '">';
+        $out = '<svg class="n-ch n-ch-heat" viewBox="0 0 ' . $w . ' ' . $h . '" role="img" aria-label="' . I18n::e('发文热力图') . '">';
         foreach ($data['months'] as [$wk, $mon]) {
             if ($wk > $weeks - 3 && $wk !== 0) continue;
-            $out .= '<text class="n-ch-axis" x="' . ($left + $wk * ($cell + $gap)) . '" y="11">' . $mon . '月</text>';
+            $out .= '<text class="n-ch-axis" x="' . ($left + $wk * ($cell + $gap)) . '" y="11">' . I18n::e('{m}月', ['m' => $mon]) . '</text>';
         }
-        foreach ([0 => '一', 2 => '三', 4 => '五'] as $i => $lab) {
+        foreach ([0 => I18n::t('一'), 2 => I18n::t('三'), 4 => I18n::t('五')] as $i => $lab) {
             $out .= '<text class="n-ch-axis" x="0" y="' . ($top + $i * ($cell + $gap) + 9) . '">' . $lab . '</text>';
         }
         foreach ($data['weeks'] as $wi => $col) {
             foreach ($col as $di => $d) {
                 if ($d['future']) continue;
                 $lv = Stats::level((int)$d['n'], (int)$data['max']);
-                $out .= '<rect class="n-ch-hc l' . $lv . '" style="--i:' . $wi . '" x="' . ($left + $wi * ($cell + $gap)) . '" y="' . ($top + $di * ($cell + $gap)) . '" width="' . $cell . '" height="' . $cell . '" rx="2.5"><title>' . View::e($d['date'] . '：' . $d['n'] . ' 篇') . '</title></rect>';
+                $out .= '<rect class="n-ch-hc l' . $lv . '" style="--i:' . $wi . '" x="' . ($left + $wi * ($cell + $gap)) . '" y="' . ($top + $di * ($cell + $gap)) . '" width="' . $cell . '" height="' . $cell . '" rx="2.5"><title>' . I18n::e('{date}：{n} 篇', ['date' => $d['date'], 'n' => $d['n']]) . '</title></rect>';
             }
         }
         return $out . '</svg>';

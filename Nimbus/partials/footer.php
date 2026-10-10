@@ -3,6 +3,7 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 use Nimbus\Options;
 use Nimbus\View;
+use Nimbus\I18n;
 $o = \Helper::options();
 $icp = (string)Options::get('ICP', '');
 $police = (string)Options::get('Police', '');
@@ -21,7 +22,7 @@ $policeCode = preg_replace('/\D+/', '', $police);
     <?php if (Options::get('FooterHtml')): ?><div class="n-footer-custom"><?= (string)Options::get('FooterHtml') ?></div><?php endif; ?>
   </div>
 </footer>
-<button type="button" class="n-totop" id="n-totop" data-totop aria-label="返回顶部">
+<button type="button" class="n-totop" id="n-totop" data-totop aria-label="<?= I18n::e('返回顶部') ?>">
   <svg class="n-totop-ring" viewBox="0 0 50 50" aria-hidden="true"><circle class="n-totop-bg" cx="25" cy="25" r="23.5"/><circle class="n-totop-fg" cx="25" cy="25" r="23.5"/></svg>
   <?= View::icon('arrow-up') ?>
 </button>

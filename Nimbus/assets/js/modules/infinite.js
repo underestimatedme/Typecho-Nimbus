@@ -1,5 +1,5 @@
 // 加载更多 / 无限滚动：fetch 下一页，追加 #n-list 子节点
-import { qs, on, config } from './util.js';
+import { qs, on, config, tr } from './util.js';
 import * as reveal from './reveal.js';
 let unbind = [], io = null, loading = false;
 
@@ -7,9 +7,8 @@ async function load(btn) {
   const next = btn.dataset.next;
   if (!next || loading) return;
   loading = true;
-  const t = config().i18n || {};
   const label = btn.textContent;
-  btn.classList.add('is-loading'); btn.textContent = t.loading || '加载中…';
+  btn.classList.add('is-loading'); btn.textContent = tr('加载中…');
   try {
     const r = await fetch(next, { headers: { 'X-Nimbus-Router': '1' } });
     if (!r.ok) throw new Error(r.status);
@@ -24,7 +23,7 @@ async function load(btn) {
     }
     const nb = doc.querySelector('[data-load-more]');
     if (nb && nb.dataset.next) { btn.dataset.next = nb.dataset.next; btn.textContent = label; }
-    else { btn.textContent = t.noMore || '没有更多了'; btn.disabled = true; btn.removeAttribute('data-next'); if (io) io.disconnect(); }
+    else { btn.textContent = tr('没有更多了'); btn.disabled = true; btn.removeAttribute('data-next'); if (io) io.disconnect(); }
   } catch (e) {
     btn.textContent = label;
   } finally {
