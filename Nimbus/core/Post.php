@@ -230,6 +230,15 @@ final class Post
         ];
     }
 
+    /** 是否使用沉浸式通栏头图：沉浸布局 + 文章或无自定义模板的页面 + 有真实配图 + 未加密。 */
+    public static function immersive($archive): bool
+    {
+        if ((string)Options::get('PostLayout', 'immersive') !== 'immersive') return false;
+        if (!$archive->is('single') || $archive->hidden) return false;
+        if (!$archive->is('post') && !($archive->is('page') && empty($archive->template))) return false;
+        return self::hasOwnImage($archive);
+    }
+
     /** 读取 nimbusHide 多选字段。 */
     public static function hidden($post, string $what): bool
     {

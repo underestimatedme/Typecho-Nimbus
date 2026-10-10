@@ -19,6 +19,8 @@ check() { # path expected_status [grep patterns...]
 }
 check "/" 200 'data-page="index"'
 check "/index.php/archives/1/" 200 'data-page="post"'
+check "/index.php/archives/3/" 200 'class="n-post-hero"' 'data-layout="tri"' 'data-width="fluid"'
+check "/index.php/archives/9/" 200 'n-nav-solid' 'class="n-post-head'
 check "/index.php/category/tech/" 200 'data-page="index"'
 check "/index.php/archives.html" 200 'data-page="page"'
 check "/index.php/links.html" 200 'data-page="page"'

@@ -43,3 +43,13 @@ html[data-font="custom"] { --font-title: var(--font-custom, var(--font-sans)); }
 
 html[data-motion="off"] { --dur-fast: 0s; --dur: 0s; --dur-slow: 0s; --motion-decor: 0; }
 html[data-motion="reduced"] { --dur-slow: .3s; --motion-decor: 0; }
+
+/* 版面宽度：自适应随屏幕放大（最宽 1760），宽屏 1440，标准 1180 */
+html[data-width="fluid"] { --max-w: clamp(1180px, 86vw, 1760px); }
+html[data-width="wide"] { --max-w: 1440px; }
+html[data-width="standard"] { --max-w: 1180px; }
+/* 正文易读行宽；图片、代码、表格可铺满正文列 */
+:root { --prose-w: 780px; --post-w: 1080px; }
+@media (min-width: 1800px) {
+  :root { --text-base: 15.5px; --text-md: 17.5px; --side-w: 340px; --gap: 32px; }
+}

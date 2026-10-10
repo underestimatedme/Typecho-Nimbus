@@ -1,5 +1,5 @@
 /* 置顶轮播 */
-.n-feature { position: relative; height: 340px; border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow); margin-bottom: 24px; isolation: isolate; background: var(--card); }
+.n-feature { position: relative; height: clamp(340px, 24vw, 520px); border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow); margin-bottom: 24px; isolation: isolate; background: var(--card); }
 .n-slide { position: absolute; inset: 0; display: flex; align-items: flex-end; color: #fff; opacity: 0; pointer-events: none; transition: opacity .9s var(--ease); }
 .n-slide.is-on { opacity: 1; pointer-events: auto; z-index: 1; }
 .n-slide-bg { position: absolute; inset: 0; background: center / cover no-repeat; transform: scale(1.06); transition: transform 6s linear; }

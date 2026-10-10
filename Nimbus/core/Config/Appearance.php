@@ -8,6 +8,7 @@ final class Appearance
     public static function items(): array
     {
         return [
+            ['name' => 'LayoutWidth', 'type' => 'radio', 'label' => '版面宽度', 'description' => '自适应：内容宽度随屏幕放大，最宽 1760 像素，大屏不再留大片空白；宽屏：固定 1440 像素；标准：固定 1180 像素。', 'default' => 'fluid', 'options' => ['fluid' => '自适应（推荐）', 'wide' => '宽屏 1440', 'standard' => '标准 1180']],
             ['name' => 'ThemeLight', 'type' => 'radio', 'label' => '亮色皮肤', 'description' => '白天模式使用的皮肤。', 'default' => 'sky', 'options' => ['sky' => '晴空 · 明亮通透']],
             ['name' => 'ThemeDark', 'type' => 'radio', 'label' => '暗色皮肤', 'description' => '夜间模式使用的皮肤。', 'default' => 'dusk', 'options' => ['dusk' => '暮色 · 深邃温暖', 'cyber' => '赛博朋克 · 霓虹']],
             ['name' => 'ThemeFollowSystem', 'type' => 'radio', 'label' => '默认跟随系统', 'description' => '访客首次访问时按系统亮暗偏好选择皮肤；关闭则默认亮色。', 'default' => '1', 'options' => ['1' => '跟随系统', '0' => '默认亮色']],

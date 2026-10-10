@@ -9,12 +9,14 @@ use Nimbus\Post;
 use Nimbus\Content;
 $nimbusContent = $this->hidden ? ['html' => '', 'hasMath' => false, 'hasMermaid' => false, 'hasCode' => false, 'toc' => []] : Content::render($this);
 $showToc = Options::bool('TocEnable') && !Post::hidden($this, 'toc') && count($nimbusContent['toc']) >= 3 && !$this->hidden;
+$immersive = Post::immersive($this);
 View::partial('header', ['archive' => $this, 'nimbusContent' => $nimbusContent]);
+if ($immersive) View::partial('post-hero', ['archive' => $this, 'post' => $this]);
 ?>
 <div class="n-container">
   <div class="n-wrap n-wrap-page" data-side="<?= $showToc ? 'toc' : View::e((string)Options::get('SidebarPosition', 'right')) ?>">
     <article class="n-post n-page n-main" id="n-post" data-cid="<?= (int)$this->cid ?>">
-      <?php View::partial('post-head', ['archive' => $this, 'post' => $this]); ?>
+      <?php if (!$immersive) View::partial('post-head', ['archive' => $this, 'post' => $this]); ?>
       <?php if ($this->hidden): ?>
         <?php View::partial('password', ['archive' => $this, 'post' => $this]); ?>
       <?php else: ?>

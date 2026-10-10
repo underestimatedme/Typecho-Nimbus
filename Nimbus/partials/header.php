@@ -61,7 +61,7 @@ if ($archive->is('single')) {
 }
 $favicon = (string)Options::get('Favicon', '');
 ?><!DOCTYPE html>
-<html lang="zh-CN" data-theme="<?= View::e($themeLight) ?>" data-radius="<?= View::e((string)Options::get('Radius', 'md')) ?>" data-motion="<?= View::e((string)Options::get('Motion', 'full')) ?>" data-font="<?= View::e($fontScheme) ?>"<?= Options::bool('Mourning') ? ' data-mourning' : '' ?>>
+<html lang="zh-CN" data-theme="<?= View::e($themeLight) ?>" data-radius="<?= View::e((string)Options::get('Radius', 'md')) ?>" data-motion="<?= View::e((string)Options::get('Motion', 'full')) ?>" data-font="<?= View::e($fontScheme) ?>" data-width="<?= View::e((string)Options::get('LayoutWidth', 'fluid')) ?>"<?= Options::bool('Mourning') ? ' data-mourning' : '' ?>>
 <head>
 <meta charset="<?php $o->charset(); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -87,5 +87,6 @@ $favicon = (string)Options::get('Favicon', '');
 </head>
 <body class="n-page-<?= $page ?>" data-page="<?= $page ?>" data-cid="<?= $cid ?>">
 <div class="n-progress" id="n-progress" aria-hidden="true"></div>
-<?php View::partial('nav', ['archive' => $archive, 'solid' => !($archive->is('index') && Options::bool('HeroEnable') && (int)$archive->request->get('page', 1) <= 1)]); ?>
+<?php $nimbusHeroNav = ($archive->is('index') && Options::bool('HeroEnable') && (int)$archive->request->get('page', 1) <= 1) || \Nimbus\Post::immersive($archive); ?>
+<?php View::partial('nav', ['archive' => $archive, 'solid' => !$nimbusHeroNav]); ?>
 <main id="n-main" class="n-main-wrap" data-page="<?= $page ?>" data-cid="<?= $cid ?>">

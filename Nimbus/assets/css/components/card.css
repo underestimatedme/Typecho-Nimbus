@@ -2,11 +2,11 @@
    文章卡片：交错 / 网格 / 纯文字
    ========================================================================== */
 .n-list { display: flex; flex-direction: column; gap: 20px; }
-.n-card { position: relative; display: grid; grid-template-columns: 300px minmax(0, 1fr); border-radius: var(--r); overflow: hidden; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), border-color var(--dur-fast); }
-.n-list-card .n-card:nth-child(even) { grid-template-columns: minmax(0, 1fr) 300px; }
+.n-card { position: relative; display: grid; grid-template-columns: clamp(300px, 36%, 460px) minmax(0, 1fr); border-radius: var(--r); overflow: hidden; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), border-color var(--dur-fast); }
+.n-list-card .n-card:nth-child(even) { grid-template-columns: minmax(0, 1fr) clamp(300px, 36%, 460px); }
 .n-list-card .n-card:nth-child(even) .n-card-img { order: 2; }
 .n-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: var(--line-hover); }
-.n-card-img { display: block; height: 214px; overflow: hidden; position: relative; background: var(--chip); }
+.n-card-img { display: block; height: clamp(214px, 15vw, 280px); overflow: hidden; position: relative; background: var(--chip); }
 .n-card-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-slow) var(--ease); }
 .n-card:hover .n-card-img img { transform: scale(1.06); }
 .n-card-img::after { content: ""; position: absolute; top: 0; left: -80%; width: 50%; height: 100%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .28), transparent); transform: skewX(-20deg); transition: left .7s var(--ease); pointer-events: none; }
@@ -28,7 +28,7 @@
 :root[data-theme="cyber"] .n-meta { font-family: var(--font-mono); }
 
 /* 网格 */
-.n-list-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.n-list-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
 .n-card-grid { grid-template-columns: 1fr; }
 .n-card-grid .n-card-img { height: 170px; }
 .n-card-grid .n-card-body { padding: 18px 20px; }
@@ -53,6 +53,7 @@
 .n-plain-meta .n-chip { position: relative; z-index: 2; }
 
 @media (max-width: 1000px) { .n-list-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.n-card-grid .n-card-img { height: clamp(170px, 11vw, 220px); }
 @media (max-width: 760px) {
   .n-card, .n-list-card .n-card:nth-child(even) { grid-template-columns: 1fr; }
   .n-list-card .n-card:nth-child(even) .n-card-img { order: 0; }
