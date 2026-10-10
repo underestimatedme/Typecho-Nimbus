@@ -4,7 +4,7 @@ cd "$(dirname "$0")/.."
 fail=0
 while IFS= read -r f; do
   out=$(php -l "$f" 2>&1) || { echo "$out"; fail=1; }
-done < <(find Nimbus tests -name '*.php')
+done < <(find Nimbus NimbusKit tests -name '*.php')
 bash tests/lint-php74.sh || fail=1
 [ $fail -eq 0 ] && echo "lint ok"
 exit $fail

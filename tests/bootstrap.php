@@ -25,3 +25,10 @@ function assert_true($v, string $msg = ''): void
     if ($v !== true) throw new RuntimeException($msg ?: 'expected true');
 }
 require_once __DIR__ . '/../Nimbus/core/Bootstrap.php';
+// NimbusKit 纯逻辑类（Lib/）无 Typecho 依赖，可直接加载
+spl_autoload_register(function (string $class): void {
+    $p = 'TypechoPlugin\\NimbusKit\\Lib\\';
+    if (strpos($class, $p) !== 0) return;
+    $f = __DIR__ . '/../NimbusKit/Lib/' . substr($class, strlen($p)) . '.php';
+    if (is_file($f)) require $f;
+});
