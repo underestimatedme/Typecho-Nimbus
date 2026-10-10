@@ -26,7 +26,7 @@
 2. 下载本仓库，把 `Nimbus` 目录放到 `usr/themes/` 下（目录名必须是 `Nimbus`）。
 3. 后台「控制台 → 外观」启用 Nimbus，然后在「设置外观」里按需配置。
 
-可选：安装配套插件 **NimbusKit** 可解锁点赞、浏览量、即时搜索、AJAX 评论等互动功能（开发中）。未安装时这些功能自动隐藏，主题其余功能不受影响。
+可选：安装配套插件 **[NimbusKit](../NimbusKit/)** 解锁浏览量、点赞、即时搜索、AJAX 评论、邮件通知、说说、友链管理、相册与 Sitemap。未安装时这些功能自动隐藏，主题其余功能不受影响。
 
 ## 配置速查
 
@@ -69,6 +69,10 @@
   [{"name": "Typecho", "url": "https://typecho.org", "avatar": "https://typecho.org/favicon.ico", "desc": "轻量开源博客程序"}]
   ```
 - **关于**（`page-about.php`）：大头像 + 社交 + 正文。
+- **说说**（`page-moments.php`）：时间线展示后台发布的说说（需 NimbusKit）。
+- **相册**（`page-albums.php`）：相册卡片与照片网格（需 NimbusKit）。
+
+安装 NimbusKit 后，友链页优先显示插件后台管理的友链。
 
 ## 文章自定义字段
 
