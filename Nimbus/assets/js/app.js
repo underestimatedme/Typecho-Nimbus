@@ -25,6 +25,7 @@ async function boot(root = document) {
   search.init(root);
   reveal.init(root);
   count.init(root);
+  if (cfg.music) import('./modules/player.js').then((m) => m.init()).catch(() => {});
   if (pageModule && pageModule.destroy) { try { pageModule.destroy(); } catch (e) {} }
   pageModule = null;
   const page = (document.body.dataset.page || 'index');

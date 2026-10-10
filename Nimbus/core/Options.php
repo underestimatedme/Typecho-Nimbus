@@ -34,7 +34,7 @@ final class Options
     {
         if (self::$defaults !== null) return self::$defaults;
         $d = [];
-        foreach (['Site', 'Index', 'Post', 'Sidebar', 'Appearance', 'Advanced'] as $g) {
+        foreach (['Site', 'Index', 'Post', 'Sidebar', 'Appearance', 'Media', 'Advanced'] as $g) {
             $cls = 'Nimbus\\Config\\' . $g;
             foreach ($cls::items() as $it) {
                 $d[$it['name']] = isset($it['default']) ? (string)$it['default'] : '';

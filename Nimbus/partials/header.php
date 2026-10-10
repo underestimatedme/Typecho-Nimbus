@@ -43,6 +43,7 @@ $config = [
     'admin' => (string)$o->adminUrl,
     'api' => Kit::apiUrl(),
     'features' => Kit::features(),
+    'music' => \Nimbus\Music::config(),
     'page' => $page,
     'cid' => $cid,
     'themes' => ['light' => $themeLight, 'dark' => $themeDark, 'follow' => $follow, 'switchable' => $switchable],

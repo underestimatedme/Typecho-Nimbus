@@ -13,6 +13,7 @@ import * as infinite from '../modules/infinite.js';
 import * as bookmarks from '../modules/bookmarks.js';
 import * as river from '../modules/river.js';
 import * as shortcode from '../modules/shortcode.js';
+import * as musicPage from '../modules/music-page.js';
 import { on } from '../modules/util.js';
 let offAppend = null;
 
@@ -24,6 +25,7 @@ export async function init(root = document) {
   bookmarks.init(root);
   river.init(root);
   shortcode.init(root);
+  musicPage.init(root);
   offAppend = on(document, 'nimbus:append', (e) => { like.init(e.detail.root); if ((window.NimbusConfig || {}).lightbox !== false) lightbox.init(document); });
   toc.init(root);
   share.init(root);
@@ -32,4 +34,4 @@ export async function init(root = document) {
   if (cfg.lightbox !== false) lightbox.init(root);
   await Promise.all([code.init(root), math.init(root), mermaid.init(root)]);
 }
-export function destroy() { if (offAppend) offAppend(); offAppend = null; infinite.destroy(); bookmarks.destroy(); river.destroy(); shortcode.destroy(); like.destroy(); hero.destroy(); toc.destroy(); share.destroy(); comment.destroy(); lightbox.destroy(); mermaid.destroy(); }
+export function destroy() { if (offAppend) offAppend(); offAppend = null; infinite.destroy(); bookmarks.destroy(); river.destroy(); shortcode.destroy(); musicPage.destroy(); like.destroy(); hero.destroy(); toc.destroy(); share.destroy(); comment.destroy(); lightbox.destroy(); mermaid.destroy(); }

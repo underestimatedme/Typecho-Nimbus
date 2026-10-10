@@ -53,6 +53,13 @@ final class View
         'wechat' => '<path d="M9 4C5.1 4 2 6.7 2 10c0 1.8.9 3.4 2.4 4.5L4 17l2.7-1.4c.7.2 1.5.4 2.3.4"/><path d="M15 8c3.9 0 7 2.5 7 5.5 0 1.6-.9 3-2.3 4L20 20l-2.5-1.2c-.8.2-1.6.3-2.5.3-3.9 0-7-2.5-7-5.6S11.1 8 15 8z"/>',
         'telegram' => '<path d="m21 4-4 16-6-4-3 3v-5l9-8-11 7-4-2z"/>',
         'zhihu' => '<path d="M4 5h9M8 5v6c0 3-1 5-3 7M5 11h8M10 11l3 7M15 5h5v12h-5zM17 17l-2 3"/>',
+        'play' => '<path d="M7 4.5v15l12-7.5z" fill="currentColor"/>',
+        'pause' => '<path d="M7 4h3v16H7zM14 4h3v16h-3z" fill="currentColor"/>',
+        'skip-back' => '<path d="M19 20 9 12l10-8z" fill="currentColor"/><path d="M5 19V5"/>',
+        'skip-forward' => '<path d="m5 4 10 8-10 8z" fill="currentColor"/><path d="M19 5v14"/>',
+        'volume' => '<path d="M11 5 6 9H2v6h4l5 4z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/>',
+        'music' => '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+        'shuffle' => '<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>',
         'alipay' => '<rect x="3" y="3" width="18" height="18" rx="4"/><path d="M7 12h10M12 7v3M8 15c3 2 6 2 9-1"/>',
     ];
 

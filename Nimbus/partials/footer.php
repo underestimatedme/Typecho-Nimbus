@@ -26,6 +26,7 @@ $policeCode = preg_replace('/\D+/', '', $police);
   <?= View::icon('arrow-up') ?>
 </button>
 <?php View::partial('search-modal', ['archive' => $archive]); ?>
+<?php if (\Nimbus\Music::config() !== null) View::partial('player', ['archive' => $archive]); ?>
 <?= (string)Options::get('FootCode', '') ?>
 <?php if (Options::get('CustomJs')): ?><script><?= (string)Options::get('CustomJs') ?></script>
 <?php endif; ?>

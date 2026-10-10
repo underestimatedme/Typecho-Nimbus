@@ -6,7 +6,7 @@ namespace Nimbus;
  */
 final class Admin
 {
-    const GROUPS = ['Site', 'Index', 'Post', 'Sidebar', 'Appearance', 'Advanced'];
+    const GROUPS = ['Site', 'Index', 'Post', 'Sidebar', 'Appearance', 'Media', 'Advanced'];
 
     public static function render($form): void
     {

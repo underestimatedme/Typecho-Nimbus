@@ -27,6 +27,9 @@ check "/index.php/links.html" 200 'data-page="page"'
 check "/index.php/search/test/" 200 'data-page="index"'
 check "/index.php/messages.html" 200 'n-comments-wall'
 check "/index.php/timeline.html" 200 'data-river'
+check "/index.php/music.html" 200 'data-music-page'
+check "/" 200 'id="n-player"'
+check "/usr/themes/Nimbus/assets/js/modules/player.js" 200 'export function play'
 check "/index.php/not-exist-page/" 404 'data-page="error"'
 # 短代码与回复可见（示例文章由 tests/seed-kit.php 创建）
 SC=$(curl -s "$BASE/index.php/search/%E7%9F%AD%E4%BB%A3%E7%A0%81%E6%BC%94%E7%A4%BA/" | grep -o 'href="[^"]*archives/[0-9]*/"' | head -1 | sed 's/href="//;s/"$//')

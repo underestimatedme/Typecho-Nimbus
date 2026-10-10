@@ -71,6 +71,7 @@
 
 /* 菜单项放不下时收进「更多」 */
 .n-nav-menu { min-width: 0; flex: 1; display: flex; justify-content: center; }
+@media (max-width: 1000px) { .n-nav-menu { display: none; } }
 .n-menu { flex-wrap: nowrap; }
 .n-menu-item { flex-shrink: 0; }
 .n-menu-more > a { cursor: pointer; }

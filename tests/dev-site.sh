@@ -27,5 +27,6 @@ php "$ROOT/tests/reset-admin.php" "$SITE/usr/nimbus.db"
 if ! curl -s -o /dev/null "$URL/"; then (php -d error_reporting=8191 -S 127.0.0.1:$PORT -t "$SITE" "$ROOT/tests/router.php" >/tmp/nimbus-php.log 2>&1 &); sleep 1; STARTED=1; fi
 BASE="$URL" bash "$ROOT/tests/activate-kit.sh"
 php "$ROOT/tests/seed-kit.php" "$SITE/usr/nimbus.db"
+php "$ROOT/tests/seed-media.php" "$SITE"
 [ "${STARTED:-0}" = "1" ] && pkill -f "php -d error_reporting=8191 -S 127.0.0.1:$PORT"
 echo "dev site: $URL  (admin / admin123)"
