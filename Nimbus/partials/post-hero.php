@@ -21,7 +21,7 @@ $cat = isset($post->categories[0]) ? $post->categories[0] : null;
       <time datetime="<?= date('c', (int)$post->created) ?>"><?= View::icon('calendar') ?><?= date('Y-m-d', (int)$post->created) ?></time>
       <?php if (Options::bool('ShowWordCount')): ?><span><?= View::icon('edit') ?><?= $words ?> 字</span><?php endif; ?>
       <?php if (Options::bool('ShowReadingTime')): ?><span><?= View::icon('clock') ?><?= Post::readingTime($words) ?> 分钟</span><?php endif; ?>
-      <?php if ($views !== null): ?><span><?= View::icon('eye') ?><?= View::num($views) ?></span><?php endif; ?>
+      <?php if ($views !== null): ?><span><?= View::icon('eye') ?><b data-views><?= View::num($views) ?></b></span><?php endif; ?>
       <a href="#comments"><?= View::icon('comment') ?><?= (int)$post->commentsNum ?></a>
     </div>
     <?php endif; ?>

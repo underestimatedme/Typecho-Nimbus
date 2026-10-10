@@ -42,6 +42,7 @@ $config = [
     'site' => rtrim((string)$o->siteUrl, '/'),
     'admin' => (string)$o->adminUrl,
     'api' => Kit::apiUrl(),
+    'features' => Kit::features(),
     'page' => $page,
     'cid' => $cid,
     'themes' => ['light' => $themeLight, 'dark' => $themeDark, 'follow' => $follow, 'switchable' => $switchable],

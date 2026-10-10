@@ -62,6 +62,36 @@ final class Kit
         return is_array($v) ? $v : null;
     }
 
+    /** 插件开启的功能名单（views likes search ajaxComment sitemap）。 */
+    public static function features(): array
+    {
+        $v = self::call('features');
+        return is_array($v) ? $v : [];
+    }
+
+    public static function has(string $feature): bool
+    {
+        return in_array($feature, self::features(), true);
+    }
+
+    /** @return array{items:array,total:int}|null */
+    public static function moments(int $page, int $size): ?array
+    {
+        $v = self::call('moments', [$page, $size]);
+        return is_array($v) ? $v : null;
+    }
+
+    public static function albums(): ?array
+    {
+        $v = self::call('albums');
+        return is_array($v) ? $v : null;
+    }
+
+    public static function version(): ?string
+    {
+        return self::enabled() && defined('NimbusKit_Api::VERSION') ? (string)\NimbusKit_Api::VERSION : null;
+    }
+
     public static function links(): ?array
     {
         $v = self::call('links');

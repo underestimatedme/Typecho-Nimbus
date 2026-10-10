@@ -27,3 +27,10 @@
 .n-reward-codes img { width: 220px; height: 220px; object-fit: cover; margin: 0 auto; border-radius: var(--r); border: 1px solid var(--line); background: #fff; }
 .n-reward-codes figcaption { margin-top: 10px; font-size: var(--text-xs); color: var(--muted); }
 :root[data-theme="cyber"] .n-reward-tabs, :root[data-theme="cyber"] .n-reward-tabs button, :root[data-theme="cyber"] .n-share-menu { border-radius: var(--r-md); }
+.n-like { min-width: 88px; }
+.n-like .n-ico { transition: transform var(--dur-fast) var(--ease); }
+.n-like:hover .n-ico { transform: scale(1.15); }
+.n-like.is-on { background: color-mix(in srgb, var(--like) 10%, var(--card)); }
+.n-like-burst { position: fixed; z-index: var(--z-toast); width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%; background: var(--like); pointer-events: none; animation: n-burst .7s var(--ease) forwards; }
+.n-like-burst:nth-child(odd) { background: var(--accent); }
+@keyframes n-burst { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(.2); opacity: 0; } }

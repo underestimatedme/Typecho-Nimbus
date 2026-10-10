@@ -77,28 +77,51 @@ export function init(root = document) {
   if (pv && pt) unbind.push(on(pt, 'click', () => { const show = pv.hidden; pv.hidden = !show; ta.hidden = show; if (show) pv.innerHTML = mdPreview(ta.value); pt.classList.toggle('is-on', show); }));
   // Ctrl+Enter
   unbind.push(on(ta, 'keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); form.requestSubmit ? form.requestSubmit() : form.submit(); } }));
-  // 提交态 / AJAX（Kit）
+  // 提交态 / AJAX（NimbusKit 开启时）
+  const errBox = (() => { let el = qs('[data-comment-error]', form); if (!el) { el = document.createElement('div'); el.className = 'n-comment-error'; el.dataset.commentError = ''; el.hidden = true; form.insertBefore(el, qs('.n-comment-tools', form)); } return el; })();
+  const showError = (msg) => { errBox.textContent = msg; errBox.hidden = false; errBox.classList.remove('is-shake'); void errBox.offsetWidth; errBox.classList.add('is-shake'); };
   unbind.push(on(form, 'submit', async (e) => {
     const btn = qs('[data-comment-submit]', form);
     if (pv && !pv.hidden) { pv.hidden = true; ta.hidden = false; }
-    if (form.dataset.ajax !== '1' || !config().api) { btn && btn.classList.add('is-loading'); return; }
+    errBox.hidden = true;
+    if (form.dataset.ajax !== '1' || !config().api || !window.fetch) { btn && btn.classList.add('is-loading'); return; }
     e.preventDefault();
-    btn && btn.classList.add('is-loading');
+    if (btn) { btn.classList.add('is-loading'); btn.disabled = true; }
     try {
-      const r = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' } });
-      const data = await r.json();
-      if (!r.ok || data.error) throw new Error(data.error || '提交失败');
-      toast(data.message || '评论已提交');
-      if (data.html) {
-        const list = qs('#n-comment-list') || (() => { const ol = document.createElement('ol'); ol.className = 'n-comment-list'; ol.id = 'n-comment-list'; respond.before(ol); return ol; })();
-        const parent = qs('input[name=parent]', form);
-        const tpl = document.createElement('template'); tpl.innerHTML = data.html.trim();
-        if (parent && parent.value) { const li = document.getElementById('comment-' + parent.value); let ol = li && li.querySelector(':scope > .n-comment-children'); if (li && !ol) { ol = document.createElement('ol'); ol.className = 'n-comment-children'; li.appendChild(ol); } (ol || list).appendChild(tpl.content); } else list.appendChild(tpl.content);
+      const r = await fetch(form.action, { method: 'POST', body: new FormData(form), credentials: 'same-origin', headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' } });
+      const type = r.headers.get('content-type') || '';
+      let coid = null, message = '评论成功', doc = null;
+      if (type.includes('json')) {
+        const d = await r.json();
+        if (!d.ok) throw new Error(d.error || '提交失败');
+        coid = d.data.coid; message = d.data.message || message;
+      } else {
+        const html = await r.text();
+        doc = new DOMParser().parseFromString(html, 'text/html');
+        if (!r.ok || !doc.querySelector('#comments')) {
+          // Typecho 拒绝评论时返回错误页：取正文作为原因
+          const box = doc.querySelector('.container') || doc.body;
+          throw new Error((box ? box.textContent : '').replace(/\s+/g, ' ').trim().slice(0, 160) || '提交失败（' + r.status + '）');
+        }
+        const m = (r.url || '').match(/#comment-(\d+)/); if (m) coid = m[1];
       }
-      ta.value = '';
-      window.TypechoComment.cancelReply();
-    } catch (err) { toast(err.message || '提交失败，请重试'); }
-    finally { btn && btn.classList.remove('is-loading'); }
+      if (!doc) {
+        const page = await fetch(location.href.split('#')[0], { credentials: 'same-origin', headers: { 'X-Nimbus-Router': '1' } });
+        doc = new DOMParser().parseFromString(await page.text(), 'text/html');
+      }
+      const fresh = doc.querySelector('#comments'), old = document.getElementById('comments');
+      if (fresh && old) {
+        old.replaceWith(fresh);
+        init(document);
+        const li = coid ? document.getElementById('comment-' + coid) : null;
+        if (li) { li.classList.add('is-new'); li.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+      }
+      toast(message);
+    } catch (err) {
+      showError(err.message || '提交失败，请重试');
+    } finally {
+      if (btn && document.contains(btn)) { btn.classList.remove('is-loading'); btn.disabled = false; }
+    }
   }));
   // URL 带 replyTo 时定位
   const m = location.search.match(/replyTo=(\d+)/);

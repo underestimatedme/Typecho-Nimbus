@@ -73,3 +73,8 @@ a.n-comment-name:hover { color: var(--accent-text); }
   .n-respond { padding: 16px; }
   .n-comment-tip { display: none; }
 }
+.n-comment-error { margin-top: 10px; padding: 10px 14px; border-radius: 10px; font-size: var(--text-sm); color: var(--like); background: color-mix(in srgb, var(--like) 10%, var(--card)); border: 1px solid color-mix(in srgb, var(--like) 30%, transparent); }
+.n-comment-error.is-shake { animation: n-shake .4s var(--ease); }
+.n-comment.is-new > .n-comment-main { animation: n-new-comment 2.4s var(--ease); border-radius: 12px; }
+@keyframes n-shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+@keyframes n-new-comment { 0% { background: var(--accent-soft); box-shadow: 0 0 0 8px var(--accent-soft); } 100% { background: transparent; box-shadow: 0 0 0 8px transparent; } }

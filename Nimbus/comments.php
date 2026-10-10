@@ -34,7 +34,7 @@ $allow = $this->allow('comment');
       <h4 class="n-respond-title" data-respond-title>发表评论</h4>
       <?php $comments->cancelReply('取消回复'); ?>
     </div>
-    <form class="n-comment-form" id="n-comment-form" method="post" action="<?php $this->commentUrl(); ?>" data-comment-form data-ajax="<?= Kit::enabled() ? '1' : '0' ?>">
+    <form class="n-comment-form" id="n-comment-form" method="post" action="<?php $this->commentUrl(); ?>" data-comment-form data-ajax="<?= Kit::has('ajaxComment') ? '1' : '0' ?>">
       <input type="hidden" name="_" value="<?= View::e($this->security->getToken($this->request->getRequestUrl())) ?>">
       <?php if ($this->user->hasLogin()): ?>
       <p class="n-comment-logged">以 <b><?= View::e($this->user->screenName) ?></b> 的身份评论 · <a href="<?php $this->options->logoutUrl(); ?>" data-no-router>退出</a></p>
