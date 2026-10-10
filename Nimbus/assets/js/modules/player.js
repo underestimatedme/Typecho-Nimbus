@@ -132,7 +132,7 @@ export async function init() {
     if (!S.list.length) return;
     S.sameOrigin = S.list.every((t) => { try { return new URL(t.url, location.href).origin === location.origin; } catch (e) { return false; } });
     S.audio = new Audio();
-    S.audio.preload = 'metadata';
+    S.audio.preload = 'none'; // 不在每个页面预取音频；音乐页需要时长时再加载元数据
     let saved = {};
     try { saved = JSON.parse(storage.get(KEY) || '{}') || {}; } catch (e) {}
     S.audio.volume = typeof saved.v === 'number' ? Math.min(1, Math.max(0, saved.v)) : 0.8;

@@ -81,7 +81,7 @@ html[data-motion="off"] .n-post-hero-chip, html[data-motion="off"] .n-post-hero-
    ========================================================================== */
 .n-post { width: 100%; max-width: var(--post-w); justify-self: center; }
 .n-post .n-prose > * { max-width: var(--prose-w); margin-inline: auto; }
-.n-post .n-prose > pre, .n-post .n-prose > .n-table-wrap, .n-post .n-prose > .mermaid, .n-post .n-prose > figure, .n-post .n-prose > .katex-display, .n-post .n-prose > p:has(> .n-lightbox-link:only-child), .n-post .n-prose > p:has(> img:only-child), .n-post .n-prose > iframe, .n-post .n-prose > video { max-width: none; }
+/* 表格、代码、图片、视频与正文同宽、左右对齐（之前铺满正文列，与标题和段落对不齐） */
 .n-post .n-prose > p:has(> .n-lightbox-link:only-child) img, .n-post .n-prose > p:has(> img:only-child) img { width: 100%; }
 .n-post > .n-post-foot, .n-post > .n-notice, .n-post > .n-password, .n-post > .n-post-head:not(.has-banner) { max-width: var(--prose-w); margin-inline: auto; width: 100%; }
 

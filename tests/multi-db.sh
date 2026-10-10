@@ -69,7 +69,7 @@ if [ "$WHICH" = all ] || [ "$WHICH" = mysql ]; then
   prepare_copy "$W/tc-mysql"
   (cd "$W/tc-mysql" && TYPECHO_DB_ADAPTER=Pdo_Mysql TYPECHO_DB_HOST=127.0.0.1 TYPECHO_DB_PORT=33077 TYPECHO_DB_USER=root TYPECHO_DB_PASSWORD= TYPECHO_DB_DATABASE=typecho TYPECHO_DB_CHARSET=utf8mb4 TYPECHO_DB_PREFIX=typecho_ TYPECHO_SITE_URL=http://localhost:8101 TYPECHO_USER_NAME=admin TYPECHO_USER_PASSWORD=admin123 TYPECHO_USER_MAIL=admin@example.com php -d error_reporting=8191 install.php >/dev/null 2>&1)
   mysql -h127.0.0.1 -P33077 -uroot typecho -e "UPDATE typecho_options SET value='Nimbus' WHERE name='theme'"
-  php -d error_reporting=8191 -S 127.0.0.1:8101 -t "$W/tc-mysql" "$ROOT/tests/router.php" >"$W/php-mysql.log" 2>&1 & pids+=($!)
+  PHP_CLI_SERVER_WORKERS=4 php -d error_reporting=8191 -S 127.0.0.1:8101 -t "$W/tc-mysql" "$ROOT/tests/router.php" >"$W/php-mysql.log" 2>&1 & pids+=($!)
   sleep 1; BASE=http://localhost:8101 bash "$ROOT/tests/activate-kit.sh" >/dev/null || BASE=http://localhost:8101 bash "$ROOT/tests/activate-kit.sh"
   T=$(( $(date +%s) - 120 ))
   { seed_sql $T; pages_sql $T '`order`' 'authorId'; } | mysql -h127.0.0.1 -P33077 -uroot typecho
@@ -85,7 +85,7 @@ if [ "$WHICH" = all ] || [ "$WHICH" = pgsql ]; then
   prepare_copy "$W/tc-pg"
   (cd "$W/tc-pg" && TYPECHO_DB_ADAPTER=Pdo_Pgsql TYPECHO_DB_HOST=127.0.0.1 TYPECHO_DB_PORT=54377 TYPECHO_DB_USER=postgres TYPECHO_DB_PASSWORD= TYPECHO_DB_DATABASE=typecho TYPECHO_DB_PREFIX=typecho_ TYPECHO_SITE_URL=http://localhost:8102 TYPECHO_USER_NAME=admin TYPECHO_USER_PASSWORD=admin123 TYPECHO_USER_MAIL=admin@example.com php -d error_reporting=8191 install.php >/dev/null 2>&1)
   "$PGBIN/psql" -h 127.0.0.1 -p 54377 -U postgres typecho -q -c "UPDATE typecho_options SET value='Nimbus' WHERE name='theme'"
-  php -d error_reporting=8191 -S 127.0.0.1:8102 -t "$W/tc-pg" "$ROOT/tests/router.php" >"$W/php-pg.log" 2>&1 & pids+=($!)
+  PHP_CLI_SERVER_WORKERS=4 php -d error_reporting=8191 -S 127.0.0.1:8102 -t "$W/tc-pg" "$ROOT/tests/router.php" >"$W/php-pg.log" 2>&1 & pids+=($!)
   sleep 1; BASE=http://localhost:8102 bash "$ROOT/tests/activate-kit.sh" >/dev/null || BASE=http://localhost:8102 bash "$ROOT/tests/activate-kit.sh"
   T=$(( $(date +%s) - 120 ))
   { seed_sql $T; pages_sql $T '"order"' '"authorId"'; } | "$PGBIN/psql" -h 127.0.0.1 -p 54377 -U postgres typecho -q

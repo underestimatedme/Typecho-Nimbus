@@ -24,7 +24,7 @@ ln -sfn "$ROOT/Nimbus" "$SITE/usr/themes/Nimbus"
 php "$ROOT/tests/seed.php" "$SITE/usr/nimbus.db" "$URL"
 php "$ROOT/tests/reset-admin.php" "$SITE/usr/nimbus.db"
 # 启用 NimbusKit 并灌入插件示例数据（需要站点在运行）
-if ! curl -s -o /dev/null "$URL/"; then (php -d error_reporting=8191 -S 127.0.0.1:$PORT -t "$SITE" "$ROOT/tests/router.php" >/tmp/nimbus-php.log 2>&1 &); sleep 1; STARTED=1; fi
+if ! curl -s -o /dev/null "$URL/"; then (PHP_CLI_SERVER_WORKERS=8 php -d error_reporting=8191 -S 127.0.0.1:$PORT -t "$SITE" "$ROOT/tests/router.php" >/tmp/nimbus-php.log 2>&1 &); sleep 1; STARTED=1; fi
 BASE="$URL" bash "$ROOT/tests/activate-kit.sh"
 php "$ROOT/tests/seed-kit.php" "$SITE/usr/nimbus.db"
 php "$ROOT/tests/seed-media.php" "$SITE"

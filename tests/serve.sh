@@ -26,4 +26,4 @@ fi
 
 echo "Nimbus 测试站：$URL   后台：$URL/admin/  (admin / admin123)   按 Ctrl+C 停止"
 # Typecho 1.2.1 核心在 PHP 8.4+ 上会刷 Deprecated 提醒；本地只屏蔽这一类，警告和错误照常显示
-exec php -d error_reporting=8191 -S "127.0.0.1:$PORT" -t .dev/typecho tests/router.php
+PHP_CLI_SERVER_WORKERS="${PHP_CLI_SERVER_WORKERS:-8}" exec php -d error_reporting=8191 -S "127.0.0.1:$PORT" -t .dev/typecho tests/router.php

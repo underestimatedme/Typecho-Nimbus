@@ -84,7 +84,13 @@ $favicon = (string)Options::get('Favicon', '');
 <?php elseif ($fontScheme === 'serif'): ?>
 <link rel="stylesheet" href="<?= View::e(View::asset('fonts/fonts.css')) ?>">
 <?php endif; ?>
-<link rel="stylesheet" href="<?= View::e(View::asset('css/nimbus.css')) ?>">
+<link rel="stylesheet" href="<?= View::e(\Nimbus\Assets::cssHref()) ?>">
+<?php
+$nimbusPreload = [];
+if (Options::bool('RouterEnable')) $nimbusPreload[] = 'modules/router.js';
+if ($config['music']) $nimbusPreload[] = 'modules/player.js';
+echo \Nimbus\Assets::preloadTags($page, $nimbusPreload);
+?>
 <script id="n-config" type="application/json"><?= json_encode($config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) ?></script>
 <?php if (Options::get('CustomCss')): ?><style><?= (string)Options::get('CustomCss') ?></style>
 <?php endif; ?>

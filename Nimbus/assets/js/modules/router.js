@@ -32,11 +32,15 @@ export async function navigate(url, push = true) {
   if (current) current.abort();
   const ctrl = new AbortController(); current = ctrl;
   progressStart();
+  // 服务器响应太慢时不让用户干等：4 秒内拿不到响应就改为普通跳转
+  let slow = false;
+  const timer = setTimeout(() => { slow = true; ctrl.abort(); }, 4000);
   try {
     const r = await fetch(url, { headers: { 'X-Nimbus-Router': '1', Accept: 'text/html' }, signal: ctrl.signal, credentials: 'same-origin' });
     const type = r.headers.get('content-type') || '';
     if (!r.ok && r.status !== 404) throw new Error('status ' + r.status);
     if (!type.includes('text/html')) throw new Error('not html');
+    clearTimeout(timer);
     const html = await r.text();
     const doc = new DOMParser().parseFromString(html, 'text/html');
     if (!doc.querySelector('#n-main')) throw new Error('foreign page');
@@ -55,7 +59,8 @@ export async function navigate(url, push = true) {
     if (target) target.scrollIntoView(); else window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
     document.dispatchEvent(new CustomEvent('nimbus:page', { detail: { root: document, url: finalUrl } }));
   } catch (e) {
-    if (e.name === 'AbortError') return;
+    clearTimeout(timer);
+    if (e.name === 'AbortError' && !slow) return;
     if (config().debug) console.warn('[nimbus] router fallback', e);
     location.href = url;
     return;

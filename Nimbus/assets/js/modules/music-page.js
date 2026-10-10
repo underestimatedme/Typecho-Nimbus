@@ -14,6 +14,7 @@ export async function init(root = document) {
   const S = P.state();
   if (!S.ready || !S.list.length) { el.classList.add('is-empty'); return; }
   el.classList.add('is-ready');
+  if (S.audio.preload === 'none' && S.audio.readyState === 0) { S.audio.preload = 'metadata'; S.audio.load(); }
   const offs = [];
   const $ = (s) => qs(s, el);
   const cover = $('[data-mp-cover]'), title = $('[data-mp-title]'), artist = $('[data-mp-artist]');
