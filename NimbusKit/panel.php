@@ -16,7 +16,7 @@ include $adminDir . 'header.php';
 include $adminDir . 'menu.php';
 
 $e = function ($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); };
-$tabs = ['moments' => '说说', 'links' => '友链', 'albums' => '相册', 'stats' => '统计', 'mail' => '邮件'];
+$tabs = ['moments' => '说说', 'links' => '友链', 'albums' => '相册', 'bookmarks' => '收藏夹', 'projects' => '项目', 'stats' => '统计', 'mail' => '邮件'];
 $tab = (string)$request->get('tab', 'moments');
 if (!isset($tabs[$tab])) $tab = 'moments';
 $edit = (int)$request->get('edit');
@@ -146,8 +146,86 @@ $pluginUrl = rtrim((string)$options->pluginUrl, '/') . '/NimbusKit';
         </div>
       </div>
 
+<?php elseif ($tab === 'bookmarks'):
+    $items = Store::bookmarks(true);
+    $cur = $edit ? Store::bookmark($edit) : null;
+    $groups = array_values(array_unique(array_filter(array_column($items, 'group')))); ?>
+      <div class="nk-grid">
+        <form class="nk-card nk-form" method="post" action="<?= $e($act('bookmark-save')) ?>">
+          <h3><?= $cur ? '编辑收藏' : '添加收藏' ?></h3>
+          <?php if ($cur): ?><input type="hidden" name="id" value="<?= (int)$cur['id'] ?>"><?php endif; ?>
+          <label>分组<input name="group" list="nk-groups" maxlength="100" placeholder="如：AI 工具、开发、设计" value="<?= $e($cur['group'] ?? '') ?>"></label>
+          <datalist id="nk-groups"><?php foreach ($groups as $g): ?><option value="<?= $e($g) ?>"><?php endforeach; ?></datalist>
+          <label>名称 *<input name="name" required maxlength="100" value="<?= $e($cur['name'] ?? '') ?>"></label>
+          <label>网址 *<input name="url" required type="url" placeholder="https://" value="<?= $e($cur['url'] ?? '') ?>"></label>
+          <label>图标 URL<input name="icon" type="url" placeholder="留空显示首字母" value="<?= $e($cur['icon'] ?? '') ?>"></label>
+          <label>简介<input name="desc" maxlength="500" value="<?= $e($cur['desc'] ?? '') ?>"></label>
+          <div class="nk-row">
+            <label>排序<input name="sort" type="number" value="<?= (int)($cur['sort'] ?? 0) ?>"></label>
+            <label>状态<select name="status"><option value="publish">显示</option><option value="hidden"<?= ($cur['status'] ?? '') === 'hidden' ? ' selected' : '' ?>>隐藏</option></select></label>
+          </div>
+          <div class="nk-actions"><button class="btn primary" type="submit">保存</button><?php if ($cur): ?><a class="btn" href="<?= $e($self(['tab' => 'bookmarks'])) ?>">取消</a><?php endif; ?></div>
+          <p class="nk-tip">前台展示：新建独立页面，模板选择「收藏夹」。分组按组内最小排序值排列。</p>
+        </form>
+        <div class="nk-card">
+          <h3>收藏夹 <small><?= count($items) ?> 个</small></h3>
+          <?php if (empty($items)): ?><p class="nk-empty">还没有收藏。</p><?php endif; ?>
+          <table class="nk-table">
+            <thead><tr><th>分组</th><th>名称</th><th>网址</th><th>排序</th><th></th></tr></thead>
+            <tbody>
+              <?php foreach ($items as $b): ?>
+              <tr>
+                <td><?= $e($b['group'] ?: '未分组') ?></td>
+                <td><span class="nk-av"<?= $b['icon'] ? ' style="background-image:url(\'' . $e($b['icon']) . '\')"' : '' ?>></span><?= $e($b['name']) ?><?= $b['status'] === 'hidden' ? ' <small>（隐藏）</small>' : '' ?></td>
+                <td><a href="<?= $e($b['url']) ?>" target="_blank" rel="noopener"><?= $e(preg_replace('#^https?://#', '', $b['url'])) ?></a></td>
+                <td><?= (int)$b['sort'] ?></td>
+                <td class="nk-ops"><a href="<?= $e($self(['tab' => 'bookmarks', 'edit' => $b['id']])) ?>">编辑</a><form method="post" action="<?= $e($act('bookmark-delete', ['id' => $b['id']])) ?>" onsubmit="return confirm('确定删除？')"><button type="submit">删除</button></form></td>
+              </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+<?php elseif ($tab === 'projects'):
+    $items = Store::projects(true);
+    $cur = $edit ? Store::project($edit) : null; ?>
+      <div class="nk-grid">
+        <form class="nk-card nk-form" method="post" action="<?= $e($act('project-save')) ?>">
+          <h3><?= $cur ? '编辑项目' : '添加项目' ?></h3>
+          <?php if ($cur): ?><input type="hidden" name="id" value="<?= (int)$cur['id'] ?>"><?php endif; ?>
+          <label>项目名称 *<input name="name" required maxlength="200" value="<?= $e($cur['name'] ?? '') ?>"></label>
+          <label>简介<textarea name="description" rows="4"><?= $e($cur['description'] ?? '') ?></textarea></label>
+          <label>封面 URL<input name="cover" type="url" value="<?= $e($cur['cover'] ?? '') ?>"></label>
+          <label>演示地址<input name="url" type="url" placeholder="https://" value="<?= $e($cur['url'] ?? '') ?>"></label>
+          <label>源码地址<input name="repo" type="url" placeholder="https://github.com/…" value="<?= $e($cur['repo'] ?? '') ?>"></label>
+          <label>技术栈<input name="tags" placeholder="用逗号分隔，如：Next.js, FastAPI, PostgreSQL" value="<?= $e(implode(', ', $cur['tags'] ?? [])) ?>"></label>
+          <div class="nk-row">
+            <label>排序<input name="sort" type="number" value="<?= (int)($cur['sort'] ?? 0) ?>"></label>
+            <label>状态<select name="status"><option value="publish">显示</option><option value="hidden"<?= ($cur['status'] ?? '') === 'hidden' ? ' selected' : '' ?>>隐藏</option></select></label>
+          </div>
+          <div class="nk-actions"><button class="btn primary" type="submit">保存</button><?php if ($cur): ?><a class="btn" href="<?= $e($self(['tab' => 'projects'])) ?>">取消</a><?php endif; ?></div>
+          <p class="nk-tip">前台展示：新建独立页面，模板选择「项目」。</p>
+        </form>
+        <div class="nk-card">
+          <h3>项目 <small><?= count($items) ?> 个</small></h3>
+          <?php if (empty($items)): ?><p class="nk-empty">还没有项目。</p><?php endif; ?>
+          <div class="nk-albums">
+            <?php foreach ($items as $p): ?>
+            <div class="nk-album">
+              <i style="background-image:url('<?= $e($p['cover']) ?>')"></i>
+              <b><?= $e($p['name']) ?><?= $p['status'] === 'hidden' ? ' <small>（隐藏）</small>' : '' ?></b><small><?= $e(implode(' · ', $p['tags'])) ?: '—' ?> · 排序 <?= (int)$p['sort'] ?></small>
+              <div class="nk-ops"><a href="<?= $e($self(['tab' => 'projects', 'edit' => $p['id']])) ?>">编辑</a><form method="post" action="<?= $e($act('project-delete', ['id' => $p['id']])) ?>" onsubmit="return confirm('确定删除这个项目？')"><button type="submit">删除</button></form></div>
+            </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      </div>
+
 <?php elseif ($tab === 'stats'):
     $views = Store::topPosts('views', 20);
+    $daily = Store::daily(14);
+    $totals = Store::totals();
     $likes = Store::topPosts('likes', 20);
     $w = \Widget\Base\Contents::alloc();
     $link = function ($cid) use ($w) {
@@ -155,6 +233,11 @@ $pluginUrl = rtrim((string)$options->pluginUrl, '/') . '/NimbusKit';
         $r = $db->fetchRow($db->select()->from('table.contents')->where('cid = ?', $cid)->limit(1));
         return $r ? $w->filter($r)['permalink'] : '#';
     }; ?>
+      <div class="nk-card" style="margin-bottom:18px">
+        <h3>近 14 天浏览 <small>总浏览 <?= (int)$totals['views'] ?> · 总点赞 <?= (int)$totals['likes'] ?></small></h3>
+        <?php $max = max(1, max(array_column($daily, 'views'))); ?>
+        <div class="nk-bars"><?php foreach ($daily as $d): ?><span title="<?= $e(substr((string)$d['day'], 4, 2) . '-' . substr((string)$d['day'], 6, 2)) ?>：<?= (int)$d['views'] ?>"><i style="height:<?= round($d['views'] / $max * 100) ?>%"></i><em><?= $e(substr((string)$d['day'], 6, 2)) ?></em></span><?php endforeach; ?></div>
+      </div>
       <div class="nk-grid nk-grid-2">
         <?php foreach (['浏览量 Top 20' => [$views, 'views'], '点赞 Top 20' => [$likes, 'likes']] as $title => $pair): ?>
         <div class="nk-card">

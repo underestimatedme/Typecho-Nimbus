@@ -88,6 +88,7 @@ final class Store
         $db = self::db();
         $db->query($db->update('table.nimbus_stats')->expression('views', 'views + 1')->where('type = ? AND cid = ?', $type, $cid));
         unset(self::$stats[$type . ':' . $cid]);
+        self::incrementDaily();
         return self::stat($type, $cid)['views'];
     }
 
@@ -138,6 +139,111 @@ final class Store
         $db = self::db();
         $row = $db->fetchRow($db->select('cid', 'password')->from('table.contents')->where('cid = ? AND status = ? AND (type = ? OR type = ?)', $cid, 'publish', 'post', 'page')->where('created < ?', self::now())->limit(1));
         return $row && ($row['password'] === null || $row['password'] === '');
+    }
+
+    /** 每日总浏览量（统计看板用）。 */
+    private static function incrementDaily(): void
+    {
+        $db = self::db();
+        $day = Text::dayKey(self::now() ?: time());
+        try {
+            $n = $db->query($db->update('table.nimbus_daily')->expression('views', 'views + 1')->where('day = ?', $day));
+            if (!$n) $db->query($db->insert('table.nimbus_daily')->rows(['day' => $day, 'views' => 1]));
+        } catch (\Typecho\Db\Exception $e) {
+            // 旧版本升级后还没重新启用插件建表：忽略
+        }
+    }
+
+    /** 近 $days 天每日浏览量（含 0）。 */
+    public static function daily(int $days): array
+    {
+        $db = self::db();
+        $end = self::now() ?: time();
+        $keys = [];
+        for ($i = $days - 1; $i >= 0; $i--) $keys[Text::dayKey($end - $i * 86400)] = 0;
+        try {
+            $rows = $db->fetchAll($db->select('day', 'views')->from('table.nimbus_daily')->where('day >= ?', (int)array_key_first($keys)));
+            foreach ($rows as $r) if (isset($keys[(int)$r['day']])) $keys[(int)$r['day']] = (int)$r['views'];
+        } catch (\Typecho\Db\Exception $e) {
+        }
+        $out = [];
+        foreach ($keys as $k => $v) $out[] = ['day' => $k, 'views' => $v];
+        return $out;
+    }
+
+    public static function totals(): array
+    {
+        $db = self::db();
+        $r = $db->fetchRow($db->select(['SUM(views)' => 'v', 'SUM(likes)' => 'l'])->from('table.nimbus_stats')->where('type = ?', 'post'));
+        return ['views' => (int)($r['v'] ?? 0), 'likes' => (int)($r['l'] ?? 0)];
+    }
+
+    // ---------- 收藏夹 ----------
+
+    public static function bookmarks(bool $all = false): array
+    {
+        $db = self::db();
+        $q = $db->select()->from('table.nimbus_bookmarks');
+        if (!$all) $q->where('status = ?', 'publish');
+        $rows = $db->fetchAll($q->order('sort', \Typecho\Db::SORT_ASC)->order('id', \Typecho\Db::SORT_ASC));
+        return array_map(function ($r) {
+            return ['id' => (int)$r['id'], 'group' => (string)$r['group_name'], 'name' => (string)$r['name'], 'url' => (string)$r['url'], 'icon' => (string)$r['icon'], 'desc' => (string)$r['description'], 'sort' => (int)$r['sort'], 'status' => (string)$r['status']];
+        }, $rows);
+    }
+
+    public static function bookmark(int $id): ?array
+    {
+        foreach (self::bookmarks(true) as $b) if ($b['id'] === $id) return $b;
+        return null;
+    }
+
+    public static function saveBookmark(?int $id, array $d): int
+    {
+        $db = self::db();
+        $row = ['group_name' => (string)$d['group'], 'name' => (string)$d['name'], 'url' => (string)$d['url'], 'icon' => (string)$d['icon'], 'description' => (string)$d['desc'], 'sort' => (int)$d['sort'], 'status' => ($d['status'] ?? '') === 'hidden' ? 'hidden' : 'publish'];
+        if ($id) { $db->query($db->update('table.nimbus_bookmarks')->rows($row)->where('id = ?', $id)); return $id; }
+        $row['created'] = time();
+        return (int)$db->query($db->insert('table.nimbus_bookmarks')->rows($row));
+    }
+
+    public static function deleteBookmark(int $id): void
+    {
+        $db = self::db();
+        $db->query($db->delete('table.nimbus_bookmarks')->where('id = ?', $id));
+    }
+
+    // ---------- 项目 ----------
+
+    public static function projects(bool $all = false): array
+    {
+        $db = self::db();
+        $q = $db->select()->from('table.nimbus_projects');
+        if (!$all) $q->where('status = ?', 'publish');
+        $rows = $db->fetchAll($q->order('sort', \Typecho\Db::SORT_ASC)->order('id', \Typecho\Db::SORT_DESC));
+        return array_map(function ($r) {
+            return ['id' => (int)$r['id'], 'name' => (string)$r['name'], 'description' => (string)$r['description'], 'cover' => (string)$r['cover'], 'url' => (string)$r['url'], 'repo' => (string)$r['repo'], 'tags' => Text::tags((string)$r['tags']), 'sort' => (int)$r['sort'], 'status' => (string)$r['status']];
+        }, $rows);
+    }
+
+    public static function project(int $id): ?array
+    {
+        foreach (self::projects(true) as $p) if ($p['id'] === $id) return $p;
+        return null;
+    }
+
+    public static function saveProject(?int $id, array $d): int
+    {
+        $db = self::db();
+        $row = ['name' => (string)$d['name'], 'description' => (string)$d['description'], 'cover' => (string)$d['cover'], 'url' => (string)$d['url'], 'repo' => (string)$d['repo'], 'tags' => implode(',', Text::tags((string)$d['tags'])), 'sort' => (int)$d['sort'], 'status' => ($d['status'] ?? '') === 'hidden' ? 'hidden' : 'publish'];
+        if ($id) { $db->query($db->update('table.nimbus_projects')->rows($row)->where('id = ?', $id)); return $id; }
+        $row['created'] = time();
+        return (int)$db->query($db->insert('table.nimbus_projects')->rows($row));
+    }
+
+    public static function deleteProject(int $id): void
+    {
+        $db = self::db();
+        $db->query($db->delete('table.nimbus_projects')->where('id = ?', $id));
     }
 
     // ---------- 搜索 ----------

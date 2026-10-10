@@ -6,7 +6,7 @@ namespace TypechoPlugin\NimbusKit\Lib;
  */
 final class Schema
 {
-    const TABLES = ['nimbus_stats', 'nimbus_like_log', 'nimbus_moments', 'nimbus_links', 'nimbus_albums'];
+    const TABLES = ['nimbus_stats', 'nimbus_like_log', 'nimbus_moments', 'nimbus_links', 'nimbus_albums', 'nimbus_bookmarks', 'nimbus_projects', 'nimbus_daily'];
 
     /** Typecho 适配器名（Mysqli、Pdo_Mysql、SQLite、Pdo_SQLite、Pgsql、Pdo_Pgsql）归一。 */
     public static function normalizeAdapter(string $adapter): string
@@ -43,6 +43,9 @@ final class Schema
             "CREATE TABLE IF NOT EXISTS {$p}nimbus_moments (id {$id}, content {$text}, images {$text}, created INT NOT NULL DEFAULT 0, status VARCHAR(10) NOT NULL DEFAULT 'publish'){$tail}",
             "CREATE TABLE IF NOT EXISTS {$p}nimbus_links (id {$id}, name VARCHAR(100) NOT NULL DEFAULT '', url VARCHAR(500) NOT NULL DEFAULT '', avatar VARCHAR(500) NOT NULL DEFAULT '', description VARCHAR(500) NOT NULL DEFAULT '', sort INT NOT NULL DEFAULT 0, status VARCHAR(10) NOT NULL DEFAULT 'publish', created INT NOT NULL DEFAULT 0){$tail}",
             "CREATE TABLE IF NOT EXISTS {$p}nimbus_albums (id {$id}, title VARCHAR(200) NOT NULL DEFAULT '', cover VARCHAR(500) NOT NULL DEFAULT '', description {$text}, photos {$text}, sort INT NOT NULL DEFAULT 0, created INT NOT NULL DEFAULT 0){$tail}",
+            "CREATE TABLE IF NOT EXISTS {$p}nimbus_bookmarks (id {$id}, group_name VARCHAR(100) NOT NULL DEFAULT '', name VARCHAR(100) NOT NULL DEFAULT '', url VARCHAR(500) NOT NULL DEFAULT '', icon VARCHAR(500) NOT NULL DEFAULT '', description VARCHAR(500) NOT NULL DEFAULT '', sort INT NOT NULL DEFAULT 0, status VARCHAR(10) NOT NULL DEFAULT 'publish', created INT NOT NULL DEFAULT 0){$tail}",
+            "CREATE TABLE IF NOT EXISTS {$p}nimbus_projects (id {$id}, name VARCHAR(200) NOT NULL DEFAULT '', description {$text}, cover VARCHAR(500) NOT NULL DEFAULT '', url VARCHAR(500) NOT NULL DEFAULT '', repo VARCHAR(500) NOT NULL DEFAULT '', tags VARCHAR(500) NOT NULL DEFAULT '', sort INT NOT NULL DEFAULT 0, status VARCHAR(10) NOT NULL DEFAULT 'publish', created INT NOT NULL DEFAULT 0){$tail}",
+            "CREATE TABLE IF NOT EXISTS {$p}nimbus_daily (day INT NOT NULL PRIMARY KEY, views INT NOT NULL DEFAULT 0){$tail}",
         ];
     }
 

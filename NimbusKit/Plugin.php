@@ -16,7 +16,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  *
  * @package NimbusKit
  * @author Nimbus Contributors
- * @version 1.0.0
+ * @version 1.1.0
  * @link https://github.com/underestimatedme/Nimbus
  */
 class Plugin implements PluginInterface

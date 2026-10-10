@@ -9,7 +9,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  */
 final class Api
 {
-    const VERSION = '1.0.0';
+    const VERSION = '1.1.0';
 
     public static function features(): array
     {
@@ -58,6 +58,23 @@ final class Api
     public static function albums(): ?array
     {
         return Store::albums();
+    }
+
+    /** @return array<int,array{name:string,items:array}> */
+    public static function bookmarks(): array
+    {
+        return \TypechoPlugin\NimbusKit\Lib\Text::groupBookmarks(Store::bookmarks());
+    }
+
+    public static function projects(): array
+    {
+        return Store::projects();
+    }
+
+    /** 统计看板数据。 */
+    public static function stats(): array
+    {
+        return ['daily' => Store::daily(30), 'totals' => Store::totals(), 'top' => Store::topPosts('views', 10)];
     }
 
     public static function likesFeature(): bool

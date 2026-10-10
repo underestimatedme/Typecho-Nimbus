@@ -66,6 +66,40 @@ class AdminAction extends \Widget\Base implements \Widget\ActionInterface
                     Store::deleteAlbum((int)$this->request->get('id'));
                     $msg = '相册已删除';
                     break;
+                case 'bookmark-save':
+                    $tab = 'bookmarks';
+                    $url = Text::safeUrl((string)$this->request->get('url'));
+                    $name = trim((string)$this->request->get('name'));
+                    if ($name === '' || $url === '') throw new \InvalidArgumentException('名称和以 http(s):// 开头的网址必填');
+                    Store::saveBookmark((int)$this->request->get('id') ?: null, [
+                        'group' => mb_substr(trim((string)$this->request->get('group')), 0, 100), 'name' => mb_substr($name, 0, 100), 'url' => $url,
+                        'icon' => Text::safeUrl((string)$this->request->get('icon')), 'desc' => mb_substr(trim((string)$this->request->get('desc')), 0, 500),
+                        'sort' => (int)$this->request->get('sort'), 'status' => (string)$this->request->get('status'),
+                    ]);
+                    $msg = '收藏已保存';
+                    break;
+                case 'bookmark-delete':
+                    $tab = 'bookmarks';
+                    Store::deleteBookmark((int)$this->request->get('id'));
+                    $msg = '收藏已删除';
+                    break;
+                case 'project-save':
+                    $tab = 'projects';
+                    $name = trim((string)$this->request->get('name'));
+                    if ($name === '') throw new \InvalidArgumentException('项目名称必填');
+                    Store::saveProject((int)$this->request->get('id') ?: null, [
+                        'name' => mb_substr($name, 0, 200), 'description' => trim((string)$this->request->get('description')),
+                        'cover' => Text::safeUrl((string)$this->request->get('cover')), 'url' => Text::safeUrl((string)$this->request->get('url')),
+                        'repo' => Text::safeUrl((string)$this->request->get('repo')), 'tags' => (string)$this->request->get('tags'),
+                        'sort' => (int)$this->request->get('sort'), 'status' => (string)$this->request->get('status'),
+                    ]);
+                    $msg = '项目已保存';
+                    break;
+                case 'project-delete':
+                    $tab = 'projects';
+                    Store::deleteProject((int)$this->request->get('id'));
+                    $msg = '项目已删除';
+                    break;
                 case 'test-mail':
                     $tab = 'mail';
                     $to = trim((string)$this->request->get('to'));

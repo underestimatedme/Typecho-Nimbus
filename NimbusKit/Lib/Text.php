@@ -58,6 +58,46 @@ final class Text
         return array_values(array_map(function ($p) { return $p['url']; }, self::photos($raw)));
     }
 
+    /**
+     * 收藏夹按分组聚合：分组顺序取组内最小排序值，组内按 sort、id。
+     * @param array<int,array> $rows 每项含 group、sort、id
+     * @return array<int,array{name:string,items:array}>
+     */
+    public static function groupBookmarks(array $rows): array
+    {
+        $groups = [];
+        foreach ($rows as $r) {
+            $g = trim((string)($r['group'] ?? '')) ?: '未分组';
+            if (!isset($groups[$g])) $groups[$g] = ['name' => $g, 'min' => PHP_INT_MAX, 'items' => []];
+            $groups[$g]['items'][] = $r;
+            $groups[$g]['min'] = min($groups[$g]['min'], (int)($r['sort'] ?? 0));
+        }
+        foreach ($groups as &$g) {
+            usort($g['items'], function ($a, $b) { return [(int)$a['sort'], (int)$a['id']] <=> [(int)$b['sort'], (int)$b['id']]; });
+        }
+        unset($g);
+        $list = array_values($groups);
+        usort($list, function ($a, $b) { return $a['min'] <=> $b['min']; });
+        return array_map(function ($g) { return ['name' => $g['name'], 'items' => $g['items']]; }, $list);
+    }
+
+    /** 技术栈标签：逗号 / 顿号 / 分号分隔（保留「Vue 3」这类带空格的名字），去重。 */
+    public static function tags(string $raw): array
+    {
+        $out = [];
+        foreach (preg_split('/[,，、;；\n]+/u', $raw) ?: [] as $t) {
+            $t = trim($t);
+            if ($t !== '' && !in_array($t, $out, true)) $out[] = mb_substr($t, 0, 30);
+        }
+        return array_slice($out, 0, 12);
+    }
+
+    /** 日期键：20261011 */
+    public static function dayKey(int $ts): int
+    {
+        return (int)date('Ymd', $ts);
+    }
+
     /** 去掉 HTML / Markdown 标记的纯文本。 */
     public static function plain(string $text): string
     {

@@ -89,3 +89,14 @@ test('sitemap escapes and formats lastmod', function () {
     assert_true(strpos($x, '<lastmod>2023-11-14T22:13:20Z</lastmod>') !== false);
     $doc = new DOMDocument(); assert_true($doc->loadXML($x), 'valid xml');
 });
+
+test('groupBookmarks orders groups by min sort and items within', function () {
+    $g = Text::groupBookmarks([
+        ['id' => 1, 'group' => '工具', 'sort' => 5], ['id' => 2, 'group' => 'AI', 'sort' => 1],
+        ['id' => 3, 'group' => '工具', 'sort' => 2], ['id' => 4, 'group' => '', 'sort' => 9],
+    ]);
+    assert_eq(['AI', '工具', '未分组'], array_column($g, 'name'));
+    assert_eq([3, 1], array_column($g[1]['items'], 'id'));
+});
+test('tags split on commas, keep spaces inside names, dedupe', fn() => assert_eq(['Next.js', 'PHP', 'Vue 3'], Text::tags('Next.js, PHP，PHP、Vue 3')));
+test('dayKey', fn() => assert_eq((int)date('Ymd', 1700000000), Text::dayKey(1700000000)));
