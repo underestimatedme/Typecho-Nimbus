@@ -19,6 +19,17 @@ final class Store
         return \Typecho\Db::get();
     }
 
+    /** 当前时间：定时发布的文章（created 在未来）对外不可见。 */
+    private static function now(): int
+    {
+        return (int)\Helper::options()->time;
+    }
+
+    private static function likeOp(): string
+    {
+        return Schema::normalizeAdapter(self::db()->getAdapterName()) === 'pgsql' ? 'ILIKE' : 'LIKE';
+    }
+
     public static function install(): void
     {
         $db = self::db();
@@ -114,6 +125,7 @@ final class Store
             ->where('table.contents.status = ?', 'publish')
             ->where('table.contents.type = ?', 'post')
             ->where("table.contents.password IS NULL OR table.contents.password = ''")
+            ->where('table.contents.created < ?', self::now())
             ->where('table.nimbus_stats.' . $field . ' > 0')
             ->order('table.nimbus_stats.' . $field, \Typecho\Db::SORT_DESC)
             ->limit($limit));
@@ -124,7 +136,7 @@ final class Store
     public static function publicPost(int $cid): bool
     {
         $db = self::db();
-        $row = $db->fetchRow($db->select('cid', 'password')->from('table.contents')->where('cid = ? AND status = ? AND (type = ? OR type = ?)', $cid, 'publish', 'post', 'page')->limit(1));
+        $row = $db->fetchRow($db->select('cid', 'password')->from('table.contents')->where('cid = ? AND status = ? AND (type = ? OR type = ?)', $cid, 'publish', 'post', 'page')->where('created < ?', self::now())->limit(1));
         return $row && ($row['password'] === null || $row['password'] === '');
     }
 
@@ -138,14 +150,16 @@ final class Store
             return $db->select()->from('table.contents')
                 ->where('status = ? AND type = ?', 'publish', 'post')
                 ->where("password IS NULL OR password = ''")
+                ->where('created < ?', self::now())
                 ->order('created', \Typecho\Db::SORT_DESC);
         };
+        $op = self::likeOp();
         $rows = [];
         $seen = [];
         // 标题命中优先，其次正文；SQL 宽松匹配后在 PHP 里精确复核
         foreach ([['title', 'title'], ['text', 'text']] as $pair) {
             list($col, $field) = $pair;
-            foreach ($db->fetchAll($base()->where($col . ' LIKE ?', $like)->limit($limit * 5)) as $r) {
+            foreach ($db->fetchAll($base()->where($col . ' ' . $op . ' ?', $like)->limit($limit * 5)) as $r) {
                 $cid = (int)$r['cid'];
                 if (isset($seen[$cid])) continue;
                 $hay = $field === 'title' ? htmlspecialchars_decode((string)$r['title'], ENT_QUOTES) : Text::plain((string)$r['text']);

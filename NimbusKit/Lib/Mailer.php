@@ -15,6 +15,7 @@ final class Mailer
     public static function recipients(array $comment, ?array $parent, array $cfg): array
     {
         $out = [];
+        if (($comment['status'] ?? '') === 'spam') return $out;
         $mail = strtolower(trim((string)($comment['mail'] ?? '')));
         $admin = strtolower(trim((string)($cfg['adminMail'] ?? '')));
         $byOwner = !empty($comment['authorId']) && (int)$comment['authorId'] === (int)($comment['ownerId'] ?? -1);

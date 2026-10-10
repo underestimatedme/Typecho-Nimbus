@@ -109,15 +109,24 @@ class Action extends \Widget\Base
         $db = $this->db;
         $w = \Widget\Base\Contents::alloc();
         $urls = [['loc' => (string)$this->options->siteUrl, 'lastmod' => time(), 'priority' => '1.0']];
-        $rows = $db->fetchAll($db->select()->from('table.contents')->where('status = ?', 'publish')->where('type = ? OR type = ?', 'post', 'page')->where("password IS NULL OR password = ''")->order('modified', \Typecho\Db::SORT_DESC)->limit(5000));
+        $rows = $db->fetchAll($db->select()->from('table.contents')->where('status = ?', 'publish')->where('type = ? OR type = ?', 'post', 'page')->where("password IS NULL OR password = ''")->where('created < ?', (int)$this->options->time)->order('modified', \Typecho\Db::SORT_DESC)->limit(5000));
         foreach ($rows as $r) {
             $f = $w->filter($r);
             $urls[] = ['loc' => $f['permalink'], 'lastmod' => (int)$r['modified'], 'priority' => $r['type'] === 'post' ? '0.8' : '0.6'];
         }
         $metas = $db->fetchAll($db->select()->from('table.metas')->where('type = ? OR type = ?', 'category', 'tag')->where('count > 0'));
+        $cats = null;
         foreach ($metas as $m) {
-            $route = $m['type'] === 'category' ? 'category' : 'tag';
-            $urls[] = ['loc' => \Typecho\Router::url($route, ['slug' => urlencode((string)$m['slug']), 'directory' => urlencode((string)$m['slug'])], (string)$this->options->index), 'lastmod' => null, 'priority' => '0.4'];
+            $slug = urlencode((string)$m['slug']);
+            $params = ['slug' => $slug, 'mid' => (int)$m['mid']];
+            if ($m['type'] === 'category') {
+                // 子分类的 directory 需包含父级路径
+                $cats = $cats ?? \Widget\Metas\Category\Rows::alloc();
+                $dir = $cats->getAllParentsSlug((int)$m['mid']);
+                $dir[] = (string)$m['slug'];
+                $params['directory'] = implode('/', array_map('urlencode', $dir));
+            }
+            $urls[] = ['loc' => \Typecho\Router::url($m['type'] === 'category' ? 'category' : 'tag', $params, (string)$this->options->index), 'lastmod' => null, 'priority' => '0.4'];
         }
         $this->response->setContentType('application/xml');
         echo Sitemap::xml($urls);

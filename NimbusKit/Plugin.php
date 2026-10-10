@@ -34,6 +34,10 @@ class Plugin implements PluginInterface
         Helper::addAction('nimbus-kit', AdminAction::class);
         Helper::addPanel(3, self::PANEL, 'Nimbus', '说说、友链、相册与统计', 'administrator');
         \Typecho\Plugin::factory('Widget_Feedback')->finishComment = Hooks::class . '::finishComment';
+        // AJAX 响应放在最后（权重 99），保证其他插件的 finishComment 钩子都已执行
+        \Typecho\Plugin::factory('Widget_Feedback')->finishComment_99 = Hooks::class . '::ajaxRespond';
+        \Typecho\Plugin::factory('Widget_Comments_Edit')->finishComment = Hooks::class . '::finishComment';
+        \Typecho\Plugin::factory('Widget_Comments_Edit')->mark = Hooks::class . '::mark';
         return _t('NimbusKit 已启用：数据表已就绪，可在「管理 → Nimbus」中管理说说、友链与相册。');
     }
 
@@ -43,7 +47,34 @@ class Plugin implements PluginInterface
         Helper::removeRoute('nimbus_sitemap');
         Helper::removeAction('nimbus-kit');
         Helper::removePanel(3, self::PANEL);
-        if (Config::get('dropOnDeactivate') === '1') Store::uninstall();
+        if (Config::get('dropOnDeactivate') === '1') {
+            Store::uninstall();
+            self::backup(null);
+        } else {
+            // Typecho 禁用插件时会删除插件配置；先另存，重新启用时恢复（SMTP 等设置不丢）
+            self::backup(Config::all());
+        }
+    }
+
+    const BACKUP = 'nimbuskit:config-backup';
+
+    /** 写入或清除配置备份（存放在 options 表）。 */
+    private static function backup(?array $cfg): void
+    {
+        $db = \Typecho\Db::get();
+        $db->query($db->delete('table.options')->where('name = ? AND user = 0', self::BACKUP));
+        if ($cfg !== null) {
+            $db->query($db->insert('table.options')->rows(['name' => self::BACKUP, 'user' => 0, 'value' => serialize($cfg)]));
+        }
+    }
+
+    private static function restore(): ?array
+    {
+        $db = \Typecho\Db::get();
+        $row = $db->fetchRow($db->select('value')->from('table.options')->where('name = ? AND user = 0', self::BACKUP)->limit(1));
+        if (!$row) return null;
+        $v = @unserialize((string)$row['value'], ['allowed_classes' => false]);
+        return is_array($v) ? $v : null;
     }
 
     public static function config(Form $form)
@@ -62,7 +93,7 @@ class Plugin implements PluginInterface
         $form->addInput(new TextInput('smtpPort', null, '465', _t('端口'), _t('SSL 一般为 465，STARTTLS 一般为 587，明文为 25。')));
         $form->addInput(new Radio('smtpSecure', ['ssl' => 'SSL', 'tls' => 'STARTTLS', 'none' => '不加密'], 'ssl', _t('加密方式')));
         $form->addInput(new TextInput('smtpUser', null, '', _t('SMTP 用户名'), _t('通常是完整邮箱地址。')));
-        $form->addInput(new Password('smtpPass', null, '', _t('SMTP 密码 / 授权码'), _t('QQ、163 等邮箱需要在邮箱设置里生成授权码。')));
+        $form->addInput(new Password('smtpPass', null, '', _t('SMTP 密码 / 授权码'), _t('QQ、163 等邮箱需要在邮箱设置里生成授权码。清空并保存即可删除已保存的密码。')));
         $form->addInput(new TextInput('mailFromName', null, '', _t('发件人名称'), _t('留空使用站点名称。')));
         $form->addInput(new TextInput('mailFrom', null, '', _t('发件地址'), _t('留空使用 SMTP 用户名。部分服务商要求与登录账号一致。')));
         $form->addInput(new TextInput('adminMail', null, '', _t('站长收件地址'), _t('留空使用文章作者的邮箱。')));
@@ -75,12 +106,16 @@ class Plugin implements PluginInterface
     {
     }
 
+    /**
+     * Typecho 每次启用插件都会用默认值覆盖已有配置；这里在启用时保留用户之前的设置，
+     * 只为新增的选项补上默认值。
+     */
     public static function configHandle(array $settings, bool $isInit)
     {
-        if (!$isInit && isset($settings['smtpPass']) && $settings['smtpPass'] === '') {
-            // 密码框留空表示不修改
-            $old = Config::get('smtpPass');
-            if (is_string($old)) $settings['smtpPass'] = $old;
+        if ($isInit) {
+            $old = self::restore();
+            if ($old) $settings = array_merge($settings, array_intersect_key($old, $settings));
+            self::backup(null);
         }
         Helper::configPlugin('NimbusKit', $settings);
         Config::reset();

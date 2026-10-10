@@ -44,7 +44,11 @@ final class Smtp
             $msg = self::buildMessage($from, $fromName, $to, $subject, $html, $text);
             $this->write(self::dotStuff($msg) . "\r\n.");
             $this->expect(250);
-            $this->cmd('QUIT', 221);
+            try {
+                $this->cmd('QUIT', [221, 250]);
+            } catch (\RuntimeException $e) {
+                // 邮件已投递成功；有的服务器 QUIT 后直接断开
+            }
         } finally {
             if ($this->sock) fclose($this->sock);
             $this->sock = null;
@@ -97,8 +101,19 @@ final class Smtp
 
     public static function encodeHeader(string $s): string
     {
-        if (preg_match('/^[\x20-\x7e]*$/', $s)) return $s;
+        $s = str_replace(["\r", "\n"], ' ', $s);
+        if (preg_match('/\A[\x20-\x7e]*\z/', $s)) return $s;
         return '=?UTF-8?B?' . base64_encode($s) . '?=';
+    }
+
+    /** 显示名：非 ASCII 用 RFC 2047 编码；含特殊字符的 ASCII 用 quoted-string。 */
+    public static function displayName(string $name): string
+    {
+        $name = trim(str_replace(["\r", "\n"], ' ', $name));
+        if ($name === '') return '';
+        if (!preg_match('/\A[\x20-\x7e]*\z/', $name)) return '=?UTF-8?B?' . base64_encode($name) . '?=';
+        if (preg_match('/\A[A-Za-z0-9!#$%&\'*+\/=?^_`{|}~ -]+\z/', $name)) return $name;
+        return '"' . str_replace(['\\', '"'], ['\\\\', '\\"'], $name) . '"';
     }
 
     public static function dotStuff(string $msg): string
@@ -112,7 +127,7 @@ final class Smtp
         $domain = substr(strrchr($from, '@') ?: '@localhost', 1);
         $h = [
             'Date: ' . date('r', $date ?? time()),
-            'From: ' . ($fromName !== '' ? self::encodeHeader($fromName) . ' ' : '') . '<' . $from . '>',
+            'From: ' . ($fromName !== '' ? self::displayName($fromName) . ' ' : '') . '<' . $from . '>',
             'To: <' . $to . '>',
             'Subject: ' . self::encodeHeader($subject),
             'Message-ID: <' . bin2hex(random_bytes(10)) . '@' . $domain . '>',

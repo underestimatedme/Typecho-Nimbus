@@ -13,7 +13,8 @@ export function init(root = document) {
   const d = qs('[data-search]');
   if (!d) return;
   const form = qs('[data-search-form]', d), input = qs('[data-search-input]', d), results = qs('[data-search-results]', d);
-  const { index = '', api = null } = config();
+  const { index = '', features = [] } = config();
+  const api = features.includes('search') ? config().api : null;
   on(document, 'keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); d.open ? close() : open(); }
     if (e.key === '/' && !/input|textarea/i.test(document.activeElement.tagName) && !d.open) { e.preventDefault(); open(); }

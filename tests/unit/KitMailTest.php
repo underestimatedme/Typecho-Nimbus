@@ -25,3 +25,16 @@ test('render escapes content', function () {
     assert_true(strpos($r['html'], '<script>') === false && strpos($r['html'], '&lt;script&gt;') !== false);
     assert_true(strpos($r['subject'], 'T') !== false && strpos($r['text'], 'http://a/') !== false);
 });
+test('display name quoting', function () {
+    assert_eq('Nimbus Bot', Smtp::displayName('Nimbus Bot'));
+    assert_eq('"Tom, Jerry: Notes"', Smtp::displayName('Tom, Jerry: Notes'));
+    assert_eq('"a \\"b\\" \\\\ c"', Smtp::displayName('a "b" \\ c'));
+    assert_eq('=?UTF-8?B?' . base64_encode('小站') . '?=', Smtp::displayName('小站'));
+    assert_true(strpbrk(Smtp::displayName("Evil\r\nBcc: x"), "\r\n") === false, 'no CR/LF in display name');
+});
+test('header newline cannot end headers early', fn() => assert_true(strpos(Smtp::encodeHeader("Hi\n"), "\n") === false));
+test('From header with special chars is quoted', function () {
+    $m = Smtp::buildMessage('bot@x.org', 'Tom, Jerry: Notes', 'c@d.com', 's', 'h', 't', 0, 'B');
+    assert_true(strpos($m, 'From: "Tom, Jerry: Notes" <bot@x.org>') !== false);
+});
+test('spam comment sends nothing', fn() => assert_eq([], Mailer::recipients(['mail' => 'v@x.com', 'status' => 'spam', 'authorId' => 0, 'ownerId' => 1], ['mail' => 'p@x.com'], $cfg)));

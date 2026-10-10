@@ -41,7 +41,7 @@ NimbusKit/                      复制到 usr/plugins/NimbusKit
 │   ├── Text.php                说说内容清洗（纯文本 + 换行 + 链接）、照片列表解析
 │   └── Sitemap.php             XML 生成
 ├── panel.php                   后台面板：说说 / 友链 / 相册 / 统计 四个标签页
-├── assets/admin.css、admin.js  面板样式与交互
+├── assets/admin.css            面板样式（面板为纯服务端渲染，无需脚本）
 └── README.md、LICENSE
 ```
 
@@ -85,8 +85,8 @@ NimbusKit/                      复制到 usr/plugins/NimbusKit
 
 ### 2.4 AJAX 评论流程
 
-1. 前端在表单提交时带 `X-Requested-With: XMLHttpRequest` 用 fetch 提交到原评论地址。
-2. 插件的 `finishComment` 钩子检测到 Ajax 请求，输出 `{"ok":true,"data":{"coid","status","message"}}` 并结束（`status` 为 waiting 时提示"等待审核"）。
+1. 前端在表单提交时附加 `nimbus_ajax=1` 字段，用 fetch 提交到原评论地址（只有带这个标记的请求才返回 JSON，不影响其他主题自己的 AJAX 评论）。
+2. 插件以最低优先级（最后执行）的 `finishComment` 钩子检测到标记，输出 `{"ok":true,"data":{"coid","status","message"}}` 并结束（`status` 为 waiting 时提示"等待审核"）。
 3. 前端成功后重新 fetch 当前文章页，只替换 `#comments` 区块，滚动并高亮新评论。
 4. Typecho 校验失败会抛异常输出错误页（403 / 500 HTML）；前端解析错误页正文作为提示，保留用户输入。
 5. 插件未启用或接口异常时回退为普通表单提交。
@@ -112,7 +112,7 @@ NimbusKit/                      复制到 usr/plugins/NimbusKit
 - 后台动作：`$user->pass('administrator')` + `$security->protect()`。
 - URL 字段只接受 `http(s)://` 与站内相对路径。
 - SMTP 密码存于插件配置（Typecho options 表），设置页输入框为 password 类型。
-- 访客指纹 = `sha1(盐 + IP + UA)`，盐在启用时随机生成并保存，不存原始 IP。
+- 访客指纹 = `sha1(盐 + IP + UA)`，盐使用 Typecho 安装时生成的站点密钥 `secret`（稳定且不公开），不存原始 IP。
 
 ## 4. 测试
 

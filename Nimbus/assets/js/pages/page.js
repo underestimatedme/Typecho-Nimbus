@@ -18,7 +18,7 @@ export async function init(root = document) {
   like.init(root);
   views.init();
   infinite.init(root);
-  offAppend = on(document, 'nimbus:append', (e) => { like.init(e.detail.root); lightbox.init(document); });
+  offAppend = on(document, 'nimbus:append', (e) => { like.init(e.detail.root); if ((window.NimbusConfig || {}).lightbox !== false) lightbox.init(document); });
   toc.init(root);
   share.init(root);
   comment.init(root);

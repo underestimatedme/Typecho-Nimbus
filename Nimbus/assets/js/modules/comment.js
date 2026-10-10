@@ -87,28 +87,33 @@ export function init(root = document) {
     if (form.dataset.ajax !== '1' || !config().api || !window.fetch) { btn && btn.classList.add('is-loading'); return; }
     e.preventDefault();
     if (btn) { btn.classList.add('is-loading'); btn.disabled = true; }
+    const body = new FormData(form);
+    body.set('nimbus_ajax', '1');
     try {
-      const r = await fetch(form.action, { method: 'POST', body: new FormData(form), credentials: 'same-origin', headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' } });
+      let r;
+      try {
+        r = await fetch(form.action, { method: 'POST', body, credentials: 'same-origin', headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' } });
+      } catch (netErr) {
+        // 网络异常：回退为普通表单提交
+        form.submit();
+        return;
+      }
       const type = r.headers.get('content-type') || '';
-      let coid = null, message = '评论成功', doc = null;
+      let coid = null, message = '评论成功';
       if (type.includes('json')) {
-        const d = await r.json();
+        let d;
+        try { d = await r.json(); } catch (parseErr) { form.submit(); return; }
         if (!d.ok) throw new Error(d.error || '提交失败');
         coid = d.data.coid; message = d.data.message || message;
       } else {
-        const html = await r.text();
-        doc = new DOMParser().parseFromString(html, 'text/html');
-        if (!r.ok || !doc.querySelector('#comments')) {
-          // Typecho 拒绝评论时返回错误页：取正文作为原因
-          const box = doc.querySelector('.container') || doc.body;
-          throw new Error((box ? box.textContent : '').replace(/\s+/g, ' ').trim().slice(0, 160) || '提交失败（' + r.status + '）');
-        }
-        const m = (r.url || '').match(/#comment-(\d+)/); if (m) coid = m[1];
+        // 没拿到 NimbusKit 的 JSON：说明评论没有成功写入（Typecho 报错页，或安全校验失败后被重定向回文章）
+        const doc = new DOMParser().parseFromString(await r.text(), 'text/html');
+        const box = r.ok ? null : (doc.querySelector('.container') || doc.body);
+        const reason = box ? box.textContent.replace(/\s+/g, ' ').trim().slice(0, 160) : '';
+        throw new Error(reason || '评论没有提交成功，请刷新页面后重试');
       }
-      if (!doc) {
-        const page = await fetch(location.href.split('#')[0], { credentials: 'same-origin', headers: { 'X-Nimbus-Router': '1' } });
-        doc = new DOMParser().parseFromString(await page.text(), 'text/html');
-      }
+      const page = await fetch(location.href.split('#')[0], { credentials: 'same-origin', headers: { 'X-Nimbus-Router': '1' } });
+      const doc = new DOMParser().parseFromString(await page.text(), 'text/html');
       const fresh = doc.querySelector('#comments'), old = document.getElementById('comments');
       if (fresh && old) {
         old.replaceWith(fresh);

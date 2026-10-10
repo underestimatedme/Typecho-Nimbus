@@ -31,6 +31,7 @@ run_checks() { # $1 port $2 label
   echo "$r" | grep -q '"counted":false' && ok "view dedupe" "$2" || bad "view dedupe $r" "$2"
   r=$(curl -s -H "$O" -d 'cid=1&type=moment' "$API/like"); echo "$r" | grep -q '"ok":true' && ok "moment like" "$2" || bad "moment like $r" "$2"
   r=$(curl -s "$API/search?q=Typecho"); echo "$r" | grep -q '"ok":true' && ok "search" "$2" || bad "search $r" "$2"
+  r=$(curl -s "$API/search?q=typecho"); echo "$r" | grep -q '"url"' && ok "search case-insensitive" "$2" || bad "search case-insensitive $r" "$2"
   c=$(curl -s -o "$W/sm.xml" -w '%{http_code}' "$B/index.php/sitemap.xml"); { [ "$c" = 200 ] && grep -q '<urlset' "$W/sm.xml"; } && ok "sitemap" "$2" || bad "sitemap $c" "$2"
   for u in / archives/1/ moments.html albums.html "albums.html?album=1" links.html; do
     c=$(curl -s -o "$W/p.html" -w '%{http_code}' "$B/index.php/$u")

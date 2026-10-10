@@ -76,9 +76,10 @@ class AdminAction extends \Widget\Base implements \Widget\ActionInterface
                 default:
                     throw new \InvalidArgumentException('未知操作');
             }
-            \Widget\Notice::alloc()->set($msg, 'success');
+            // Typecho 后台把提示当 HTML 插入，必须转义（异常文本可能来自远端 SMTP 服务器）
+            \Widget\Notice::alloc()->set(htmlspecialchars($msg, ENT_QUOTES, 'UTF-8'), 'success');
         } catch (\Throwable $e) {
-            \Widget\Notice::alloc()->set($e->getMessage(), 'error');
+            \Widget\Notice::alloc()->set(htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'), 'error');
         }
         $this->response->redirect(\Typecho\Common::url('extending.php?panel=' . urlencode(Plugin::PANEL) . '&tab=' . $tab, (string)$this->options->adminUrl));
     }
