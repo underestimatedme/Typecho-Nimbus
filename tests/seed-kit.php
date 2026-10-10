@@ -12,7 +12,7 @@ $pages = [
     ['说说', 'moments', 'page-moments.php', '生活的碎片，随手记下。'], ['相册', 'albums', 'page-albums.php', ''],
     ['收藏夹', 'bookmarks', 'page-bookmarks.php', '收集常用的好用站点和工具。'], ['项目', 'projects', 'page-projects.php', '从零到一，用代码构建的每一份作品。'],
     ['留言板', 'messages', 'page-messages.php', '有什么想说的，留在这里吧。'], ['时间线', 'timeline', 'page-timeline.php', ''],
-    ['音乐', 'music', 'page-music.php', '给专注一点节奏，给灵感一段旋律。'], ['统计', 'stats', 'page-stats.php', ''],
+    ['音乐', 'music', 'page-music.php', '给专注一点节奏，给灵感一段旋律。'], ['统计', 'stats', 'page-stats.php', '记录每一次写作与相遇。'],
 ];
 foreach ($pages as [$title, $slug, $tpl, $text]) {
     $st = $db->prepare("SELECT COUNT(*) FROM {$p}contents WHERE slug=? AND type='page'"); $st->execute([$slug]);
