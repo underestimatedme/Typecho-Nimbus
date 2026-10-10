@@ -6,6 +6,15 @@ namespace Nimbus;
  */
 final class Music
 {
+    /** Live2D 加载配置；未开启或地址不安全返回 null。 */
+    public static function live2d(): ?array
+    {
+        if (!Options::bool('Live2dEnable')) return null;
+        $u = self::safeUrl((string)Options::get('Live2dScript', ''));
+        if ($u === '') return null;
+        return ['script' => $u, 'mobile' => Options::bool('Live2dMobile')];
+    }
+
     public static function safeUrl(string $u): string
     {
         $u = trim($u);

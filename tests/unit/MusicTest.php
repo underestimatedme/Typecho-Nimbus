@@ -10,3 +10,12 @@ test('music list parses full and partial lines, drops invalid', function () {
 });
 test('music cover/lrc unsafe urls dropped', fn() => assert_eq('', Music::parse('a|b|https://x/1.mp3|javascript:x|data:text')[0]['cover']));
 test('empty title gets placeholder', fn() => assert_eq('未命名', Music::parse('|b|https://x/1.mp3')[0]['title']));
+test('live2d 配置：关闭、开启、危险地址', function () {
+    $opts = ['Live2dEnable' => '0', 'Live2dScript' => 'https://cdn.example.com/autoload.js', 'Live2dMobile' => '0'];
+    \Nimbus\Options::setSource(function ($k) use (&$opts) { return $opts[$k] ?? null; });
+    assert_eq(null, Music::live2d());
+    $opts['Live2dEnable'] = '1';
+    assert_eq(['script' => 'https://cdn.example.com/autoload.js', 'mobile' => false], Music::live2d());
+    $opts['Live2dScript'] = 'javascript:alert(1)';
+    assert_eq(null, Music::live2d());
+});

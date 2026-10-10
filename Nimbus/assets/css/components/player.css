@@ -49,3 +49,5 @@
   .n-player-list { width: min(280px, calc(100vw - 32px)); }
 }
 @media print { .n-player { display: none !important; } }
+/* 与 Live2D 看板娘（默认在左下角）同时开启时，播放器让到右侧 */
+@media (min-width: 769px) { .has-live2d .n-player { left: 300px; } }

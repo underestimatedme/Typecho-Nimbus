@@ -44,6 +44,7 @@ $config = [
     'api' => Kit::apiUrl(),
     'features' => Kit::features(),
     'music' => \Nimbus\Music::config(),
+    'live2d' => \Nimbus\Music::live2d(),
     'page' => $page,
     'cid' => $cid,
     'themes' => ['light' => $themeLight, 'dark' => $themeDark, 'follow' => $follow, 'switchable' => $switchable],
