@@ -25,6 +25,7 @@ async function boot(root = document) {
   search.init(root);
   reveal.init(root);
   count.init(root);
+  if (document.documentElement.dataset.fx) import('./modules/cyber-fx.js').then((m) => m.init()).catch(() => {});
   if (cfg.live2d) import('./modules/live2d.js').then((m) => m.init()).catch(() => {});
   if (cfg.music) import('./modules/player.js').then((m) => m.init()).catch(() => {});
   if (pageModule && pageModule.destroy) { try { pageModule.destroy(); } catch (e) {} }

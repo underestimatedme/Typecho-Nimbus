@@ -17,7 +17,11 @@ final class Admin
             $cls = 'Nimbus\\Config\\' . $g;
             foreach ($cls::items() as $it) $defaults[$it['name']] = isset($it['default']) ? $it['default'] : '';
         }
-        echo '<div class="n-admin" data-nimbus-admin data-defaults="' . View::e(json_encode($defaults, JSON_UNESCAPED_UNICODE)) . '">';
+        // 从未保存过的多选项：由 admin.js 勾上默认值（Typecho 会把未保存的值当作空数组渲染）
+        $unsaved = [];
+        $opt = \Helper::options();
+        foreach ($defaults as $k => $v) if (is_array($v) && $opt->{$k} === null) $unsaved[] = $k;
+        echo '<div class="n-admin" data-nimbus-admin data-defaults="' . View::e(json_encode($defaults, JSON_UNESCAPED_UNICODE)) . '" data-unsaved="' . View::e(json_encode($unsaved)) . '">';
         echo '<div class="n-admin-head"><strong>Nimbus</strong><span class="n-admin-ver">v' . NIMBUS_VERSION . '</span>';
         echo '<a class="n-admin-link" href="https://github.com/underestimatedme/Nimbus" target="_blank" rel="noopener">文档与反馈</a>';
         echo '</div>';

@@ -24,6 +24,23 @@ function nimbusAdmin() {
   // 未保存过的选项：单选按默认值勾选，文本框显示默认值占位
   var defaults = {};
   try { defaults = JSON.parse(root.getAttribute('data-defaults') || '{}'); } catch (e) {}
+  var unsaved = [];
+  try { unsaved = JSON.parse(root.getAttribute('data-unsaved') || '[]'); } catch (e) {}
+  unsaved.forEach(function (name) {
+    var boxes = document.querySelectorAll('input[type=checkbox][name="' + name + '[]"]');
+    var want = Array.isArray(defaults[name]) ? defaults[name].map(String) : [];
+    boxes.forEach(function (b) { b.checked = want.indexOf(b.value) !== -1; });
+  });
+  // 多选全部取消时 Typecho 不会提交该字段，保存后又回落到默认值；提交时补一个占位值「-」
+  var form = document.querySelector('form[action*="themes-edit"]');
+  if (form) form.addEventListener('submit', function () {
+    Object.keys(defaults).forEach(function (name) {
+      if (!Array.isArray(defaults[name])) return;
+      var h = document.createElement('input');
+      h.type = 'hidden'; h.name = name + '[]'; h.value = '-';
+      form.appendChild(h);
+    });
+  });
   Object.keys(defaults).forEach(function (name) {
     var radios = document.querySelectorAll('input[type=radio][name="' + name + '"]');
     if (radios.length) {

@@ -64,7 +64,7 @@ if ($archive->is('single')) {
 }
 $favicon = (string)Options::get('Favicon', '');
 ?><!DOCTYPE html>
-<html lang="zh-CN" data-theme="<?= View::e($themeLight) ?>" data-radius="<?= View::e((string)Options::get('Radius', 'md')) ?>" data-motion="<?= View::e((string)Options::get('Motion', 'full')) ?>" data-font="<?= View::e($fontScheme) ?>" data-width="<?= View::e((string)Options::get('LayoutWidth', 'fluid')) ?>"<?= Options::bool('Mourning') ? ' data-mourning' : '' ?>>
+<html lang="zh-CN" data-theme="<?= View::e($themeLight) ?>" data-radius="<?= View::e((string)Options::get('Radius', 'md')) ?>" data-motion="<?= View::e((string)Options::get('Motion', 'full')) ?>" data-font="<?= View::e($fontScheme) ?>" data-width="<?= View::e((string)Options::get('LayoutWidth', 'fluid')) ?>" data-fx="<?= View::e(implode(' ', array_diff(Options::list('CyberEffects'), ['-']))) ?>"<?= Options::bool('Mourning') ? ' data-mourning' : '' ?>>
 <head>
 <meta charset="<?php $o->charset(); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">

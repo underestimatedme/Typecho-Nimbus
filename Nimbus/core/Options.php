@@ -37,7 +37,8 @@ final class Options
         foreach (['Site', 'Index', 'Post', 'Sidebar', 'Appearance', 'Media', 'Advanced'] as $g) {
             $cls = 'Nimbus\\Config\\' . $g;
             foreach ($cls::items() as $it) {
-                $d[$it['name']] = isset($it['default']) ? (string)$it['default'] : '';
+                $def = $it['default'] ?? '';
+                $d[$it['name']] = is_array($def) ? implode(',', $def) : (string)$def;
             }
         }
         return self::$defaults = $d;

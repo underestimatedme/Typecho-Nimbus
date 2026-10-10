@@ -1,0 +1,33 @@
+/* 赛博朋克特效（仅 cyber 皮肤；由 <html data-fx> 控制开关） */
+@property --fx-a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+
+/* 标题故障悬停：RGB 分离 + 抖动，悬停时播放两次 */
+:root[data-theme="cyber"][data-fx~="glitch"]:not([data-motion="off"]) :is(.n-card:hover .n-card-title, .n-post-title:hover, .n-post-hero-title:hover, .n-slide:hover .n-slide-title, .n-list-head h1:hover) { animation: n-fx-glitch .42s steps(2, jump-none) 2; }
+@keyframes n-fx-glitch {
+  0% { text-shadow: 2px 0 #ff2d95, -2px 0 #22d3ee; transform: translate(0); clip-path: inset(0 0 0 0); }
+  20% { text-shadow: -3px 0 #ff2d95, 3px 0 #22d3ee; transform: translate(-1px, 1px) skewX(-4deg); clip-path: inset(20% 0 35% 0); }
+  40% { text-shadow: 3px 1px #ff2d95, -3px -1px #22d3ee; transform: translate(1px, -1px); clip-path: inset(55% 0 5% 0); }
+  60% { text-shadow: -2px 0 #ff2d95, 2px 0 #22d3ee; transform: translate(-1px, 0) skewX(3deg); clip-path: inset(5% 0 60% 0); }
+  80% { text-shadow: 1px 0 #ff2d95, -1px 0 #22d3ee; transform: translate(1px, 1px); clip-path: inset(0 0 0 0); }
+  100% { text-shadow: none; transform: none; clip-path: inset(0 0 0 0); }
+}
+
+/* 小部件霓虹描边：沿边框流动的光带 */
+:root[data-theme="cyber"][data-fx~="neon"] .n-widget::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none; z-index: 3; background: conic-gradient(from var(--fx-a), transparent 0 62%, color-mix(in srgb, var(--accent) 90%, transparent) 76%, var(--neon, #ff2d95) 86%, transparent 96%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); animation: n-fx-spin 7s linear infinite; opacity: .9; }
+:root[data-theme="cyber"][data-fx~="neon"] .n-widget:nth-child(2n)::before { animation-duration: 9s; animation-direction: reverse; }
+:root[data-theme="cyber"][data-fx~="neon"] .n-widget:hover { box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent), 0 0 28px -8px var(--accent-glow); }
+:root[data-theme="cyber"][data-fx~="neon"][data-motion="reduced"] .n-widget::before,
+:root[data-theme="cyber"][data-fx~="neon"][data-motion="off"] .n-widget::before { animation: none; --fx-a: 210deg; }
+@keyframes n-fx-spin { to { --fx-a: 360deg; } }
+
+/* 字符雨画布 */
+.n-fx-rain { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; opacity: .32; mix-blend-mode: screen; }
+/* 鼠标拖尾画布 */
+.n-fx-trail { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: var(--z-toast); pointer-events: none; }
+/* 解码中的字符 */
+.n-fx-scramble { color: var(--neon, #ff2d95); opacity: .85; }
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-theme="cyber"] :is(.n-card-title, .n-post-title, .n-post-hero-title, .n-slide-title, .n-list-head h1) { animation: none !important; }
+  :root[data-theme="cyber"][data-fx~="neon"] .n-widget::before { animation: none; }
+}
