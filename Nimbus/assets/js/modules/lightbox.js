@@ -27,7 +27,13 @@ function close() { if (dlg && dlg.open) dlg.close(); }
 
 export function init(root = document) {
   destroy();
-  items = qsa('[data-lightbox]', root);
-  items.forEach((a, i) => unbind.push(on(a, 'click', (e) => { e.preventDefault(); ensure(); show(i); })));
+  qsa('[data-lightbox]', root).forEach((a) => unbind.push(on(a, 'click', (e) => {
+    e.preventDefault();
+    // 同一 [data-gallery] 内的图片为一组；没有分组时整页为一组
+    const group = a.closest('[data-gallery]');
+    items = qsa('[data-lightbox]', group || document);
+    ensure();
+    show(Math.max(0, items.indexOf(a)));
+  })));
 }
 export function destroy() { unbind.forEach((f) => f()); unbind = []; close(); }

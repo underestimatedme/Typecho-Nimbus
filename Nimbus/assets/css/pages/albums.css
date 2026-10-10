@@ -1,0 +1,25 @@
+/* 相册 */
+.n-albums { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
+.n-album { position: relative; display: block; aspect-ratio: 4 / 3; border-radius: var(--r); isolation: isolate; color: #fff; }
+.n-album-cover { position: absolute; inset: 0; z-index: 2; border-radius: inherit; background: var(--chip) center / cover no-repeat; box-shadow: var(--shadow); overflow: hidden; transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
+.n-album-cover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0, 0, 0, .72), transparent 55%); }
+.n-album-stack, .n-album-stack::before { position: absolute; inset: 0; border-radius: inherit; background: var(--card); border: 1px solid var(--line); transition: transform var(--dur) var(--ease); }
+.n-album-stack { z-index: 1; transform: rotate(-3deg) translate(-4px, 4px); }
+.n-album-stack::before { content: ""; z-index: 0; transform: rotate(6deg) translate(8px, 0); }
+.n-album:hover .n-album-cover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+.n-album:hover .n-album-stack { transform: rotate(-6deg) translate(-10px, 6px); }
+.n-album:hover .n-album-stack::before { transform: rotate(12deg) translate(16px, -2px); }
+.n-album-in { position: absolute; z-index: 3; left: 18px; right: 18px; bottom: 16px; display: flex; flex-direction: column; gap: 2px; transition: transform var(--dur) var(--ease); }
+.n-album:hover .n-album-in { transform: translateY(-6px); }
+.n-album-in b { font-family: var(--font-title); font-size: 20px; text-shadow: 0 4px 16px rgba(0, 0, 0, .5); }
+.n-album-in small { font-size: var(--text-xs); opacity: .85; }
+.n-back { display: inline-flex; align-items: center; gap: 6px; font-size: var(--text-sm); color: var(--muted); margin-bottom: 8px; transition: color var(--dur-fast); }
+.n-back:hover { color: var(--accent-text); }
+.n-photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.n-photo { margin: 0; border-radius: var(--r-sm); overflow: hidden; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
+.n-photo:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+.n-photo a { display: block; overflow: hidden; aspect-ratio: 4 / 3; }
+.n-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-slow) var(--ease); cursor: zoom-in; }
+.n-photo:hover img { transform: scale(1.04); }
+.n-photo figcaption { padding: 8px 12px; font-size: var(--text-xs); color: var(--muted); }
+:root[data-theme="cyber"] .n-album-in b { font-family: var(--font-display); text-transform: uppercase; letter-spacing: 1px; }

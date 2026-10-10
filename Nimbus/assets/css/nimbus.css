@@ -30,3 +30,5 @@
 @import url("pages/links.css") layer(pages);
 @import url("pages/error.css") layer(pages);
 @import url("pages/page.css") layer(pages);
+@import url("pages/moments.css") layer(pages);
+@import url("pages/albums.css") layer(pages);

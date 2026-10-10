@@ -26,5 +26,16 @@ check "/index.php/archives.html" 200 'data-page="page"'
 check "/index.php/links.html" 200 'data-page="page"'
 check "/index.php/search/test/" 200 'data-page="index"'
 check "/index.php/not-exist-page/" 404 'data-page="error"'
+# NimbusKit（插件启用时）
+if curl -s "$BASE/" | grep -q '"api":"http'; then
+  O="Origin: $BASE"; API="$BASE/index.php/nimbus-api"
+  r=$(curl -s -H "$O" -d 'cid=3' "$API/like"); echo "$r" | grep -q '"ok":true' || { echo "FAIL like: $r"; fail=1; }
+  c=$(curl -s -o /dev/null -w '%{http_code}' -H 'Origin: http://evil.example' -d 'cid=3' "$API/like"); [ "$c" = "403" ] || { echo "FAIL cross-origin like: $c"; fail=1; }
+  r=$(curl -s "$API/search?q=Nimbus"); echo "$r" | grep -q '"ok":true' || { echo "FAIL search: $r"; fail=1; }
+  c=$(curl -s -o /tmp/nimbus-sitemap.xml -w '%{http_code}' "$BASE/index.php/sitemap.xml"); { [ "$c" = "200" ] && grep -q '<urlset' /tmp/nimbus-sitemap.xml; } || { echo "FAIL sitemap: $c"; fail=1; }
+  check "/index.php/moments.html" 200 'class="n-moments"'
+  check "/index.php/albums.html" 200 'class="n-albums"'
+  check "/index.php/albums.html?album=1" 200 'class="n-photos"'
+fi
 [ $fail -eq 0 ] && echo "smoke ok"
 exit $fail

@@ -9,11 +9,16 @@ import * as comment from '../modules/comment.js';
 import * as hero from '../modules/hero.js';
 import * as like from '../modules/like.js';
 import * as views from '../modules/views.js';
+import * as infinite from '../modules/infinite.js';
+import { on } from '../modules/util.js';
+let offAppend = null;
 
 export async function init(root = document) {
   hero.init(root);
   like.init(root);
   views.init();
+  infinite.init(root);
+  offAppend = on(document, 'nimbus:append', (e) => { like.init(e.detail.root); lightbox.init(document); });
   toc.init(root);
   share.init(root);
   comment.init(root);
@@ -21,4 +26,4 @@ export async function init(root = document) {
   if (cfg.lightbox !== false) lightbox.init(root);
   await Promise.all([code.init(root), math.init(root), mermaid.init(root)]);
 }
-export function destroy() { like.destroy(); hero.destroy(); toc.destroy(); share.destroy(); comment.destroy(); lightbox.destroy(); mermaid.destroy(); }
+export function destroy() { if (offAppend) offAppend(); offAppend = null; infinite.destroy(); like.destroy(); hero.destroy(); toc.destroy(); share.destroy(); comment.destroy(); lightbox.destroy(); mermaid.destroy(); }

@@ -20,10 +20,12 @@ function burst(btn) {
 }
 
 export function init(root = document) {
-  destroy();
+  if (root === document) destroy();
   const { api, features = [] } = config();
   if (!api || !features.includes('likes')) return;
   qsa('[data-like]', root).forEach((btn) => {
+    if (btn.dataset.likeBound) return;
+    btn.dataset.likeBound = '1';
     const id = btn.dataset.like, type = btn.dataset.likeType || 'post';
     const key = `nimbus-liked-${type}-${id}`;
     const count = btn.querySelector('[data-like-count]');
@@ -51,4 +53,4 @@ export function init(root = document) {
     }));
   });
 }
-export function destroy() { unbind.forEach((f) => f()); unbind = []; }
+export function destroy() { unbind.forEach((f) => f()); unbind = []; document.querySelectorAll('[data-like-bound]').forEach((b) => delete b.dataset.likeBound); }
