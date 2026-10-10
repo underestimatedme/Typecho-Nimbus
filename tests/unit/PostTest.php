@@ -18,3 +18,4 @@ test('seo json-ld cannot break out of script', function () {
     $json = json_encode(['d' => '</script><script>alert(1)</script>'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_HEX_APOS);
     assert_true(strpos($json, '</script') === false);
 });
+test('excerpt never contains hidden content', fn() => assert_true(strpos(Post::excerptFrom(null, '<p>公开</p>[hide]<p>秘密ZXQ</p>[/hide]', 100), 'ZXQ') === false));

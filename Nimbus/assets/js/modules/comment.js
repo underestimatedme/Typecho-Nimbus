@@ -114,6 +114,10 @@ export function init(root = document) {
       }
       const page = await fetch(location.href.split('#')[0], { credentials: 'same-origin', headers: { 'X-Nimbus-Router': '1' } });
       const doc = new DOMParser().parseFromString(await page.text(), 'text/html');
+      // 回复可见：评论通过后正文里被锁住的内容当场解锁
+      const oldProse = document.getElementById('n-prose'), newProse = doc.getElementById('n-prose');
+      const unlock = oldProse && newProse && oldProse.querySelector('.n-sc-hide:not(.is-open)') && newProse.querySelector('.n-sc-hide.is-open');
+      if (unlock) oldProse.innerHTML = newProse.innerHTML;
       const fresh = doc.querySelector('#comments'), old = document.getElementById('comments');
       if (fresh && old) {
         old.replaceWith(fresh);
@@ -121,6 +125,7 @@ export function init(root = document) {
         const li = coid ? document.getElementById('comment-' + coid) : null;
         if (li) { li.classList.add('is-new'); li.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
       }
+      if (unlock) { document.dispatchEvent(new CustomEvent('nimbus:page', { detail: { root: document } })); message += '，隐藏内容已解锁'; }
       toast(message);
     } catch (err) {
       showError(err.message || '提交失败，请重试');

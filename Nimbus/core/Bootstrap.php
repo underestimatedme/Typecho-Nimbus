@@ -24,8 +24,17 @@ final class NimbusBootstrap
      * themeInit 入口：统一评论相关默认项。
      * @param mixed $archive Widget_Archive
      */
+    /** @var bool */
+    private static $hooked = false;
+
     public static function init($archive): void
     {
+        if (!self::$hooked) {
+            self::$hooked = true;
+            // 短代码：正文与摘要的所有出口（模板、RSS、摘要）统一经过处理，回复可见内容不会泄露
+            \Typecho\Plugin::factory('Widget_Abstract_Contents')->contentEx = 'Nimbus\\Shortcode::hookContent';
+            \Typecho\Plugin::factory('Widget_Abstract_Contents')->excerptEx = 'Nimbus\\Shortcode::hookExcerpt';
+        }
         $o = \Helper::options();
         $o->commentsThreaded = true;
         $o->commentsMaxNestingLevels = max(3, (int)$o->commentsMaxNestingLevels);

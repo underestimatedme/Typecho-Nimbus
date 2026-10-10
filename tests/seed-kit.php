@@ -67,4 +67,13 @@ if (!$has('nimbus_albums')) {
     ];
     foreach ($rows as [$t, $d, $ph, $s]) $db->prepare("INSERT INTO {$p}nimbus_albums (title,cover,description,photos,sort,created) VALUES (?,'',?,?,?,?)")->execute([$t, $d, json_encode($ph, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), $s, $now]);
 }
+$st = $db->prepare("SELECT COUNT(*) FROM {$p}contents WHERE slug='shortcode-demo'"); $st->execute();
+if ((int)$st->fetchColumn() === 0) {
+    $md = "<!--markdown-->这篇文章演示 Nimbus 的短代码。\n\n## 提示框\n\n[tip]这是默认的信息提示。[/tip]\n\n[tip type=\"success\"]\n操作成功！支持**多行**和 Markdown。\n[/tip]\n\n[tip type=\"warning\"]注意：这是警告。[/tip]\n\n[tip type=\"danger\"]危险操作，请三思。[/tip]\n\n## 折叠块\n\n[collapse title=\"点击展开详细说明\"]\n折叠块里的内容，适合放长篇补充。\n[/collapse]\n\n## 标签页\n\n[tabs]\n[tab title=\"macOS\"]使用 Homebrew 安装：`brew install php`[/tab]\n[tab title=\"Ubuntu\"]使用 apt 安装：`apt install php`[/tab]\n[tab title=\"Windows\"]下载官方压缩包解压即可。[/tab]\n[/tabs]\n\n## 按钮\n\n[button url=\"https://typecho.org\"]访问 Typecho 官网[/button] [button url=\"/\" type=\"ghost\"]回到首页[/button]\n\n## GitHub 卡片\n\n[github repo=\"typecho/typecho\"]\n\n## B 站视频\n\n[bilibili bv=\"BV1GJ411x7h7\"]\n\n## 回复可见\n\n[hide]\n恭喜你看到了隐藏内容：下载密码是 nimbus2026。\n[/hide]\n\n## 代码块里的短代码不解析\n\n```\n[tip]我不会被解析[/tip]\n```\n";
+    $t = $now - 600;
+    $db->prepare("INSERT INTO {$p}contents (title,slug,created,modified,text,\"order\",authorId,template,type,status,password,commentsNum,allowComment,allowPing,allowFeed,parent) VALUES (?,?,?,?,?,0,1,NULL,'post','publish',NULL,0,'1','1','1',0)")->execute(['短代码演示', 'shortcode-demo', $t, $t, $md]);
+    $cid = (int)$db->lastInsertId();
+    $mid = (int)$db->query("SELECT mid FROM {$p}metas WHERE slug='tech' AND type='category'")->fetchColumn();
+    if ($mid) $db->prepare("INSERT INTO {$p}relationships (cid,mid) VALUES (?,?)")->execute([$cid, $mid]);
+}
 echo "seed-kit: ok\n";

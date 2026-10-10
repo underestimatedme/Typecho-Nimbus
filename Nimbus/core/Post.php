@@ -51,7 +51,8 @@ final class Post
     {
         $field = trim((string)$field);
         if ($field !== '') return $field;
-        $s = preg_replace('/<!--.*?-->/s', '', $html);
+        $s = Shortcode::strip($html);
+        $s = preg_replace('/<!--.*?-->/s', '', $s);
         $s = preg_replace('/<(pre|code|script|style)[^>]*>.*?<\/\1>/is', '', (string)$s);
         $s = strip_tags((string)$s);
         $s = html_entity_decode($s, ENT_QUOTES, 'UTF-8');

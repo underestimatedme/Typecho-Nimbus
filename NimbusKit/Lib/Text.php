@@ -101,7 +101,8 @@ final class Text
     /** 去掉 HTML / Markdown 标记的纯文本。 */
     public static function plain(string $text): string
     {
-        $s = preg_replace('/<!--.*?-->/s', '', $text);
+        $s = preg_replace('/\[hide[^\]]*\].*?\[\/hide\]/su', '', $text); // 回复可见内容不进入摘要与搜索
+        $s = preg_replace('/<!--.*?-->/s', '', (string)$s);
         $s = preg_replace('/```.*?```/s', ' ', (string)$s);
         $s = strip_tags((string)$s);
         $s = html_entity_decode($s, ENT_QUOTES, 'UTF-8');

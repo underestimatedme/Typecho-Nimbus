@@ -100,3 +100,4 @@ test('groupBookmarks orders groups by min sort and items within', function () {
 });
 test('tags split on commas, keep spaces inside names, dedupe', fn() => assert_eq(['Next.js', 'PHP', 'Vue 3'], Text::tags('Next.js, PHP，PHP、Vue 3')));
 test('dayKey', fn() => assert_eq((int)date('Ymd', 1700000000), Text::dayKey(1700000000)));
+test('plain text drops hidden content (search/excerpt)', fn() => assert_eq('公开', Text::plain('公开[hide]秘密 ZXQ[/hide]')));
