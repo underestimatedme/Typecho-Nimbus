@@ -81,7 +81,7 @@ return [
     '阿联酋' => 'United Arab Emirates', '菲律宾' => 'Philippines', '印度尼西亚' => 'Indonesia', '瑞士' => 'Switzerland', '瑞典' => 'Sweden', '爱尔兰' => 'Ireland', '芬兰' => 'Finland',
 ],
 'js' => [
-    '复制' => 'Copy', '{y} 年 {m} 月 {d} 日' => '{y}-{m}-{d}', '{n} 篇' => '{n} posts', '查看当天归档' => 'Day archive', '已复制' => 'Copied', '复制失败，请手动选择' => 'Copy failed. Please select the text manually.', '展开全部 · {n} 行' => 'Expand · {n} lines', '收起' => 'Collapse',
+    '复制' => 'Copy', '{y} 年 {m} 月 {d} 日' => '{y}-{m}-{d}', '{n} 篇' => '{n} posts', '查看当天归档' => 'Day archive', '加载失败，请重试' => 'Could not load. Please try again.', '已复制' => 'Copied', '复制失败，请手动选择' => 'Copy failed. Please select the text manually.', '展开全部 · {n} 行' => 'Expand · {n} lines', '收起' => 'Collapse',
     '点赞失败' => 'Could not like', '点赞失败，请稍后再试' => 'Could not like. Please try again later.', '更多' => 'More', '加载中…' => 'Loading…', '没有更多了' => 'No more',
     '表情加载失败' => 'Could not load emoji', '回复 {name}' => 'Reply to {name}', '评论成功' => 'Comment posted', '提交失败' => 'Submission failed',
     '评论没有提交成功，请刷新页面后重试' => 'The comment was not posted. Refresh the page and try again.', '，隐藏内容已解锁' => '; hidden content unlocked', '提交失败，请重试' => 'Submission failed. Please try again.',

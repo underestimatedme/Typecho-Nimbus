@@ -132,3 +132,5 @@
 .n-st-sub span { display: inline-flex; align-items: center; gap: 3px; }
 .n-st-sub .n-ico { width: 12px; height: 12px; }
 @media (max-width: 760px) { .n-st-top.is-all { grid-template-columns: 1fr; } .n-st-sub { display: none; } .n-st-top.is-all a { grid-template-columns: 24px 1fr auto; } }
+.n-st-panel > header .n-st-more.is-loading { opacity: .55; pointer-events: none; }
+#hot { scroll-margin-top: calc(var(--nav-h) + 20px); }

@@ -1,5 +1,5 @@
-// 统计页：点击热力图某天，弹出当天的文章列表（含当天归档链接）
-import { qs, on, tr } from './util.js';
+// 统计页：点击热力图某天，弹出当天的文章列表（含当天归档链接）；热门文章「查看全部 / 收起」原地展开
+import { qs, on, tr, toast } from './util.js';
 
 let offs = [], pop = null;
 
@@ -49,8 +49,43 @@ function open(heat, cell, data) {
   if (first) first.focus({ preventScroll: true });
 }
 
+// 只取新页面里的 #hot 面板替换当前面板，不刷新、不跳动
+async function toggleHot(link) {
+  const panel = qs('#hot');
+  if (!panel || panel.dataset.busy) return;
+  panel.dataset.busy = '1';
+  link.classList.add('is-loading');
+  try {
+    const r = await fetch(link.href, { headers: { 'X-Nimbus-Router': '1', Accept: 'text/html' }, credentials: 'same-origin' });
+    if (!r.ok) throw new Error(r.status);
+    const doc = new DOMParser().parseFromString(await r.text(), 'text/html');
+    const fresh = doc.getElementById('hot');
+    if (!fresh) throw new Error('no panel');
+    fresh.classList.add('is-in');
+    const before = panel.getBoundingClientRect().top;
+    panel.replaceWith(fresh);
+    // 收起后如果面板顶部已在视口上方，滚回面板顶部
+    if (before < 0) fresh.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    history.replaceState(history.state, '', link.href.replace(/#hot$/, ''));
+    bindHot();
+  } catch (e) {
+    toast(tr('加载失败，请重试'));
+  } finally {
+    delete panel.dataset.busy;
+    link.classList.remove('is-loading');
+  }
+}
+
+let hotOff = null;
+function bindHot() {
+  if (hotOff) hotOff();
+  const link = qs('#hot .n-st-more');
+  hotOff = link ? on(link, 'click', (e) => { e.preventDefault(); toggleHot(link); }) : null;
+}
+
 export function init(root = document) {
   destroy();
+  bindHot();
   const heat = qs('[data-heat]', root), el = qs('#n-heat-data', root);
   if (!heat || !el) return;
   let data = {};
@@ -67,4 +102,4 @@ export function init(root = document) {
   offs.push(on(document, 'keydown', (e) => { if (e.key === 'Escape') close(); }));
 }
 
-export function destroy() { offs.forEach((f) => f()); offs = []; close(); }
+export function destroy() { offs.forEach((f) => f()); offs = []; close(); if (hotOff) hotOff(); hotOff = null; }
