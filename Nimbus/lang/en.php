@@ -10,7 +10,7 @@ return [
     '首页' => 'Home', '搜索' => 'Search', '搜索 {q}' => 'Search: {q}', '搜索文章…' => 'Search posts…', '返回首页' => 'Back to home',
     '返回' => 'Back', '关闭' => 'Close', '菜单' => 'Menu', '打开菜单' => 'Open menu', '主导航' => 'Main navigation',
     '切换亮暗模式' => 'Toggle light / dark', '亮暗切换' => 'Light / dark', '返回顶部' => 'Back to top', '向下滚动' => 'Scroll down',
-    '加载更多' => 'Load more', '没有更多了' => 'No more', '加载中…' => 'Loading…', '全部' => 'All', '更多' => 'More',
+    '加载更多' => 'Load more', '浏览方式' => 'Browse mode', '分页' => 'Pages', '滚动' => 'Scroll', '没有更多了' => 'No more', '加载中…' => 'Loading…', '全部' => 'All', '更多' => 'More',
     '文章' => 'Posts', '分类' => 'Categories', '标签' => 'Tags', '作者' => 'Author', '归档' => 'Archives', '其他' => 'Other',
     '共 {n} 篇文章' => '{n} posts', '共 {n} 篇' => '{n} posts', '{n} 篇' => '{n} posts', '这里还没有文章。' => 'No posts here yet.', '还没有文章。' => 'No posts yet.',
     '页面不见了' => 'Page not found', '页面不存在' => 'Page not found', '你访问的地址可能已被移动或删除。试试搜索，或者看看这些文章。' => 'The page you are looking for may have been moved or deleted. Try searching, or have a look at these posts.',
