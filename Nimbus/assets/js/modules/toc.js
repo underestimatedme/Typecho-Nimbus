@@ -16,7 +16,16 @@ export function init(root = document) {
     const a = idx >= 0 ? links[idx] : null;
     if (a !== active) {
       links.forEach((l) => l.classList.remove('is-active'));
-      if (a) { a.classList.add('is-active'); const box = toc.querySelector('.n-toc-in'); if (box && box.scrollHeight > box.clientHeight) a.scrollIntoView({ block: 'nearest' }); }
+      if (a) {
+        a.classList.add('is-active');
+        const box = toc.querySelector('.n-toc-in');
+        if (box && box.scrollHeight > box.clientHeight) {
+          const boxRect = box.getBoundingClientRect(), linkRect = a.getBoundingClientRect();
+          const visibleTop = boxRect.top + box.clientTop, visibleBottom = visibleTop + box.clientHeight;
+          if (linkRect.top < visibleTop) box.scrollTop -= visibleTop - linkRect.top;
+          else if (linkRect.bottom > visibleBottom) box.scrollTop += linkRect.bottom - visibleBottom;
+        }
+      }
       active = a;
     }
     if (bar) {
