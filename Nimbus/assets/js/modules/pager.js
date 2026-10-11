@@ -17,7 +17,9 @@ export function init(root = document) {
   destroy();
   const pager = qs('[data-pager]', root);
   if (!pager) return;
-  const saved = storage.get(KEY);
+  // 只有站长开启了切换（页面上有切换按钮）时才采用访客自己的选择，否则一律按后台设置
+  const canSwitch = qsa('[data-list-mode]').length > 0;
+  const saved = canSwitch ? storage.get(KEY) : null;
   const mode = saved === 'page' || saved === 'scroll' ? saved : pager.dataset.default;
   apply(pager, mode, mode !== pager.dataset.mode || (qs('[data-load-more]', pager) && mode === 'scroll'));
   qsa('[data-list-mode]', root).forEach((b) => offs.push(on(b, 'click', () => {
