@@ -77,6 +77,13 @@ final class Kit
         return is_array($v) ? array_map('intval', $v) : [];
     }
 
+    /** 浏览量排行原始行 [cid, views, likes]；插件未装或过旧返回 null。 */
+    public static function topViewed(int $limit): ?array
+    {
+        $v = self::call('topViewed', [$limit]);
+        return is_array($v) ? $v : null;
+    }
+
     /** 评论者 IP 属地（省份 / 国家）；未启用或无数据文件返回 null。 */
     public static function region(string $ip): ?string
     {

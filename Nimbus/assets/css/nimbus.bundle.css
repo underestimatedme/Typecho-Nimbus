@@ -1581,6 +1581,39 @@ html[data-motion="off"] .n-post-hero-chip, html[data-motion="off"] .n-post-hero-
   .n-ch-legend { width: 100%; }
   .n-st-card b { font-size: 24px; }
 }
+
+/* 热力图：有文章的格子可点击，弹出当天文章 */
+.n-st-heat { position: relative; }
+.n-ch-hc.is-on { cursor: pointer; outline: none; }
+.n-ch-hc.is-on:focus-visible { stroke: var(--accent); stroke-width: 2; }
+.n-heat-pop { position: absolute; z-index: 10; width: min(300px, 80vw); padding: 14px 16px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow-hover); animation: n-pl-pop .2s var(--ease); }
+.n-heat-pop-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; font-weight: 700; color: var(--fg-strong); font-size: var(--text-sm); margin-bottom: 8px; }
+.n-heat-pop-head small { font-weight: 500; color: var(--muted); font-size: var(--text-xs); }
+.n-heat-pop ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.n-heat-pop li a { display: block; padding: 7px 10px; margin-inline: -10px; border-radius: 10px; font-size: var(--text-sm); line-height: 1.45; color: var(--fg); transition: background var(--dur-fast), color var(--dur-fast); }
+.n-heat-pop li a:hover, .n-heat-pop li a:focus-visible { background: var(--accent-soft); color: var(--accent-text); outline: none; }
+.n-heat-pop-all { display: inline-block; margin-top: 8px; font-size: var(--text-xs); font-weight: 600; color: var(--accent-text); }
+
+/* 分类分布：扇区与图例可点击 */
+.n-ch-donut a { cursor: pointer; }
+.n-ch-donut a:hover .n-ch-seg, .n-ch-donut a:focus .n-ch-seg { stroke-width: 28; }
+.n-ch-legend li:has(> a) { display: block; }
+.n-ch-legend li a { display: grid; grid-template-columns: 12px 1fr auto 46px; gap: 8px; align-items: center; padding: 4px 8px; margin-inline: -8px; border-radius: 8px; color: inherit; transition: background var(--dur-fast); }
+.n-ch-legend li a:hover { background: var(--chip); }
+.n-ch-legend li a:hover span { color: var(--accent-text); }
+
+/* 热门文章：查看全部 */
+.n-st-panel > header .n-st-more { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: var(--r-pill); font-size: var(--text-xs); font-weight: 600; color: var(--fg-soft); background: var(--chip); transition: color var(--dur-fast), gap var(--dur) var(--ease); white-space: nowrap; }
+.n-st-panel > header .n-st-more:hover { color: var(--accent-text); gap: 7px; }
+.n-st-panel > header { flex-wrap: wrap; }
+.n-st-top b { display: inline-flex; align-items: center; gap: 4px; }
+.n-st-top b .n-ico { width: 13px; height: 13px; opacity: .6; }
+.n-st-top.is-all { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; }
+.n-st-top.is-all a { grid-template-columns: 28px minmax(0, 1fr) auto auto; }
+.n-st-sub { display: inline-flex; gap: 10px; font-size: 11px; color: var(--muted); }
+.n-st-sub span { display: inline-flex; align-items: center; gap: 3px; }
+.n-st-sub .n-ico { width: 12px; height: 12px; }
+@media (max-width: 760px) { .n-st-top.is-all { grid-template-columns: 1fr; } .n-st-sub { display: none; } .n-st-top.is-all a { grid-template-columns: 24px 1fr auto; } }
 }
 /* --- pages/home.css --- */
 @layer pages {

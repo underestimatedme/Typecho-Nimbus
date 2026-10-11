@@ -110,9 +110,12 @@ final class Chart
             $frac = (int)$it['count'] / $total;
             $len = $frac * $c;
             $gap = count($items) > 1 ? min(3, $len * 0.3) : 0;
-            $svg .= '<circle class="n-ch-seg n-ch-c' . ($k % 8) . '" style="--i:' . $k . '" cx="100" cy="100" r="' . $r . '" stroke-dasharray="' . self::n(max(0.1, $len - $gap)) . ' ' . self::n($c) . '" stroke-dashoffset="' . self::n(-$acc) . '" transform="rotate(-90 100 100)"><title>' . View::e($it['name'] . I18n::t('：') . $it['count']) . '</title></circle>';
+            $url = isset($it['url']) && $it['url'] !== '' ? (string)$it['url'] : '';
+            $seg = '<circle class="n-ch-seg n-ch-c' . ($k % 8) . '" style="--i:' . $k . '" cx="100" cy="100" r="' . $r . '" stroke-dasharray="' . self::n(max(0.1, $len - $gap)) . ' ' . self::n($c) . '" stroke-dashoffset="' . self::n(-$acc) . '" transform="rotate(-90 100 100)"><title>' . View::e($it['name'] . I18n::t('：') . $it['count']) . '</title></circle>';
+            $svg .= $url !== '' ? '<a href="' . View::e($url) . '" aria-label="' . View::e($it['name']) . '">' . $seg . '</a>' : $seg;
             $acc += $len;
-            $legend .= '<li><i class="n-ch-c' . ($k % 8) . '"></i><span>' . View::e($it['name']) . '</span><b>' . (int)$it['count'] . '</b><em>' . self::n(round($frac * 100, 1)) . '%</em></li>';
+            $row = '<i class="n-ch-c' . ($k % 8) . '"></i><span>' . View::e($it['name']) . '</span><b>' . (int)$it['count'] . '</b><em>' . self::n(round($frac * 100, 1)) . '%</em>';
+            $legend .= '<li>' . ($url !== '' ? '<a href="' . View::e($url) . '">' . $row . '</a>' : $row) . '</li>';
         }
         $svg .= '<text class="n-ch-center" x="100" y="96" text-anchor="middle">' . $total . '</text><text class="n-ch-center-sub" x="100" y="120" text-anchor="middle">' . View::e($centerLabel) . '</text></svg>';
         return '<div class="n-ch-donut-wrap">' . $svg . $legend . '</ul></div>';
@@ -136,7 +139,8 @@ final class Chart
             foreach ($col as $di => $d) {
                 if ($d['future']) continue;
                 $lv = Stats::level((int)$d['n'], (int)$data['max']);
-                $out .= '<rect class="n-ch-hc l' . $lv . '" style="--i:' . $wi . '" x="' . ($left + $wi * ($cell + $gap)) . '" y="' . ($top + $di * ($cell + $gap)) . '" width="' . $cell . '" height="' . $cell . '" rx="2.5"><title>' . I18n::e('{date}：{n} 篇', ['date' => $d['date'], 'n' => $d['n']]) . '</title></rect>';
+                $act = (int)$d['n'] > 0 ? ' data-day="' . View::e($d['date']) . '" tabindex="0" role="button" aria-label="' . I18n::e('{date}：{n} 篇', ['date' => $d['date'], 'n' => $d['n']]) . '"' : '';
+                $out .= '<rect class="n-ch-hc l' . $lv . ($act ? ' is-on' : '') . '"' . $act . ' style="--i:' . $wi . '" x="' . ($left + $wi * ($cell + $gap)) . '" y="' . ($top + $di * ($cell + $gap)) . '" width="' . $cell . '" height="' . $cell . '" rx="2.5"><title>' . I18n::e('{date}：{n} 篇', ['date' => $d['date'], 'n' => $d['n']]) . '</title></rect>';
             }
         }
         return $out . '</svg>';

@@ -60,7 +60,7 @@ return [
     '统计' => 'Stats', '数字背后，是每一次写作与相遇' => 'Behind every number, a post written and a reader met', '篇' => 'posts', '条' => 'comments', '总字数' => 'Words', '字' => 'words', '运行' => 'Running', '天' => 'days',
     '总浏览' => 'Views', '次' => 'views', '获赞' => 'Likes', '个' => '', '近 30 天浏览量' => 'Views in the last 30 days', '{n} 次' => '{n} views', ' 次' => ' views', '近 12 个月' => 'Last 12 months',
     '写作热力图' => 'Writing heatmap', '近一年 {n} 篇' => '{n} posts in the past year', '少' => 'Less', '多' => 'More', '分类分布' => 'Categories', '篇文章' => 'posts', '暂无数据' => 'No data yet',
-    '热门文章' => 'Popular posts', '按浏览量' => 'by views', '常用标签' => 'Top tags', '启用配套插件 NimbusKit 后可显示浏览量趋势与热门文章。' => 'Enable the companion plugin NimbusKit to see view trends and popular posts.',
+    '热门文章' => 'Popular posts', '查看全部' => 'View all', '前 {n} 篇 · 按浏览量' => 'Top {n} · by views', '按浏览量' => 'by views', '常用标签' => 'Top tags', '启用配套插件 NimbusKit 后可显示浏览量趋势与热门文章。' => 'Enable the companion plugin NimbusKit to see view trends and popular posts.',
     '折线图' => 'Line chart', '柱状图' => 'Bar chart', '环形图' => 'Donut chart', '发文热力图' => 'Posting heatmap', '：' => ': ', '{date}：{n} 篇' => '{date}: {n} posts',
     // 日期
     '{m}月' => '{m}', '{m} 月' => 'Month {m}', '{y} 年 {m} 月' => '{y}-{m}', '一' => 'M', '二' => 'T', '三' => 'W', '四' => 'T', '五' => 'F', '六' => 'S', '日' => 'S',
@@ -81,7 +81,7 @@ return [
     '阿联酋' => 'United Arab Emirates', '菲律宾' => 'Philippines', '印度尼西亚' => 'Indonesia', '瑞士' => 'Switzerland', '瑞典' => 'Sweden', '爱尔兰' => 'Ireland', '芬兰' => 'Finland',
 ],
 'js' => [
-    '复制' => 'Copy', '已复制' => 'Copied', '复制失败，请手动选择' => 'Copy failed. Please select the text manually.', '展开全部 · {n} 行' => 'Expand · {n} lines', '收起' => 'Collapse',
+    '复制' => 'Copy', '{y} 年 {m} 月 {d} 日' => '{y}-{m}-{d}', '{n} 篇' => '{n} posts', '查看当天归档' => 'Day archive', '已复制' => 'Copied', '复制失败，请手动选择' => 'Copy failed. Please select the text manually.', '展开全部 · {n} 行' => 'Expand · {n} lines', '收起' => 'Collapse',
     '点赞失败' => 'Could not like', '点赞失败，请稍后再试' => 'Could not like. Please try again later.', '更多' => 'More', '加载中…' => 'Loading…', '没有更多了' => 'No more',
     '表情加载失败' => 'Could not load emoji', '回复 {name}' => 'Reply to {name}', '评论成功' => 'Comment posted', '提交失败' => 'Submission failed',
     '评论没有提交成功，请刷新页面后重试' => 'The comment was not posted. Refresh the page and try again.', '，隐藏内容已解锁' => '; hidden content unlocked', '提交失败，请重试' => 'Submission failed. Please try again.',

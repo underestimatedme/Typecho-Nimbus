@@ -166,6 +166,12 @@ final class Api
         ];
     }
 
+    /** 浏览量排行（最多 200 篇）。 */
+    public static function topViewed(int $limit): array
+    {
+        return Store::topPosts('views', max(1, min(200, $limit)));
+    }
+
     public static function likesFeature(): bool
     {
         return Config::feature('likes');

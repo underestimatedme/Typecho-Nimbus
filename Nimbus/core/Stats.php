@@ -86,6 +86,22 @@ final class Stats
         return (int)$cjk + (int)$latin;
     }
 
+    /**
+     * 浏览量排行：插件返回的 [cid, views, likes] 行 → 带标题与链接的列表（按浏览量排序，只保留可公开访问的文章）。
+     * @param array<int,array> $rows
+     */
+    public static function ranked($archive, array $rows): array
+    {
+        $by = [];
+        foreach ($rows as $r) $by[(int)$r['cid']] = ['views' => (int)($r['views'] ?? 0), 'likes' => (int)($r['likes'] ?? 0)];
+        $out = [];
+        foreach (Post::byCids($archive, array_keys($by)) as $p) {
+            $c = (int)$p['cid'];
+            $out[] = ['title' => View::t((string)$p['title']), 'url' => (string)$p['permalink'], 'views' => $by[$c]['views'] ?? 0, 'likes' => $by[$c]['likes'] ?? 0, 'comments' => (int)$p['commentsNum']];
+        }
+        return $out;
+    }
+
     /** 从数据库采集看板全部数据。 */
     public static function collect($archive): array
     {
@@ -114,7 +130,10 @@ final class Stats
             return $db->fetchAll($db->select('mid', 'name', 'slug', 'count', 'type')->from('table.metas')->where('type = ?', $type)
                 ->where('count > 0')->order('count', \Typecho_Db::SORT_DESC)->limit($limit));
         };
-        $cats = array_map(function ($r) { return ['name' => (string)$r['name'], 'count' => (int)$r['count']]; }, $metas('category', 100));
+        $cats = array_map(function ($r) {
+            $f = \Typecho_Widget::widget('Widget_Abstract_Metas')->filter($r);
+            return ['name' => (string)$r['name'], 'count' => (int)$r['count'], 'url' => (string)$f['permalink']];
+        }, $metas('category', 100));
         $tagRows = $metas('tag', 24);
         $tags = [];
         foreach ($tagRows as $r) {
@@ -128,11 +147,21 @@ final class Stats
 
         $kit = Kit::stats();
         if (is_array($kit)) {
-            $top = isset($kit['top']) && is_array($kit['top']) ? $kit['top'] : [];
-            $views = [];
-            foreach ($top as $r) $views[(int)$r['cid']] = (int)$r['views'];
-            $kit['top'] = array_map(function ($p) use ($views) { return ['title' => View::t((string)$p['title']), 'url' => (string)$p['permalink'], 'views' => $views[(int)$p['cid']] ?? 0]; }, Post::byCids($archive, array_keys($views)));
+            $kit['top'] = self::ranked($archive, isset($kit['top']) && is_array($kit['top']) ? $kit['top'] : []);
         }
+        // 热力图每天的文章（标题 + 链接），按文章指纹缓存
+        $heatStart = $now - 380 * 86400;
+        $heatPosts = Cache::remember('heat-posts', Cache::postsKey([(string)$opt->index, $tz]), function () use ($db, $archive, $heatStart, $now) {
+            $rows = $db->fetchAll($db->select()->from('table.contents')->where('type = ? AND status = ?', 'post', 'publish')
+                ->where('created >= ? AND created < ?', $heatStart, $now)->where("password IS NULL OR password = ''")
+                ->order('created', \Typecho_Db::SORT_DESC));
+            $map = [];
+            foreach ($rows as $r) {
+                $f = $archive->filter($r);
+                $map[View::date('Y-m-d', (int)$r['created'])][] = ['t' => View::t((string)$r['title']), 'u' => (string)$f['permalink']];
+            }
+            return $map;
+        });
         return [
             'counts' => $counts + ['words' => $words, 'days' => $start ? max(0, (int)floor(($now - $start) / 86400)) : 0],
             'posts' => self::monthly($postTs, $now, 12, $tz),
@@ -140,6 +169,7 @@ final class Stats
             'categories' => self::shares($cats, 7),
             'tags' => $tags,
             'heatmap' => self::heatmap($postTs, $now, 53, $tz),
+            'heatPosts' => is_array($heatPosts) ? $heatPosts : [],
             'kit' => $kit,
         ];
     }

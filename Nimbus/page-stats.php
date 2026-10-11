@@ -9,6 +9,7 @@ use Nimbus\View;
 use Nimbus\I18n;
 use Nimbus\Chart;
 use Nimbus\Stats;
+use Nimbus\Kit;
 
 $s = Stats::collect($this);
 $c = $s['counts'];
@@ -61,7 +62,8 @@ View::partial('header', ['archive' => $this]);
 
       <section class="n-st-panel n-st-wide n-reveal">
         <header><h2><?= I18n::e('写作热力图') ?></h2><span><?= I18n::e('近一年 {n} 篇', ['n' => (int)$s['heatmap']['total']]) ?></span></header>
-        <div class="n-st-heat"><?= Chart::heatmap($s['heatmap']) ?></div>
+        <div class="n-st-heat" data-heat><?= Chart::heatmap($s['heatmap']) ?></div>
+        <script type="application/json" id="n-heat-data"><?= json_encode(['posts' => (object)$s['heatPosts'], 'day' => \Typecho\Router::url('archive_day', ['year' => 'YYYY', 'month' => 'MM', 'day' => 'DD'], (string)$this->options->index)], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) ?></script>
         <div class="n-st-heat-key"><?= I18n::e('少') ?><i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i><?= I18n::e('多') ?></div>
       </section>
 
@@ -70,12 +72,25 @@ View::partial('header', ['archive' => $this]);
         <?= Chart::donut($s['categories'], I18n::t('篇文章')) ?: '<p class="n-st-none">' . I18n::e('暂无数据') . '</p>' ?>
       </section>
 
-      <?php if (is_array($kit) && !empty($kit['top'])): $maxV = max(1, max(array_column($kit['top'], 'views'))); ?>
-      <section class="n-st-panel n-reveal">
-        <header><h2><?= I18n::e('热门文章') ?></h2><span><?= I18n::e('按浏览量') ?></span></header>
-        <ol class="n-st-top">
-          <?php foreach ($kit['top'] as $i => $p): ?>
-          <li style="--w:<?= round($p['views'] / $maxV * 100, 1) ?>%;--i:<?= $i ?>"><a href="<?= View::e($p['url']) ?>"><span class="n-st-rank"><?= $i + 1 ?></span><span class="n-st-name"><?= View::e($p['title']) ?></span><b><?= View::num((int)$p['views']) ?></b></a></li>
+      <?php if (is_array($kit) && !empty($kit['top'])):
+        // 「查看全部」：?hot=all 展开为前 100 名的完整排行（普通链接，可分享）
+        $hotAll = (string)$this->request->get('hot') === 'all';
+        $hot = $kit['top'];
+        $peek = Kit::topViewed($hotAll ? 100 : count($hot) + 1);
+        $hasMore = is_array($peek) && count($peek) > count($kit['top']);
+        if ($hotAll && is_array($peek)) $hot = Stats::ranked($this, $peek);
+        $maxV = max(1, max(array_column($hot, 'views')));
+        $self = (string)$this->permalink;
+        $allUrl = $self . (strpos($self, '?') === false ? '?' : '&') . 'hot=all#hot';
+      ?>
+      <section class="n-st-panel n-reveal<?= $hotAll ? ' n-st-wide' : '' ?>" id="hot">
+        <header><h2><?= I18n::e('热门文章') ?></h2><span><?= $hotAll ? I18n::e('前 {n} 篇 · 按浏览量', ['n' => count($hot)]) : I18n::e('按浏览量') ?></span>
+          <?php if ($hotAll): ?><a class="n-st-more" href="<?= View::e($self) ?>#hot"><?= I18n::e('收起') ?></a>
+          <?php elseif ($hasMore): ?><a class="n-st-more" href="<?= View::e($allUrl) ?>"><?= I18n::e('查看全部') ?><?= View::icon('arrow-right') ?></a><?php endif; ?>
+        </header>
+        <ol class="n-st-top<?= $hotAll ? ' is-all' : '' ?>">
+          <?php foreach ($hot as $i => $p): ?>
+          <li style="--w:<?= round($p['views'] / $maxV * 100, 1) ?>%;--i:<?= min($i, 20) ?>"><a href="<?= View::e($p['url']) ?>"><span class="n-st-rank"><?= $i + 1 ?></span><span class="n-st-name"><?= View::e($p['title']) ?></span><?php if ($hotAll): ?><span class="n-st-sub"><span><?= View::icon('heart') ?><?= View::num((int)($p['likes'] ?? 0)) ?></span><span><?= View::icon('comment') ?><?= (int)($p['comments'] ?? 0) ?></span></span><?php endif; ?><b><?= View::icon('eye') ?><?= View::num((int)$p['views']) ?></b></a></li>
           <?php endforeach; ?>
         </ol>
       </section>
