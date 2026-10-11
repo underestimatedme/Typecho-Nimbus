@@ -1601,7 +1601,7 @@ html[data-motion="off"] .n-post-hero-chip, html[data-motion="off"] .n-post-hero-
 .n-st-heat { position: relative; }
 .n-ch-hc.is-on { cursor: pointer; outline: none; }
 .n-ch-hc.is-on:focus-visible { stroke: var(--accent); stroke-width: 2; }
-.n-heat-pop { position: absolute; z-index: 10; width: min(300px, 80vw); padding: 14px 16px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow-hover); animation: n-pl-pop .2s var(--ease); }
+.n-heat-pop { position: fixed; z-index: calc(var(--z-nav) + 5); width: min(300px, 80vw); padding: 14px 16px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow-hover); animation: n-pl-pop .2s var(--ease); }
 .n-heat-pop-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; font-weight: 700; color: var(--fg-strong); font-size: var(--text-sm); margin-bottom: 8px; }
 .n-heat-pop-head small { font-weight: 500; color: var(--muted); font-size: var(--text-xs); }
 .n-heat-pop ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }

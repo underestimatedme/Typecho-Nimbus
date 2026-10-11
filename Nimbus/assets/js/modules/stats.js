@@ -35,14 +35,15 @@ function open(heat, cell, data) {
     all.textContent = tr('查看当天归档') + ' →';
     pop.appendChild(all);
   }
-  heat.appendChild(pop);
-  // 定位在格子上方，超出边界时左右收回
-  const hr = heat.getBoundingClientRect(), cr = cell.getBoundingClientRect();
+  // 挂在 body 上用 fixed 定位：热力图容器可横向滚动，会把弹层上半截裁掉
+  document.body.appendChild(pop);
+  const cr = cell.getBoundingClientRect();
   const w = pop.offsetWidth, h = pop.offsetHeight;
-  let left = cr.left - hr.left + heat.scrollLeft + cr.width / 2 - w / 2;
-  left = Math.max(heat.scrollLeft + 4, Math.min(left, heat.scrollLeft + heat.clientWidth - w - 4));
-  let top = cr.top - hr.top - h - 10;
-  if (top < -hr.top + 70) top = cr.bottom - hr.top + 10;
+  const navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 64;
+  let left = cr.left + cr.width / 2 - w / 2;
+  left = Math.max(8, Math.min(left, innerWidth - w - 8));
+  let top = cr.top - h - 10;
+  if (top < navH + 8) top = cr.bottom + 10; // 上方放不下就放到格子下方
   pop.style.left = left + 'px';
   pop.style.top = top + 'px';
   const first = pop.querySelector('a');
@@ -100,6 +101,9 @@ export function init(root = document) {
   }));
   offs.push(on(document, 'click', (e) => { if (pop && !pop.contains(e.target)) close(); }));
   offs.push(on(document, 'keydown', (e) => { if (e.key === 'Escape') close(); }));
+  offs.push(on(window, 'scroll', close, { passive: true }));
+  offs.push(on(heat, 'scroll', close, { passive: true }));
+  offs.push(on(window, 'resize', close));
 }
 
 export function destroy() { offs.forEach((f) => f()); offs = []; close(); if (hotOff) hotOff(); hotOff = null; }
