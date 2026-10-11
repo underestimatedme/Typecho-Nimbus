@@ -19,7 +19,7 @@ check() { # path expected_status [grep patterns...]
 }
 check "/" 200 'data-page="index"'
 check "/index.php/archives/1/" 200 'data-page="post"'
-check "/index.php/archives/3/" 200 'class="n-post-hero"' 'data-layout="tri"' 'data-width="fluid"'
+check "/index.php/archives/3/" 200 'n-post-cover has-image' 'class="n-article has-toc"' 'data-width="fluid"'
 check "/index.php/archives/9/" 200 'class="n-cover n-post-cover' 'n-article-paper' 'class="n-rail"' 'n-prose-magazine'
 check "/index.php/category/tech/" 200 'data-page="index"'
 check "/index.php/archives.html" 200 'data-page="page"'
