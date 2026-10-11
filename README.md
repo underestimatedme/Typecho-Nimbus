@@ -19,6 +19,7 @@
 
 <p align="center">
   <a href="#快速开始">快速开始</a> ·
+  <a href="docs/install-typecho.md">安装 Typecho</a> ·
   <a href="#截图">截图</a> ·
   <a href="#功能一览">功能一览</a> ·
   <a href="docs/user-guide.md">使用手册</a> ·
@@ -111,6 +112,18 @@
 
 ## 快速开始
 
+### 还没有 Typecho？
+
+Nimbus 运行在 [Typecho](https://typecho.org) 上，先把 Typecho 装好：
+
+1. 准备 PHP 7.4+ 和一个数据库（MySQL / SQLite / PostgreSQL 任选；用 MySQL 需先建好空库）。
+2. 从 [Typecho 发布页](https://github.com/typecho/typecho/releases) 下载 `typecho.zip`，解压到网站根目录，并让 PHP 对该目录可写。
+3. 给 Web 服务器配好伪静态（Nginx 的 `try_files`、Apache 的 `.htaccess` 或 Caddy 的 `php_fastcgi`）。
+4. 浏览器打开 `https://你的域名/install.php`，按向导填写数据库信息与管理员帐号。
+5. 后台「设置 → 永久链接」启用地址重写。
+
+每一步的命令、Nginx / Apache / Caddy 配置示例和常见报错，见 **[Typecho 安装教程](docs/install-typecho.md)**。
+
 ### 安装到你的博客
 
 1. 下载本仓库（`git clone` 或 GitHub 上的 Download ZIP）。
@@ -141,6 +154,7 @@ bash tests/serve.sh
 
 | 文档 | 内容 |
 | --- | --- |
+| [Typecho 安装教程](docs/install-typecho.md) | 从零搭建 Typecho：环境、上传、伪静态、安装向导、常见报错 |
 | [使用手册](docs/user-guide.md) | 安装步骤、常见问题、性能建议 |
 | [主题说明](Nimbus/README.md) | 配置速查、页面模板、短代码、自定义字段、皮肤定制 |
 | [插件说明](NimbusKit/README.md) | 功能、安装、邮件 / GitHub 登录 / IP 属地配置、接口、数据与卸载 |

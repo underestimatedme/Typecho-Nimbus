@@ -32,7 +32,7 @@
 
 ## 安装
 
-1. 要求：Typecho 1.2.1+，PHP 7.4 – 8.5。
+1. 要求：Typecho 1.2.1+，PHP 7.4 – 8.5。还没有 Typecho 的话，先看 [Typecho 安装教程](../docs/install-typecho.md)。
 2. 下载本仓库，把 `Nimbus` 目录放到 `usr/themes/` 下（目录名必须是 `Nimbus`）。
 3. 后台「控制台 → 外观」启用 Nimbus，然后在「设置外观」里按需配置。
 

@@ -2,6 +2,8 @@
 
 ## 安装
 
+还没有 Typecho 的话，先看 [Typecho 安装教程](install-typecho.md)。
+
 1. 把 `Nimbus` 目录上传到 Typecho 的 `usr/themes/`。
 2. 后台「控制台 → 外观」启用。
 3. 「设置外观」中配置。所有选项都有默认值，留空即用默认。
