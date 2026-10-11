@@ -19,6 +19,7 @@ final class Appearance
             ['name' => 'Radius', 'type' => 'radio', 'label' => '圆角大小', 'description' => '', 'default' => 'md', 'options' => ['sm' => '小', 'md' => '中', 'lg' => '大']],
             ['name' => 'Motion', 'type' => 'radio', 'label' => '动效强度', 'description' => '克制：关闭装饰性动画（光斑、Ken Burns），保留交互反馈。', 'default' => 'full', 'options' => ['full' => '全部', 'reduced' => '克制', 'off' => '关闭']],
             ['name' => 'CyberEffects', 'type' => 'checkbox', 'label' => '赛博朋克特效', 'description' => '只在赛博朋克皮肤下生效，并遵循「动效强度」与系统「减少动态效果」设置。鼠标拖尾只在电脑上出现。', 'default' => ['rain', 'glitch', 'neon', 'decode'], 'options' => ['rain' => '首页字符雨', 'glitch' => '标题故障悬停', 'neon' => '小部件霓虹描边', 'trail' => '鼠标霓虹拖尾', 'decode' => '副标题乱码解码']],
+            ['name' => 'CyberRainCode', 'type' => 'radio', 'label' => '字符雨代码', 'description' => '字符雨每一列从一行真实代码里逐字落下（竖着读就是代码），关键字高亮。', 'default' => 'mix', 'options' => ['mix' => '混合', 'python' => 'Python', 'go' => 'Go', 'rust' => 'Rust']],
             ['name' => 'Mourning', 'type' => 'radio', 'label' => '哀悼模式', 'description' => '全站灰度显示。', 'default' => '0', 'options' => ['1' => '开启', '0' => '关闭']],
         ];
     }

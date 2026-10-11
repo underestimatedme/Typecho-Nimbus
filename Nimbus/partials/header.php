@@ -46,6 +46,7 @@ $config = [
     'features' => Kit::features(),
     'music' => \Nimbus\Music::config(),
     'live2d' => \Nimbus\Music::live2d(),
+    'rainCode' => in_array((string)Options::get('CyberRainCode', 'mix'), ['mix', 'python', 'go', 'rust'], true) ? (string)Options::get('CyberRainCode', 'mix') : 'mix',
     'page' => $page,
     'cid' => $cid,
     'themes' => ['light' => $themeLight, 'dark' => $themeDark, 'follow' => $follow, 'switchable' => $switchable],

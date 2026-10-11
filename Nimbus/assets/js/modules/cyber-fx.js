@@ -1,25 +1,28 @@
 // 赛博朋克特效：首页字符雨、鼠标霓虹拖尾（标题故障与霓虹描边为纯 CSS，副标题解码见 hero.js）
 // 只在 cyber 皮肤生效；切换皮肤时自动启停；尊重「动效强度」与系统减少动态设置。
-import { qs, qsa, prefersReduced } from './util.js';
+import { qs, prefersReduced, config } from './util.js';
 
 const fx = () => (document.documentElement.dataset.fx || '').split(/\s+/);
 export const active = (name) => document.documentElement.dataset.theme === 'cyber' && fx().includes(name) && !prefersReduced() && document.documentElement.dataset.motion !== 'reduced';
 
-let rain = null, trail = null, bound = false;
+let rain = null, trail = null, bound = false, starting = null;
 
-function startRain() {
+async function startRain() {
   const hero = qs('[data-hero]');
-  if (!hero || (rain && rain.hero === hero)) return;
+  if (!hero || (rain && rain.hero === hero) || starting === hero) return;
+  starting = hero;
+  // 语料按需加载；加载期间若已切换皮肤或页面，则放弃
+  const { pickLine } = await import('./code-rain.js');
+  starting = null;
+  if (!active('rain') || !document.contains(hero) || (rain && rain.hero === hero)) return;
   stopRain();
   const c = document.createElement('canvas');
   c.className = 'n-fx-rain';
   c.setAttribute('aria-hidden', 'true');
   hero.insertBefore(c, qs('.n-hero-in', hero));
   const ctx = c.getContext('2d');
-  // 字符：十六进制与代码符号，混入本站标题、文章标题里的汉字（每个站的雨都不一样）
-  const code = '0123456789ABCDEF{}[]<>/=;:+*#$&|_';
-  const own = [...new Set(Array.from(qsa('.n-logo, .n-cover-title, .n-post-cover-title, .n-stack-card b, .n-card-title, .n-hero-title').map((e) => e.textContent).join('')).filter((c) => /[\u4e00-\u9fff]/.test(c)))];
-  const pick = () => (own.length > 6 && Math.random() < 0.45 ? own[(Math.random() * own.length) | 0] : code[(Math.random() * code.length) | 0]);
+  // 每列从一行真实代码（Python / Go / Rust）里逐字落下，竖着读就是代码
+  const pref = config().rainCode || 'mix';
   const size = 16;
   let cols = [], w = 0, h = 0, raf = 0, last = 0, visible = true;
   const resize = () => {
@@ -27,10 +30,12 @@ function startRain() {
     w = hero.clientWidth; h = hero.clientHeight;
     c.width = w * dpr; c.height = h * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    cols = Array.from({ length: Math.ceil(w / size) }, () => Math.random() * -h / size);
+    cols = Array.from({ length: Math.ceil(w / size) }, () => ({ y: Math.random() * -h / size, line: pickLine(pref), i: 0 }));
   };
   resize();
-  const color = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#22d3ee';
+  const cs = getComputedStyle(document.documentElement);
+  const color = cs.getPropertyValue('--accent').trim() || '#22d3ee';
+  const kwColor = cs.getPropertyValue('--neon').trim() || '#ff2d95';
   const draw = (ts) => {
     raf = requestAnimationFrame(draw);
     if (!visible || document.hidden || ts - last < 50) return; // 约 20 帧，省电
@@ -39,12 +44,30 @@ function startRain() {
     ctx.globalCompositeOperation = 'destination-out';
     ctx.fillRect(0, 0, w, h);
     ctx.globalCompositeOperation = 'source-over';
-    ctx.font = `${size}px ui-monospace, monospace`;
+    ctx.font = `${size}px ui-monospace, "SF Mono", Menlo, monospace`;
+    ctx.textBaseline = 'top';
     for (let i = 0; i < cols.length; i++) {
-      const y = cols[i] * size;
-      ctx.fillStyle = Math.random() > 0.975 ? '#fff' : color;
-      ctx.fillText(pick(), i * size, y);
-      cols[i] = y > h && Math.random() > 0.972 ? 0 : cols[i] + 1;
+      const col = cols[i], x = i * size;
+      // 上一帧的「头」改回正常颜色：关键字粉，其余青
+      if (col.prev) {
+        ctx.clearRect(x, col.prev.y, size, size);
+        ctx.fillStyle = col.prev.kw ? kwColor : color;
+        ctx.fillText(col.prev.ch, x, col.prev.y);
+        col.prev = null;
+      }
+      const y = col.y * size;
+      if (col.gap > 0) { col.gap--; }
+      else {
+        const t = col.line[col.i++];
+        if (t && t.ch && y >= 0) {
+          ctx.fillStyle = '#fff';
+          ctx.fillText(t.ch, x, y);
+          col.prev = { ch: t.ch, kw: t.kw, y };
+        }
+        if (col.i >= col.line.length) { col.line = pickLine(pref); col.i = 0; col.gap = 2 + ((Math.random() * 7) | 0); }
+      }
+      col.y += 1;
+      if (y > h && Math.random() > 0.96) { col.y = 0; col.line = pickLine(pref); col.i = 0; col.gap = 0; col.prev = null; }
     }
   };
   raf = requestAnimationFrame(draw);
