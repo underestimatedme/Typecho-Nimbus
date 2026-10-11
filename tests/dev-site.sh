@@ -28,5 +28,7 @@ if ! curl -s -o /dev/null "$URL/"; then (PHP_CLI_SERVER_WORKERS=8 php -d error_r
 BASE="$URL" bash "$ROOT/tests/activate-kit.sh"
 php "$ROOT/tests/seed-kit.php" "$SITE/usr/nimbus.db"
 php "$ROOT/tests/seed-media.php" "$SITE"
+php "$ROOT/tests/seed-tutorial.php" "$SITE/usr/nimbus.db"
+php "$ROOT/tests/set-theme-opt.php" "$SITE/usr/nimbus.db" TutorialCategories=typecho-theme-tutorial >/dev/null
 [ "${STARTED:-0}" = "1" ] && pkill -f "php -d error_reporting=8191 -S 127.0.0.1:$PORT"
 echo "dev site: $URL  (admin / admin123)"

@@ -27,7 +27,8 @@ $avatar = Comment::avatarUrl((string)$post->author->mail, 64, (string)Options::g
     <div class="n-post-cover-main">
     <nav class="n-crumbs" aria-label="<?= I18n::e('位置') ?>">
       <a href="<?= View::e((string)$o->siteUrl) ?>"><?= View::icon('home') ?><?= I18n::e('首页') ?></a>
-      <?php if ($cat): ?><i>/</i><a href="<?= View::e($cat['permalink']) ?>"><?= View::e($cat['name']) ?></a><?php endif; ?>
+      <?php if (!empty($tut)): ?><i>/</i><a href="<?= View::e($tut['tutorial']['url']) ?>"><?= View::icon('list') ?><?= View::e($tut['tutorial']['name']) ?></a><span class="n-crumb-chip"><?= I18n::e('第 {i} / {n} 章', ['i' => $tut['index'] + 1, 'n' => count($tut['tutorial']['chapters'])]) ?></span>
+      <?php elseif ($cat): ?><i>/</i><a href="<?= View::e($cat['permalink']) ?>"><?= View::e($cat['name']) ?></a><?php endif; ?>
     </nav>
     <?php if (!Post::hidden($post, 'title')): ?><h1 class="n-post-cover-title" itemprop="headline"><?= View::e(View::t($post->title)) ?></h1><?php endif; ?>
     <?php if ($lead !== ''): ?><p class="n-post-cover-lead"><?= View::e($lead) ?></p><?php endif; ?>

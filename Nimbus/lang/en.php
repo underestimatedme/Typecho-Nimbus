@@ -69,6 +69,10 @@ return [
     '最新文章' => 'Latest stories', '最新' => 'New', '精选' => 'Featured', '关于我' => 'About me', '写作节奏' => 'Writing pulse', '篇 / 近一年' => 'posts / past year',
     '共 {n} 篇 · {c} 条评论' => '{n} posts · {c} comments', '最新说说' => 'Latest moment', '正在播放' => 'Now playing', '听一首歌' => 'Play a song', '此刻' => 'Right now',
     '记录、思考，与世界温柔相处' => 'Writing, thinking, and being gentle with the world', '慢慢写，慢慢读' => 'Write slowly, read slowly', '全部归档' => 'All archives',
+    // 教程
+    '系列教程' => 'Series', '{n} 章' => '{n} chapters', '约 {n} 分钟' => 'about {n} min', '更新于 {d}' => 'Updated {d}', '还没开始' => 'Not started', '开始学习' => 'Start', '章' => 'chapters', '分钟' => 'min',
+    '跟着教程，一步一步来' => 'Learn step by step', '全部教程' => 'All series', '第 {i} / {n} 章' => 'Chapter {i} / {n}', '查看教程目录' => 'View all chapters', '上一章' => 'Previous chapter', '下一章' => 'Next chapter',
+    '{n} 个教程' => '{n} series', '还没有教程。在「主题设置 → 首页 → 教程分类」中填写分类缩略名即可。' => 'No series yet. Add category slugs under "Theme settings → Home → Tutorial categories".',
     // 侧栏
     '站点信息' => 'Site info', '运行天数' => 'Days online', '{n} 天' => '{n} days', '文章数' => 'Posts', '评论数' => 'Comments', '分类数' => 'Categories', '标签数' => 'Tags', '最后更新' => 'Last update', '最新评论' => 'Recent comments',
     // IP 属地（数据为中文，常见地区给出英文）
@@ -81,7 +85,7 @@ return [
     '阿联酋' => 'United Arab Emirates', '菲律宾' => 'Philippines', '印度尼西亚' => 'Indonesia', '瑞士' => 'Switzerland', '瑞典' => 'Sweden', '爱尔兰' => 'Ireland', '芬兰' => 'Finland',
 ],
 'js' => [
-    '复制' => 'Copy', '{y} 年 {m} 月 {d} 日' => '{y}-{m}-{d}', '{n} 篇' => '{n} posts', '查看当天归档' => 'Day archive', '加载失败，请重试' => 'Could not load. Please try again.', '已复制' => 'Copied', '复制失败，请手动选择' => 'Copy failed. Please select the text manually.', '展开全部 · {n} 行' => 'Expand · {n} lines', '收起' => 'Collapse',
+    '复制' => 'Copy', '还没开始' => 'Not started', '已学完 · 共 {n} 章' => 'Completed · {n} chapters', '已学 {d} / {n} 章' => '{d} / {n} chapters read', '重新学习' => 'Start over', '继续第 {i} 章' => 'Continue chapter {i}', '{y} 年 {m} 月 {d} 日' => '{y}-{m}-{d}', '{n} 篇' => '{n} posts', '查看当天归档' => 'Day archive', '加载失败，请重试' => 'Could not load. Please try again.', '已复制' => 'Copied', '复制失败，请手动选择' => 'Copy failed. Please select the text manually.', '展开全部 · {n} 行' => 'Expand · {n} lines', '收起' => 'Collapse',
     '点赞失败' => 'Could not like', '点赞失败，请稍后再试' => 'Could not like. Please try again later.', '更多' => 'More', '加载中…' => 'Loading…', '没有更多了' => 'No more',
     '表情加载失败' => 'Could not load emoji', '回复 {name}' => 'Reply to {name}', '评论成功' => 'Comment posted', '提交失败' => 'Submission failed',
     '评论没有提交成功，请刷新页面后重试' => 'The comment was not posted. Refresh the page and try again.', '，隐藏内容已解锁' => '; hidden content unlocked', '提交失败，请重试' => 'Submission failed. Please try again.',

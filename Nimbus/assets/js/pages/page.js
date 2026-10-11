@@ -15,10 +15,12 @@ import * as river from '../modules/river.js';
 import * as shortcode from '../modules/shortcode.js';
 import * as musicPage from '../modules/music-page.js';
 import * as stats from '../modules/stats.js';
+import * as tutorial from '../modules/tutorial.js';
 import { on } from '../modules/util.js';
 let offAppend = null;
 
 export async function init(root = document) {
+  tutorial.init(root);
   hero.init(root);
   like.init(root);
   views.init();

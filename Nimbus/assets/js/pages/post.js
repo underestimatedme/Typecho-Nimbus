@@ -1,6 +1,7 @@
 // 文章 / 页面模块
 import * as toc from '../modules/toc.js';
 import * as rail from '../modules/rail.js';
+import * as tutorial from '../modules/tutorial.js';
 import * as code from '../modules/code.js';
 import * as lightbox from '../modules/lightbox.js';
 import * as math from '../modules/math.js';
@@ -19,6 +20,7 @@ import { on } from '../modules/util.js';
 let offAppend = null;
 
 export async function init(root = document) {
+  tutorial.init(root);
   hero.init(root);
   like.init(root);
   views.init();

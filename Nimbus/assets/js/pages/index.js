@@ -4,8 +4,10 @@ import * as carousel from '../modules/carousel.js';
 import * as infinite from '../modules/infinite.js';
 import * as cover from '../modules/cover.js';
 import * as pager from '../modules/pager.js';
+import * as tutorial from '../modules/tutorial.js';
 
 export async function init(root = document) {
+  tutorial.init(root);
   hero.init(root);
   carousel.init(root);
   infinite.init(root);

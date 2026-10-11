@@ -170,6 +170,7 @@
 .n-section-head h2 { margin: 0; font-family: var(--font-title); font-size: clamp(30px, 3.4vw, 48px); line-height: 1.15; color: var(--fg-strong); }
 .n-section-more { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: var(--r-pill); font-size: var(--text-sm); font-weight: 600; color: var(--fg-soft); background: var(--chip); transition: gap var(--dur) var(--ease), color var(--dur-fast); }
 .n-section-more:hover { gap: 10px; color: var(--accent-text); }
+.n-home-tuts .n-section-head { margin-top: 0; }
 /* 浏览方式切换放在「全部归档」左侧（本层优先级高于组件层，必须写在这里） */
 .n-section-head .n-list-mode { margin-left: auto; align-self: center; }
 .n-section-head .n-list-mode + .n-section-more { margin-left: 0; }

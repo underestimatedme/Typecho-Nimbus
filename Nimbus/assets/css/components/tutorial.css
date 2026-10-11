@@ -1,0 +1,78 @@
+/* ==========================================================================
+   教程：卡片 · 课程目录 · 章节导航
+   ========================================================================== */
+.n-home-tuts { margin-top: clamp(56px, 7vw, 96px); }
+.n-tut-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 22px; }
+.n-tut-grid.is-single { grid-template-columns: minmax(0, 1fr); }
+.n-tut-card { position: relative; display: flex; flex-direction: column; border-radius: 26px; overflow: hidden; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), border-color var(--dur-fast); }
+.n-tut-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: var(--line-hover); }
+.n-tut-cover { position: relative; display: block; height: 170px; background: var(--chip) center / cover no-repeat; }
+.n-tut-cover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(4, 8, 20, .55), transparent 60%); }
+.n-tut-badge { position: absolute; z-index: 1; left: 16px; bottom: 14px; display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: var(--r-pill); font-size: 12px; font-weight: 700; color: #fff; background: rgba(255, 255, 255, .18); border: 1px solid rgba(255, 255, 255, .25); backdrop-filter: blur(10px); }
+.n-tut-body { display: flex; flex-direction: column; gap: 8px; padding: 20px 22px 22px; flex: 1; }
+.n-tut-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: var(--text-xs); font-weight: 700; letter-spacing: .2em; color: var(--accent-text); }
+.n-tut-body h3 { margin: 0; font-family: var(--font-title); font-size: 22px; line-height: 1.35; color: var(--fg-strong); }
+.n-tut-body h3 a:hover { color: var(--accent-text); }
+.n-tut-body p { margin: 0; font-size: var(--text-sm); line-height: 1.7; color: var(--fg-soft); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.n-tut-meta { display: flex; flex-wrap: wrap; gap: 14px; font-size: var(--text-xs); color: var(--muted); }
+.n-tut-meta span { display: inline-flex; align-items: center; gap: 5px; }
+.n-tut-meta .n-ico { width: 13px; height: 13px; }
+.n-tut-progress { height: 6px; border-radius: 6px; background: var(--chip); overflow: hidden; margin-top: auto; }
+.n-tut-progress i { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--accent-grad); transition: width .8s var(--ease); }
+.n-tut-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.n-tut-done { font-size: var(--text-xs); color: var(--muted); }
+.is-started .n-tut-done { color: var(--accent-text); font-weight: 600; }
+.n-tut-go { gap: 6px; }
+
+/* 课程目录页 */
+.n-tut-page { max-width: 980px; margin: 0 auto; padding-top: var(--space-5); }
+.n-tut-hero { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 28px; padding: 22px; border-radius: 30px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); margin-bottom: 26px; }
+.n-tut-hero-cover { border-radius: 22px; min-height: 220px; background: var(--chip) center / cover no-repeat; box-shadow: 0 20px 40px -24px rgba(15, 23, 42, .5); }
+.n-tut-hero-body { display: flex; flex-direction: column; gap: 12px; padding: 8px 4px; min-width: 0; }
+.n-tut-hero-body h1 { margin: 0; font-family: var(--font-title); font-size: clamp(28px, 3.2vw, 42px); line-height: 1.2; color: var(--fg-strong); }
+.n-tut-hero-body p { margin: 0; color: var(--fg-soft); line-height: 1.75; }
+.n-tut-hero-body .n-tut-meta b { font-family: var(--font-title); font-size: 20px; color: var(--fg-strong); margin-right: 3px; }
+.n-tut-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: none; }
+.n-tut-list a { position: relative; display: grid; grid-template-columns: 54px minmax(0, 1fr) auto 32px; align-items: center; gap: 14px; padding: 16px 18px; border-radius: 20px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); color: var(--fg); transition: transform var(--dur) var(--ease), border-color var(--dur-fast), box-shadow var(--dur); }
+.n-tut-list a:hover { transform: translateX(4px); border-color: var(--line-hover); box-shadow: var(--shadow-hover); }
+.n-tut-no { font-family: var(--font-title); font-size: 28px; font-weight: 800; line-height: 1; background: var(--accent-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.n-tut-txt { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.n-tut-txt b { font-family: var(--font-title); font-size: 17px; color: var(--fg-strong); line-height: 1.4; }
+.n-tut-txt em { font-style: normal; font-size: var(--text-sm); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.n-tut-time { font-size: var(--text-xs); color: var(--muted); white-space: nowrap; }
+.n-tut-check { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; border: 2px solid var(--line-hover); color: transparent; transition: background var(--dur), border-color var(--dur), color var(--dur); }
+.n-tut-check .n-ico { width: 14px; height: 14px; }
+.n-tut-list li.is-read .n-tut-check { background: var(--accent-grad); border-color: transparent; color: var(--on-accent); }
+.n-tut-list li.is-read .n-tut-txt b { color: var(--fg-soft); }
+
+/* 文章页章节导航 */
+.n-tut-nav { margin: 0 0 var(--space-6); border-radius: 20px; background: var(--chip); border: 1px solid var(--line); overflow: hidden; }
+.n-tut-nav summary { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto 24px; align-items: center; gap: 12px; padding: 12px 16px; cursor: pointer; list-style: none; }
+.n-tut-nav summary::-webkit-details-marker { display: none; }
+.n-tut-nav-icon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: var(--accent-grad); color: var(--on-accent); }
+.n-tut-nav-txt { display: flex; flex-direction: column; min-width: 0; }
+.n-tut-nav-txt small { font-size: 11px; letter-spacing: .16em; color: var(--accent-text); font-weight: 700; }
+.n-tut-nav-txt b { font-family: var(--font-title); font-size: 16px; color: var(--fg-strong); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.n-tut-nav-pos { font-size: var(--text-xs); font-weight: 600; color: var(--fg-soft); padding: 4px 10px; border-radius: var(--r-pill); background: var(--card); }
+.n-tut-nav-caret { color: var(--muted); transition: transform var(--dur) var(--ease); }
+.n-tut-nav[open] .n-tut-nav-caret { transform: rotate(180deg); }
+.n-tut-nav .n-tut-list-sm { padding: 0 12px 6px; gap: 4px; }
+.n-tut-list-sm a { grid-template-columns: 34px minmax(0, 1fr) 26px; padding: 9px 12px; border-radius: 12px; box-shadow: none; background: transparent; border-color: transparent; }
+.n-tut-list-sm a:hover { transform: none; background: var(--card); box-shadow: none; }
+.n-tut-list-sm .n-tut-no { font-size: 16px; }
+.n-tut-list-sm .n-tut-txt b { font-family: var(--font-sans); font-size: var(--text-sm); font-weight: 600; }
+.n-tut-list-sm .n-tut-check { width: 22px; height: 22px; }
+.n-tut-list-sm li.is-current a { background: var(--card); border-color: var(--line); }
+.n-tut-list-sm li.is-current .n-tut-txt b { color: var(--accent-text); }
+.n-tut-nav-all { display: inline-flex; align-items: center; gap: 4px; margin: 4px 24px 14px; font-size: var(--text-xs); font-weight: 600; color: var(--accent-text); }
+.n-crumb-chip { padding: 5px 12px; border-radius: var(--r-pill); font-size: 12px; font-weight: 700; color: #0b1220; background: rgba(255, 255, 255, .9); }
+:root[data-theme="cyber"] .n-tut-card, :root[data-theme="cyber"] .n-tut-hero, :root[data-theme="cyber"] .n-tut-list a, :root[data-theme="cyber"] .n-tut-nav { border-radius: 10px; }
+@media (max-width: 760px) {
+  .n-tut-hero { grid-template-columns: 1fr; padding: 16px; }
+  .n-tut-hero-cover { min-height: 170px; }
+  .n-tut-list a { grid-template-columns: 40px minmax(0, 1fr) 28px; }
+  .n-tut-time { display: none; }
+  .n-tut-no { font-size: 22px; }
+  .n-tut-nav summary { grid-template-columns: 34px minmax(0, 1fr) 20px; }
+  .n-tut-nav-pos { display: none; }
+}

@@ -17,6 +17,7 @@ final class Index
             ['name' => 'HeroSubtitles', 'type' => 'textarea', 'label' => 'Hero 副标题', 'description' => '每行一句，打字机效果轮播。', 'default' => "记录、思考、与世界温柔相处"],
             ['name' => 'HeroKicker', 'type' => 'text', 'label' => 'Hero 状态胶囊文字', 'description' => '显示在主标题上方的小胶囊，留空不显示。', 'default' => ''],
             ['name' => 'TopPosts', 'type' => 'text', 'label' => '置顶文章', 'description' => '文章 cid，用逗号分隔，按填写顺序轮播。留空不显示轮播。', 'default' => ''],
+            ['name' => 'TutorialCategories', 'type' => 'textarea', 'label' => '教程分类', 'description' => '把分类当作系列教程：每行一个分类缩略名，可在后面加「|封面图 URL」。教程会出现在杂志风首页与「教程」页面模板中；分类页显示为课程目录；文章页显示章节导航，上一篇 / 下一篇改为上一章 / 下一章。章节顺序：文章自定义字段 chapter（数字）优先，否则按发布时间从早到晚。', 'default' => ''],
             ['name' => 'ListStyle', 'type' => 'radio', 'label' => '列表样式', 'description' => '', 'default' => 'card', 'options' => ['card' => '图文交错卡片', 'grid' => '三栏网格', 'plain' => '纯文字列表']],
             ['name' => 'Pagination', 'type' => 'radio', 'label' => '分页方式', 'description' => '首页与分类、标签、搜索等文章列表的翻页方式。分页：底部显示页码；滚动加载：滑到底部自动加载下一页；加载更多：底部放一个按钮，点击加载下一页。', 'default' => 'normal', 'options' => ['normal' => '分页（页码）', 'infinite' => '滚动加载', 'more' => '加载更多按钮']],
             ['name' => 'PaginationSwitch', 'type' => 'radio', 'label' => '访客可切换分页方式', 'description' => '开启后在文章列表显示「分页 / 滚动」切换按钮，访客的选择记在其浏览器里；关闭时所有访客都使用上面设置的分页方式。', 'default' => '0', 'options' => ['0' => '关闭', '1' => '开启']],
