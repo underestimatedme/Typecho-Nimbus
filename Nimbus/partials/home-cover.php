@@ -7,8 +7,7 @@ use Nimbus\I18n;
 use Nimbus\Post;
 
 $o = \Helper::options();
-$images = Options::list('HeroImages');
-$bg = !empty($images) ? $images[array_rand($images)] : '';
+[$bg, $bing] = \Nimbus\Bing::heroImage();
 $title = (string)Options::get('HeroTitle', (string)$o->title);
 $parts = array_map('trim', explode('|', $title, 2));
 $subs = Options::list('HeroSubtitles');
@@ -67,6 +66,11 @@ while ($tags->next()) $chips[] = ['name' => (string)$tags->name, 'url' => (strin
     </div>
     <?php endif; ?>
   </div>
+  <?php if ($bing): ?>
+  <a class="n-cover-credit"<?= $bing['link'] !== '' ? ' href="' . View::e($bing['link']) . '" target="_blank" rel="noopener nofollow" data-no-router' : '' ?> title="<?= View::e($bing['copyright']) ?>">
+    <?= View::icon('image') ?><span><b><?= View::e($bing['title'] !== '' ? $bing['title'] : I18n::t('每日必应')) ?></b><em><?= View::e($bing['copyright']) ?></em></span>
+  </a>
+  <?php endif; ?>
   <?php if ($chips): ?>
   <div class="n-marquee" aria-hidden="true">
     <div class="n-marquee-track">

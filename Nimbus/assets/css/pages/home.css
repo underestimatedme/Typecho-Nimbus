@@ -24,6 +24,17 @@
 .n-cover-grid { position: absolute; inset: 0; background-image: radial-gradient(rgba(255, 255, 255, .16) 1px, transparent 1.4px); background-size: 26px 26px; -webkit-mask-image: radial-gradient(70% 60% at 50% 40%, #000, transparent 75%); mask-image: radial-gradient(70% 60% at 50% 40%, #000, transparent 75%); opacity: .6; }
 .n-cover-grain { position: absolute; inset: -50%; opacity: .14; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); animation: n-grain 8s steps(8) infinite; }
 .n-cover::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 90px; z-index: -1; background: linear-gradient(to bottom, transparent, var(--bg)); pointer-events: none; }
+/* 背景图（自定义或每日必应）：让照片更清楚，左侧加暗保证文字可读 */
+.n-cover.has-image:not(.n-post-cover) .n-cover-img { opacity: .82; }
+.n-cover.has-image:not(.n-post-cover) .n-cover-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, color-mix(in srgb, var(--cv-bg) 82%, transparent) 0%, color-mix(in srgb, var(--cv-bg) 40%, transparent) 48%, transparent 75%), linear-gradient(to top, color-mix(in srgb, var(--cv-bg) 70%, transparent), transparent 40%); }
+.n-cover.has-image:not(.n-post-cover) .n-aurora { opacity: .3; }
+/* 必应图片说明 */
+.n-cover-credit { position: absolute; z-index: 4; right: max(24px, calc((100vw - var(--max-w)) / 2 + 24px)); bottom: 192px; display: inline-flex; align-items: center; gap: 10px; max-width: min(460px, 70vw); padding: 8px 14px 8px 10px; border-radius: 14px; color: rgba(255, 255, 255, .86); background: rgba(0, 0, 0, .28); border: 1px solid rgba(255, 255, 255, .14); backdrop-filter: blur(12px); font-size: 12px; line-height: 1.45; transition: background var(--dur-fast); }
+.n-cover-credit:hover { background: rgba(0, 0, 0, .45); color: #fff; }
+.n-cover-credit .n-ico { flex-shrink: 0; width: 16px; height: 16px; opacity: .8; }
+.n-cover-credit span { display: flex; flex-direction: column; min-width: 0; }
+.n-cover-credit b { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.n-cover-credit em { font-style: normal; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 @keyframes n-aurora-a { to { transform: translate(18%, 22%) scale(1.15); } }
 @keyframes n-aurora-b { to { transform: translate(-22%, 18%) scale(.9); } }
 @keyframes n-aurora-c { to { transform: translate(-16%, -26%) scale(1.2); } }
@@ -173,6 +184,7 @@
   .n-bento-feature { grid-column: span 2; grid-row: auto; min-height: 380px; }
 }
 @media (max-width: 640px) {
+  .n-cover-credit { bottom: 172px; left: 16px; right: 16px; max-width: none; }
   .n-cover { padding-top: calc(var(--nav-h) + 24px); }
   .n-cover-stack { height: 260px; }
   .n-cover-stack { overflow: visible; }
