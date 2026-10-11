@@ -114,15 +114,14 @@
 
 ### 还没有 Typecho？
 
-Nimbus 运行在 [Typecho](https://typecho.org) 上，先把 Typecho 装好：
+Nimbus 需要 Typecho 1.2.1+ 和 PHP 7.4+，数据库可选 MySQL、SQLite 或 PostgreSQL。安装 Typecho 的基本步骤：
 
-1. 准备 PHP 7.4+ 和一个数据库（MySQL / SQLite / PostgreSQL 任选；用 MySQL 需先建好空库）。
-2. 从 [Typecho 发布页](https://github.com/typecho/typecho/releases) 下载 `typecho.zip`，解压到网站根目录，并让 PHP 对该目录可写。
-3. 给 Web 服务器配好伪静态（Nginx 的 `try_files`、Apache 的 `.htaccess` 或 Caddy 的 `php_fastcgi`）。
-4. 浏览器打开 `https://你的域名/install.php`，按向导填写数据库信息与管理员帐号。
-5. 后台「设置 → 永久链接」启用地址重写。
+1. 准备 PHP 和数据库；使用 MySQL 时先创建一个空数据库。
+2. 从 [Typecho 发布页](https://github.com/typecho/typecho/releases) 下载程序包，解压到网站根目录，并确保 PHP 对目录有写入权限。
+3. 浏览器打开 `https://你的域名/install.php`，按向导填写数据库信息并创建管理员帐号。
+4. 安装完成后，在后台「设置 → 永久链接」启用地址重写。
 
-每一步的命令、Nginx / Apache / Caddy 配置示例和常见报错，见 **[Typecho 安装教程](docs/install-typecho.md)**。
+下载解压、数据库配置、Nginx / Apache / Caddy 伪静态配置和常见问题的具体操作，见 **[Typecho 安装教程](docs/install-typecho.md)**。
 
 ### 安装到你的博客
 
