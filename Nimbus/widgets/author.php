@@ -14,7 +14,7 @@ $avatar = (string)Options::get('AuthorAvatar', '');
 if ($avatar === '') $avatar = Comment::avatarUrl((string)$owner['mail'], 200, (string)Options::get('GravatarMirror', 'https://cravatar.cn/avatar/'));
 $counts = Post::counts();
 $social = [];
-foreach (Options::list('SocialLinks') as $line) {
+foreach (Options::lines('SocialLinks') as $line) {
     $p = array_map('trim', explode('|', $line));
     if (count($p) < 2 || $p[1] === '') continue;
     $icon = isset($p[2]) && View::hasIcon($p[2]) ? $p[2] : 'link';

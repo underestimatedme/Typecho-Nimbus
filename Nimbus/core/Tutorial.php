@@ -42,7 +42,7 @@ final class Tutorial
     public static function all($archive): array
     {
         if (self::$all !== null) return self::$all;
-        $cfg = self::parseConfig(Options::list('TutorialCategories'));
+        $cfg = self::parseConfig(Options::lines('TutorialCategories'));
         if (!$cfg) return self::$all = [];
         $db = \Typecho_Db::get();
         $metas = $db->fetchAll($db->select('mid', 'name', 'slug', 'description', 'type', 'count')->from('table.metas')

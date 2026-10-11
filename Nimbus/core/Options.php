@@ -75,6 +75,18 @@ final class Options
     }
 
     /** 按换行 / 半角逗号 / 全角逗号 / 顿号 / 分号拆分，去空去重。 */
+    /** 按行读取（每行一项，行内的逗号、顿号等标点保留）。用于副标题、社交链接这类整句或带分隔符的行。 */
+    public static function lines(string $key): array
+    {
+        $v = (string)self::get($key, '');
+        $out = [];
+        foreach (preg_split('/\R/u', $v) ?: [] as $p) {
+            $p = trim($p);
+            if ($p !== '' && !in_array($p, $out, true)) $out[] = $p;
+        }
+        return $out;
+    }
+
     public static function list(string $key): array
     {
         $v = (string)self::get($key, '');

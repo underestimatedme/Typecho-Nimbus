@@ -13,3 +13,7 @@ test('list splits on newline, comma, fullwidth comma, 、 and ;', function () us
 test('json returns null on invalid', function () use (&$store) { $store['CustomMenu'] = '{bad'; assert_eq(null, Options::json('CustomMenu')); $store['CustomMenu'] = '[{"a":1}]'; assert_eq([['a'=>1]], Options::json('CustomMenu')); });
 test('get with empty-string default still uses config default', function () use (&$store) { unset($store['CopyrightText']); assert_true(strpos((string)Options::get('CopyrightText', ''), 'CC') !== false); });
 test('get with empty-string default returns empty when no config default', function () use (&$store) { unset($store['NoticeHtml']); assert_eq('', Options::get('NoticeHtml', '')); });
+test('lines 只按换行拆分，保留行内中文标点', function () {
+    \Nimbus\Options::setSource(function ($k) { return $k === 'HeroSubtitles' ? "记录、思考，与世界温柔相处\r\n一个开源免费的 Typecho 主题\n\n记录、思考，与世界温柔相处" : null; });
+    assert_eq(['记录、思考，与世界温柔相处', '一个开源免费的 Typecho 主题'], \Nimbus\Options::lines('HeroSubtitles'));
+});

@@ -9,7 +9,7 @@ $o = \Helper::options();
 if ($bg === '') $bg = preg_replace('/\?v=.*$/', '', View::asset('img/hero-default.svg'));
 $title = (string)Options::get('HeroTitle', (string)$o->title);
 $parts = array_map('trim', explode('|', $title, 2));
-$subs = Options::list('HeroSubtitles');
+$subs = Options::lines('HeroSubtitles');
 if (empty($subs)) $subs = [(string)$o->description];
 $kicker = (string)Options::get('HeroKicker', '');
 ?>

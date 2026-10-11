@@ -10,7 +10,7 @@ $o = \Helper::options();
 [$bg, $bing] = \Nimbus\Bing::heroImage();
 $title = (string)Options::get('HeroTitle', (string)$o->title);
 $parts = array_map('trim', explode('|', $title, 2));
-$subs = Options::list('HeroSubtitles');
+$subs = Options::lines('HeroSubtitles');
 if (empty($subs)) $subs = [(string)$o->description];
 $kicker = (string)Options::get('HeroKicker', '');
 if ($kicker === '') $kicker = I18n::t('欢迎来到 {site}', ['site' => (string)$o->title]);
