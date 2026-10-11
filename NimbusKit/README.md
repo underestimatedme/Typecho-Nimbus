@@ -25,7 +25,7 @@
 
 ## 安装
 
-1. 要求 Typecho 1.2.1+、PHP 7.4 – 8.4，数据库 MySQL / SQLite / PostgreSQL 均可。
+1. 要求 Typecho 1.2.1+、PHP 7.4 – 8.5，数据库 MySQL / SQLite / PostgreSQL 均可。
 2. 把 `NimbusKit` 目录放到 `usr/plugins/` 下（目录名必须是 `NimbusKit`）。
 3. 后台「控制台 → 插件」启用。启用时自动建表，重复启用安全。
 4. 在插件设置里勾选要开启的功能、填写邮件配置。
