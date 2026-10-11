@@ -15,7 +15,18 @@ if (empty($subs)) $subs = [(string)$o->description];
 $kicker = (string)Options::get('HeroKicker', '');
 if ($kicker === '') $kicker = I18n::t('欢迎来到 {site}', ['site' => (string)$o->title]);
 $recent = Post::recent($archive, 12);
-$stack = array_slice($recent, 0, 3);
+$stackN = max(0, min(5, (int)Options::get('CoverStackCount', '3')));
+$stack = array_slice($recent, 0, $stackN);
+// 每张卡片的偏移按数量均分：叠放时总共错开约 70px，悬停扇形展开约 200px
+$stackStyle = function (int $i, int $n): string {
+    $k = $n > 1 ? 1 / ($n - 1) : 0;
+    $mid = ($n - 1) / 2;
+    $v = ['--i' => $i, '--tx' => round($i * 70 * $k) . 'px', '--ty' => round(-$i * 54 * $k) . 'px', '--rz' => round(($i - $mid) * 8 * $k, 2) . 'deg',
+          '--htx' => round(($i - $mid) * 200 * $k) . 'px', '--hty' => round(-$i * 36 * $k) . 'px', '--hrz' => round(($i - $mid) * 14 * $k, 2) . 'deg'];
+    $out = '';
+    foreach ($v as $key => $val) $out .= $key . ':' . $val . ';';
+    return $out;
+};
 $random = $recent ? $recent[array_rand($recent)] : null;
 $counts = Post::counts();
 $since = (string)Options::get('SiteSince', '');
@@ -33,7 +44,7 @@ while ($tags->next()) $chips[] = ['name' => (string)$tags->name, 'url' => (strin
     <i class="n-aurora n-aurora-a"></i><i class="n-aurora n-aurora-b"></i><i class="n-aurora n-aurora-c"></i>
     <i class="n-cover-grid"></i><i class="n-cover-grain"></i>
   </div>
-  <div class="n-container n-cover-in">
+  <div class="n-container n-cover-in<?= $stack ? '' : ' no-stack' ?>">
     <div class="n-cover-copy">
       <div class="n-cover-kicker"><i aria-hidden="true"></i><span><?= View::e($kicker) ?></span></div>
       <h1 class="n-cover-title"><span><?= View::e($parts[0]) ?></span><?php if (isset($parts[1]) && $parts[1] !== ''): ?><em><?= View::e($parts[1]) ?></em><?php endif; ?></h1>
@@ -54,7 +65,7 @@ while ($tags->next()) $chips[] = ['name' => (string)$tags->name, 'url' => (strin
       <?php foreach (array_reverse($stack, true) as $i => $p):
         $thumb = Post::rowThumb($p);
         $cat = isset($p['categories'][0]) ? (string)$p['categories'][0]['name'] : ''; ?>
-      <a class="n-stack-card" style="--i:<?= (int)$i ?>" href="<?= View::e((string)$p['permalink']) ?>">
+      <a class="n-stack-card" style="<?= $stackStyle((int)$i, count($stack)) ?>" href="<?= View::e((string)$p['permalink']) ?>">
         <span class="n-stack-img" style="background-image:url('<?= View::e($thumb) ?>')"></span>
         <span class="n-stack-body">
           <span class="n-stack-meta"><?php if ($cat !== ''): ?><i><?= View::e($cat) ?></i><?php endif; ?><time><?= View::date('Y.m.d', (int)$p['created']) ?></time></span>

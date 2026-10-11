@@ -11,6 +11,7 @@ final class Index
             ['name' => 'HomeStyle', 'type' => 'radio', 'label' => '首页风格', 'description' => '杂志：全屏封面（极光背景、最新文章卡片堆、分类滚动条）+ 精选 Bento 网格 + 通栏文章网格，首页不显示侧栏；经典：Hero + 置顶轮播 + 文章列表 + 侧栏。两种风格都使用下面的 Hero 标题、副标题与背景图。', 'default' => 'magazine', 'options' => ['magazine' => '杂志', 'classic' => '经典']],
             ['name' => 'HeroEnable', 'type' => 'radio', 'label' => '首页 Hero 区', 'description' => '关闭后首页从导航下方直接显示文章列表。', 'default' => '1', 'options' => ['1' => '开启', '0' => '关闭']],
             ['name' => 'HeroSource', 'type' => 'radio', 'label' => 'Hero 背景来源', 'description' => '每日必应：每天自动换成必应首页的当日壁纸（服务端每天取一次并缓存，中文站使用 cn.bing.com，国内可访问），封面右下角显示图片说明与版权；取不到时使用下面的背景图。图片版权归原作者所有，仅供个人站点展示。', 'default' => 'custom', 'options' => ['custom' => '自定义图片', 'bing' => '每日必应']],
+            ['name' => 'CoverStackCount', 'type' => 'select', 'label' => '封面卡片数量', 'description' => '杂志风首页封面右侧叠放的最新文章卡片数量。', 'default' => '3', 'options' => ['0' => '不显示', '1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5']],
             ['name' => 'HeroImages', 'type' => 'textarea', 'label' => 'Hero 背景图', 'description' => '每行一个图片 URL，多行时随机展示。留空使用主题内置图。', 'default' => ''],
             ['name' => 'HeroHeight', 'type' => 'text', 'label' => 'Hero 高度', 'description' => 'CSS 高度值，如 600px 或 70vh。', 'default' => '600px'],
             ['name' => 'HeroTitle', 'type' => 'text', 'label' => 'Hero 主标题', 'description' => '留空使用站点名称。用 | 分隔前后两段，后段显示流光效果，如：给时光|以生命', 'default' => ''],

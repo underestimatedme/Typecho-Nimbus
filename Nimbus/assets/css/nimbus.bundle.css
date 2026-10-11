@@ -1784,21 +1784,24 @@ html[data-motion="off"] .n-post-hero-chip, html[data-motion="off"] .n-post-hero-
 /* 3D 卡片堆：倾斜叠放，悬停扇形展开，鼠标视差（--rx/--ry 由脚本设置） */
 .n-cover-stack { position: relative; height: clamp(360px, 34vw, 500px); perspective: 1400px; animation: n-cover-in 1.2s .3s var(--ease) both; }
 .n-cover-stack::before { content: ""; position: absolute; inset: 12% 6%; border-radius: 40px; background: radial-gradient(closest-side, color-mix(in srgb, var(--cv-a) 55%, transparent), transparent); filter: blur(40px); opacity: .7; }
-.n-stack-card { --tx: calc(var(--i) * 34px); --ty: calc(var(--i) * -26px); --rz: calc(var(--i) * 4deg - 4deg);
+.n-cover-stack { --k: 1; --ax: 6deg; --ay: -11deg; }
+/* 偏移由服务端写在卡片 style 上（--tx/--ty/--rz 与悬停时的 --htx/--hty/--hrz），这里只切换取哪一组 */
+.n-stack-card { --cx: var(--tx, 0px); --cy: var(--ty, 0px); --cz: var(--rz, 0deg); }
+.n-cover-in.no-stack { grid-template-columns: minmax(0, 1fr); }
+.n-stack-card {
   position: absolute; left: 4%; top: 12%; width: 74%; aspect-ratio: 4 / 3.3; display: flex; flex-direction: column; border-radius: 22px; overflow: hidden; color: #fff;
   background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .2); backdrop-filter: blur(16px) saturate(1.3); -webkit-backdrop-filter: blur(16px) saturate(1.3);
   box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .7), inset 0 1px 0 rgba(255, 255, 255, .25);
-  transform: rotateX(calc(6deg + var(--ry, 0deg))) rotateY(calc(-11deg + var(--rx, 0deg))) translate3d(var(--tx), var(--ty), calc(var(--i) * -60px)) rotateZ(var(--rz));
+  transform: rotateX(calc(var(--ax) + var(--ry, 0deg))) rotateY(calc(var(--ay) + var(--rx, 0deg))) translate3d(calc(var(--cx) * var(--k)), calc(var(--cy) * var(--k)), calc(var(--i) * -60px)) rotateZ(var(--cz));
   transition: transform .7s var(--ease), box-shadow .5s var(--ease); z-index: calc(10 - var(--i)); }
-.n-stack-card:nth-child(1) { --i: 2; }
 .n-stack-img { flex: 1; background: center / cover no-repeat; position: relative; }
 .n-stack-img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0, 0, 0, .55), transparent 55%); }
-.n-stack-body { display: flex; flex-direction: column; gap: 6px; padding: 16px 18px 18px; background: linear-gradient(to bottom, rgba(10, 14, 30, .55), rgba(10, 14, 30, .78)); }
+.n-stack-body { display: flex; flex-direction: column; gap: 6px; padding: 16px 18px 18px; background: linear-gradient(to bottom, rgba(12, 16, 32, .9), rgba(10, 14, 30, .96)); }
 .n-stack-meta { display: flex; gap: 10px; align-items: center; font-size: 11px; color: rgba(255, 255, 255, .7); letter-spacing: .05em; }
 .n-stack-meta i { font-style: normal; padding: 2px 9px; border-radius: var(--r-pill); background: rgba(255, 255, 255, .14); }
 .n-stack-body b { font-family: var(--font-title); font-size: clamp(16px, 1.3vw, 20px); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .n-stack-badge { position: absolute; top: 14px; left: 14px; padding: 4px 11px; border-radius: var(--r-pill); font-size: 11px; font-weight: 700; letter-spacing: .08em; color: #0b1220; background: #fff; box-shadow: 0 6px 18px rgba(0, 0, 0, .25); }
-.n-cover-stack:hover .n-stack-card { --tx: calc(var(--i) * 92px - 40px); --ty: calc(var(--i) * -18px); --rz: calc(var(--i) * 7deg - 7deg); }
+@media (hover: hover) and (min-width: 1101px) { .n-cover-stack:hover .n-stack-card { --cx: var(--htx); --cy: var(--hty); --cz: var(--hrz); } }
 .n-cover-stack .n-stack-card:hover { box-shadow: 0 50px 100px -30px rgba(0, 0, 0, .8), 0 0 0 1px rgba(255, 255, 255, .45); z-index: 20; }
 
 /* 分类标签滚动条 */
@@ -1900,17 +1903,19 @@ html[data-motion="off"] .n-post-hero-chip, html[data-motion="off"] .n-post-hero-
 @media (prefers-reduced-motion: reduce) { .n-cover *, .n-marquee-track, .n-bento-bars i { animation: none !important; transform: none; } }
 @media (max-width: 1100px) {
   .n-cover-in { grid-template-columns: minmax(0, 1fr); gap: 40px; }
-  .n-cover-stack { height: 340px; max-width: 520px; width: 100%; justify-self: center; }
+  .n-cover-stack { height: 340px; max-width: 520px; width: 100%; justify-self: center; --k: .7; --ax: 3deg; --ay: -5deg; }
+  /* 单栏时图片说明跟在卡片后面，不再压在卡片上 */
+  .n-cover-credit { position: relative; right: auto; bottom: auto; align-self: flex-end; margin: -24px var(--space-5) 18px auto; max-width: min(460px, calc(100% - 2 * var(--space-5))); }
   .n-bento { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; }
   .n-bento-feature { grid-column: span 2; grid-row: auto; min-height: 380px; }
 }
 @media (max-width: 640px) {
-  .n-cover-credit { bottom: 172px; left: 16px; right: 16px; max-width: none; }
+  .n-cover-credit { margin: -16px 16px 14px; align-self: stretch; max-width: none; }
   .n-cover { padding-top: calc(var(--nav-h) + 24px); }
   .n-cover-stack { height: 260px; }
   .n-cover-stack { overflow: visible; }
-  .n-stack-card { width: 78%; left: 2%; --tx: calc(var(--i) * 18px); --ty: calc(var(--i) * -16px); }
-  .n-cover-stack:hover .n-stack-card { --tx: calc(var(--i) * 18px); --ty: calc(var(--i) * -16px); }
+  .n-cover-stack { --k: .5; }
+  .n-stack-card { width: 80%; left: 4%; }
   .n-cover { overflow: hidden; }
   .n-cover-stats li { padding-left: 18px; }
   .n-bento { grid-template-columns: minmax(0, 1fr); margin-top: -48px; gap: 14px; }
