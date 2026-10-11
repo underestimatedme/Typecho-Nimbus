@@ -30,22 +30,23 @@ export function init(root = document) {
     const key = `nimbus-liked-${type}-${id}`;
     const count = btn.querySelector('[data-like-count]');
     if (storage.get(key)) btn.classList.add('is-on');
+    // 同一篇文章可能有多个点赞按钮（文末 + 侧边操作栏），状态与计数保持一致
+    const peers = () => qsa(`[data-like="${id}"]`).filter((b) => (b.dataset.likeType || 'post') === type);
+    const setAll = (on, n) => peers().forEach((b) => { b.classList.toggle('is-on', on); const c = b.querySelector('[data-like-count]'); if (c && n !== null) c.textContent = String(n); });
     unbind.push(on(btn, 'click', async () => {
       burst(btn);
       if (btn.classList.contains('is-on') || btn.dataset.busy) return;
       btn.dataset.busy = '1';
-      btn.classList.add('is-on');
       const before = count ? parseInt(count.textContent, 10) || 0 : 0;
-      if (count) count.textContent = String(before + 1);
+      setAll(true, before + 1);
       try {
         const r = await fetch(api + '/like', { method: 'POST', body: new URLSearchParams({ cid: id, type }), credentials: 'same-origin', headers: { Accept: 'application/json' } });
         const d = await r.json();
         if (!d.ok) throw new Error(d.error || tr('点赞失败'));
-        if (count) count.textContent = String(d.data.likes);
+        setAll(true, d.data.likes);
         storage.set(key, '1');
       } catch (e) {
-        btn.classList.remove('is-on');
-        if (count) count.textContent = String(before);
+        setAll(false, before);
         toast(tr('点赞失败，请稍后再试'));
       } finally {
         delete btn.dataset.busy;

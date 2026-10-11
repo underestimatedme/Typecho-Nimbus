@@ -8,7 +8,7 @@ final class Post
     public static function items(): array
     {
         return [
-            ['name' => 'PostLayout', 'type' => 'radio', 'label' => '文章页布局', 'description' => '沉浸：有头图的文章使用通栏大图标题；屏幕宽度 ≥1440 时为「目录｜正文｜侧栏」三栏。经典：卡片式头图，正文旁只显示目录。', 'default' => 'immersive', 'options' => ['immersive' => '沉浸（推荐）', 'classic' => '经典']],
+            ['name' => 'PostLayout', 'type' => 'radio', 'label' => '文章页布局', 'description' => '杂志：与杂志风首页一致的封面（有配图用配图，没有用极光背景）、悬浮正文卡片、左侧目录、右侧操作栏，不显示侧栏小部件。沉浸：有头图的文章使用通栏大图标题，超宽屏「目录｜正文｜侧栏」三栏。经典：卡片式头图，正文旁只显示目录。', 'default' => 'magazine', 'options' => ['magazine' => '杂志（推荐）', 'immersive' => '沉浸', 'classic' => '经典']],
             ['name' => 'ShowWordCount', 'type' => 'radio', 'label' => '显示字数', 'description' => '', 'default' => '1', 'options' => ['1' => '显示', '0' => '隐藏']],
             ['name' => 'ShowReadingTime', 'type' => 'radio', 'label' => '显示预计阅读时长', 'description' => '按每分钟 400 字估算。', 'default' => '1', 'options' => ['1' => '显示', '0' => '隐藏']],
             ['name' => 'TocEnable', 'type' => 'radio', 'label' => '文章目录', 'description' => '桌面端在右侧吸顶显示，移动端为浮动按钮。可在文章编辑页单独隐藏。', 'default' => '1', 'options' => ['1' => '开启', '0' => '关闭']],

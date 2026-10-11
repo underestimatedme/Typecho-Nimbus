@@ -30,29 +30,35 @@ View::partial('header', ['archive' => $this]);
     <header class="n-list-head n-reveal"><div class="n-kicker"><?= View::icon('clock') ?> <?= I18n::e('时间线') ?></div><h1><?= View::e(View::t($this->title)) ?></h1><p><?= I18n::e('时光河流 · 共 {n} 篇文章', ['n' => count($items)]) ?></p></header>
     <?php if (empty($items)): ?>
       <div class="n-empty"><?= View::icon('info') ?><p><?= I18n::e('还没有文章。') ?></p></div>
-    <?php else: ?>
-    <div class="n-river-wrap">
-      <button type="button" class="n-river-nav n-river-prev" data-river-prev aria-label="<?= I18n::e('向前') ?>"><?= View::icon('arrow-left') ?></button>
-      <div class="n-river" data-river tabindex="0" aria-label="<?= I18n::e('文章时间线，可左右滚动') ?>">
-        <div class="n-river-track">
-          <?php $lastYear = null; foreach ($items as $i => $it): $y = View::date('Y', $it['created']); ?>
-          <?php if ($y !== $lastYear): $lastYear = $y; ?><div class="n-river-year"><span><?= $y ?></span></div><?php endif; ?>
-          <a class="n-river-item<?= $i % 2 ? ' is-down' : '' ?>" href="<?= View::e($it['url']) ?>">
-            <i class="n-river-dot" aria-hidden="true"></i>
-            <span class="n-river-card">
-              <?php if ($it['thumb'] !== ''): ?><span class="n-river-thumb" style="background-image:url('<?= View::e($it['thumb']) ?>')"></span><?php endif; ?>
-              <time datetime="<?= View::date('c', $it['created']) ?>"><?= View::date('Y.n.j', $it['created']) ?></time>
-              <b><?= View::e($it['title']) ?></b>
-              <em><?= View::e($it['excerpt']) ?></em>
-              <span class="n-river-meta"><?php if ($it['cat'] !== ''): ?><span class="n-chip"><?= View::e($it['cat']) ?></span><?php endif; ?><span><?= View::icon('comment') ?><?= $it['comments'] ?></span></span>
-            </span>
-          </a>
+    <?php else:
+      $years = [];
+      foreach ($items as $it) $years[View::date('Y', $it['created'])][] = $it;
+    ?>
+    <div class="n-tl" data-river>
+      <span class="n-tl-spine" aria-hidden="true"><i data-tl-fill></i></span>
+      <?php $k = 0; foreach ($years as $y => $list): ?>
+      <section class="n-tl-year">
+        <h2 class="n-tl-year-head"><span><?= View::e((string)$y) ?></span><small><?= I18n::e('{n} 篇', ['n' => count($list)]) ?></small></h2>
+        <ol class="n-tl-list">
+          <?php foreach ($list as $it): $side = $k++ % 2 ? 'is-right' : 'is-left'; ?>
+          <li class="n-tl-item <?= $side ?> n-reveal">
+            <span class="n-tl-dot" aria-hidden="true"></span>
+            <time class="n-tl-date" datetime="<?= View::date('c', $it['created']) ?>"><b><?= View::date('m.d', $it['created']) ?></b><span><?= View::date('H:i', $it['created']) ?></span></time>
+            <a class="n-tl-card" href="<?= View::e($it['url']) ?>">
+              <?php if ($it['thumb'] !== ''): ?><span class="n-tl-thumb" style="background-image:url('<?= View::e($it['thumb']) ?>')"></span><?php endif; ?>
+              <span class="n-tl-body">
+                <b><?= View::e($it['title']) ?></b>
+                <?php if ($it['excerpt'] !== ''): ?><em><?= View::e($it['excerpt']) ?></em><?php endif; ?>
+                <span class="n-tl-meta"><?php if ($it['cat'] !== ''): ?><span class="n-chip"><?= View::e($it['cat']) ?></span><?php endif; ?><span><?= View::icon('comment') ?><?= (int)$it['comments'] ?></span><span class="n-tl-go"><?= View::icon('arrow-right') ?></span></span>
+              </span>
+            </a>
+          </li>
           <?php endforeach; ?>
-        </div>
-      </div>
-      <button type="button" class="n-river-nav n-river-next" data-river-next aria-label="<?= I18n::e('向后') ?>"><?= View::icon('arrow-right') ?></button>
+        </ol>
+      </section>
+      <?php endforeach; ?>
+      <div class="n-tl-end" aria-hidden="true"><span><?= View::icon('star') ?></span></div>
     </div>
-    <p class="n-river-hint"><?= I18n::e('左右滑动、拖拽或使用方向键浏览 · 点击卡片阅读') ?></p>
     <?php endif; ?>
   </section>
 </div>

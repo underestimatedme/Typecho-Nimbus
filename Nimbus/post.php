@@ -14,6 +14,33 @@ $sidePos = (string)Options::get('SidebarPosition', 'right');
 // 沉浸布局 + 有目录 + 开启侧栏：超宽屏三栏（目录｜正文｜侧栏）
 $tri = $showToc && (string)Options::get('PostLayout', 'immersive') === 'immersive' && $sidePos !== 'none';
 View::partial('header', ['archive' => $this, 'nimbusContent' => $nimbusContent]);
+if (Post::magazine($this)):
+    // 杂志风：封面 + 悬浮正文卡片 + 左侧目录 + 右侧操作栏
+    View::partial('post-cover', ['archive' => $this, 'post' => $this]);
+?>
+<div class="n-container">
+  <div class="n-article<?= $showToc ? ' has-toc' : '' ?>">
+    <?php if ($showToc) View::partial('toc', ['archive' => $this, 'toc' => $nimbusContent['toc']]); ?>
+    <article class="n-post n-article-paper" id="n-post" data-cid="<?= (int)$this->cid ?>" itemscope itemtype="https://schema.org/BlogPosting">
+      <?php View::partial('expire-notice', ['archive' => $this, 'post' => $this]); ?>
+      <?php if ($this->hidden): ?>
+        <?php View::partial('password', ['archive' => $this, 'post' => $this]); ?>
+      <?php else: ?>
+        <div class="n-prose n-prose-magazine" id="n-prose" itemprop="articleBody"><?= $nimbusContent['html'] ?></div>
+        <?php View::partial('post-foot', ['archive' => $this, 'post' => $this]); ?>
+      <?php endif; ?>
+    </article>
+    <?php if (!$this->hidden) View::partial('post-rail', ['archive' => $this, 'post' => $this]); ?>
+  </div>
+  <div class="n-article-after">
+    <?php if (!$this->hidden) { View::partial('adjacent', ['archive' => $this, 'post' => $this]); View::partial('related', ['archive' => $this, 'post' => $this]); } ?>
+    <div class="n-article-comments"><?php $this->need('comments.php'); ?></div>
+  </div>
+</div>
+<?php
+    View::partial('footer', ['archive' => $this]);
+    return;
+endif;
 if ($immersive) View::partial('post-hero', ['archive' => $this, 'post' => $this]);
 ?>
 <div class="n-container">

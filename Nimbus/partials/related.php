@@ -11,7 +11,7 @@ $pool = Options::list('ThumbPool');
 $builtin = preg_replace('/\?v=.*$/', '', View::asset('img/thumbs'));
 ?>
 <section class="n-related n-reveal">
-  <h4 class="n-section-title"><?= View::icon('star') ?><?= I18n::e('相关文章') ?></h4>
+  <h4 class="n-section-title" data-eyebrow="<?= I18n::e('继续阅读') ?>"><?= View::icon('star') ?><?= I18n::e('相关文章') ?></h4>
   <div class="n-related-grid">
     <?php foreach ($items as $r): ?>
     <a class="n-related-item" href="<?= View::e($r['permalink']) ?>">

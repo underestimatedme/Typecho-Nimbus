@@ -8,16 +8,16 @@
 | --- | --- | --- |
 | ![sky](../docs/screenshots/home-sky.png) | ![dusk](../docs/screenshots/home-dusk.png) | ![cyber](../docs/screenshots/home-cyber.png) |
 
-| 音乐 | 统计 | 时间线 | 收藏夹 |
-| --- | --- | --- | --- |
-| ![music](../docs/screenshots/music-dusk.png) | ![stats](../docs/screenshots/stats-sky.png) | ![timeline](../docs/screenshots/timeline-cyber.png) | ![bookmarks](../docs/screenshots/bookmarks-sky.png) |
+| 文章 | 音乐 | 统计 | 时间线 | 收藏夹 |
+| --- | --- | --- | --- | --- |
+| ![post](../docs/screenshots/post-sky.png) | ![music](../docs/screenshots/music-dusk.png) | ![stats](../docs/screenshots/stats-sky.png) | ![timeline](../docs/screenshots/timeline-cyber.png) | ![bookmarks](../docs/screenshots/bookmarks-sky.png) |
 
 ## 特性
 
 - **三套皮肤**：晴空（白天）、暮色（夜间）、赛博朋克。一键切换，首屏无闪烁，可跟随系统。
 - **首页**：默认「杂志」风格：全屏极光封面（超大渐变标题、行动按钮、站点数据、随鼠标倾斜的 3D 最新文章卡片堆、分类标签滚动条）+ Bento 精选网格（精选文章、作者、写作节奏、最新说说、音乐）+ 通栏文章网格；也可切回「经典」风格（Hero 大图、置顶轮播、侧栏）。三种列表样式、传统分页 / 加载更多 / 无限滚动。
 - **自适应版面**：内容宽度随屏幕放大（最宽 1760），大屏不留大片空白；有头图的文章使用通栏沉浸式标题，超宽屏为「目录｜正文｜侧栏」三栏，正文保持易读行宽，图片、代码、表格铺满正文列。
-- **文章页**：浮动目录、阅读进度、字数与阅读时长、代码高亮（行号、复制、折叠、语言标签）、KaTeX 公式、Mermaid 图表、图片灯箱、版权卡、打赏、分享、上一篇 / 下一篇、相关文章、过期提醒、密码保护美化。
+- **文章页**：默认「杂志」布局：与首页一致的封面（有配图用配图，没有用极光背景）、悬浮正文卡片、左侧目录、右侧操作栏（点赞 / 评论 / 海报 / 复制链接 / 阅读进度）、编号小标题与引言式引用；也可选沉浸或经典布局。浮动目录、阅读进度、字数与阅读时长、代码高亮（行号、复制、折叠、语言标签）、KaTeX 公式、Mermaid 图表、图片灯箱、版权卡、打赏、分享、上一篇 / 下一篇、相关文章、过期提醒、密码保护美化。
 - **评论**：楼中楼、博主标识、UA 显示、表情面板、Markdown 预览、Ctrl+Enter 提交。
 - **页面模板**：归档时间线、友链卡片、关于页、404、留言板（卡片墙）、横向时间线、音乐、统计看板；配合 NimbusKit 还有说说、相册、收藏夹（网址导航）、项目展示。
 - **短代码**：提示框、折叠块、标签页、按钮、HTML5 视频、B 站视频、GitHub 仓库卡片、回复可见（服务端不输出隐藏内容）。
@@ -85,7 +85,7 @@
 - **收藏夹**（`page-bookmarks.php`）：分组标签 + 即时过滤的网址导航（需 NimbusKit）。
 - **项目**（`page-projects.php`）：封面、技术栈标签、演示 / 源码链接（需 NimbusKit）。
 - **留言板**（`page-messages.php`）：表单置顶、留言卡片墙。
-- **时间线**（`page-timeline.php`）：全部文章排在横向「时光河流」上，可拖拽、滚轮、方向键浏览，手机上改为纵向。
+- **时间线**（`page-timeline.php`）：全部文章按年份排在纵向中轴两侧，中轴随滚动点亮，手机上中轴靠左。
 - **音乐**（`page-music.php`）：与悬浮播放器共用同一个播放器，需在「媒体」里开启并填写歌单。
 - **统计**（`page-stats.php`）：文章 / 评论 / 字数统计、月度柱状图、写作热力图、分类环形图；装 NimbusKit 后加上浏览量趋势与热门文章。
 
@@ -141,6 +141,7 @@ bash tests/smoke.sh         # 页面渲染冒烟测试（插件启用时也检�
 bash tests/multi-db.sh      # 在临时 MySQL / PostgreSQL 上安装并测试（需本机装有两者）
 bash tests/github-flow.sh   # GitHub 登录评论端到端测试（本地假 GitHub 服务器）
 bash tests/hide-flow.sh     # 回复可见端到端测试（伪造 cookie、评论解锁、原生搜索）
+node tests/shot.mjs out.png http://localhost:8099/ 1440 1200   # 无头 Chrome 截图
 ```
 
 ## 致谢

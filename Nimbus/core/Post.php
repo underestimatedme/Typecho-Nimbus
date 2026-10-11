@@ -231,10 +231,16 @@ final class Post
         ];
     }
 
+    /** 是否使用杂志风文章页：杂志布局 + 文章（加密文章也显示封面，只是不出摘要）。 */
+    public static function magazine($archive): bool
+    {
+        return (string)Options::get('PostLayout', 'magazine') === 'magazine' && $archive->is('post');
+    }
+
     /** 是否使用沉浸式通栏头图：沉浸布局 + 文章或无自定义模板的页面 + 有真实配图 + 未加密。 */
     public static function immersive($archive): bool
     {
-        if ((string)Options::get('PostLayout', 'immersive') !== 'immersive') return false;
+        if ((string)Options::get('PostLayout', 'magazine') !== 'immersive') return false;
         if (!$archive->is('single') || $archive->hidden) return false;
         if (!$archive->is('post') && !($archive->is('page') && empty($archive->template))) return false;
         return self::hasOwnImage($archive);

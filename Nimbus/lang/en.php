@@ -22,7 +22,7 @@ return [
     '{n} 字' => '{n} words', '{n} 分钟' => '{n} min read', '目录' => 'Contents', '分享' => 'Share', '微博' => 'Weibo', '生成海报' => 'Poster',
     '复制链接' => 'Copy link', '点赞' => 'Like', '打赏' => 'Tip', '请我喝杯咖啡 ☕' => 'Buy me a coffee ☕', '如果这篇文章对你有帮助，欢迎打赏支持。' => 'If this post helped you, consider leaving a tip.',
     '微信' => 'WeChat', '支付宝' => 'Alipay', '{name}收款码' => '{name} payment code', '{name}扫码' => 'Scan with {name}',
-    '本文作者' => 'Author', '本文链接' => 'Link', '版权声明' => 'License', '上一篇 / 下一篇' => 'Previous / next post', '上一篇' => 'Previous', '下一篇' => 'Next', '相关文章' => 'Related posts',
+    '本文作者' => 'Author', '本文链接' => 'Link', '版权声明' => 'License', '上一篇 / 下一篇' => 'Previous / next post', '上一篇' => 'Previous', '下一篇' => 'Next', '相关文章' => 'Related posts', '继续阅读' => 'Keep reading', '位置' => 'Breadcrumb', '文章操作' => 'Post actions',
     '本文最后更新于 {n} 天前，其中的信息可能已经过时，请谨慎参考。' => 'This post was last updated {n} days ago. Some information may be out of date.',
     '这篇文章受密码保护' => 'This post is password protected', '请输入密码查看内容。' => 'Enter the password to read it.', '密码' => 'Password', '解锁' => 'Unlock',
     // 短代码

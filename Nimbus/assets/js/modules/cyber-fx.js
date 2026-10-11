@@ -1,6 +1,6 @@
 // 赛博朋克特效：首页字符雨、鼠标霓虹拖尾（标题故障与霓虹描边为纯 CSS，副标题解码见 hero.js）
 // 只在 cyber 皮肤生效；切换皮肤时自动启停；尊重「动效强度」与系统减少动态设置。
-import { qs, prefersReduced } from './util.js';
+import { qs, qsa, prefersReduced } from './util.js';
 
 const fx = () => (document.documentElement.dataset.fx || '').split(/\s+/);
 export const active = (name) => document.documentElement.dataset.theme === 'cyber' && fx().includes(name) && !prefersReduced() && document.documentElement.dataset.motion !== 'reduced';
@@ -16,7 +16,10 @@ function startRain() {
   c.setAttribute('aria-hidden', 'true');
   hero.insertBefore(c, qs('.n-hero-in', hero));
   const ctx = c.getContext('2d');
-  const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワン0123456789NIMBUS';
+  // 字符：十六进制与代码符号，混入本站标题、文章标题里的汉字（每个站的雨都不一样）
+  const code = '0123456789ABCDEF{}[]<>/=;:+*#$&|_';
+  const own = [...new Set(Array.from(qsa('.n-logo, .n-cover-title, .n-post-cover-title, .n-stack-card b, .n-card-title, .n-hero-title').map((e) => e.textContent).join('')).filter((c) => /[\u4e00-\u9fff]/.test(c)))];
+  const pick = () => (own.length > 6 && Math.random() < 0.45 ? own[(Math.random() * own.length) | 0] : code[(Math.random() * code.length) | 0]);
   const size = 16;
   let cols = [], w = 0, h = 0, raf = 0, last = 0, visible = true;
   const resize = () => {
@@ -40,7 +43,7 @@ function startRain() {
     for (let i = 0; i < cols.length; i++) {
       const y = cols[i] * size;
       ctx.fillStyle = Math.random() > 0.975 ? '#fff' : color;
-      ctx.fillText(chars[(Math.random() * chars.length) | 0], i * size, y);
+      ctx.fillText(pick(), i * size, y);
       cols[i] = y > h && Math.random() > 0.972 ? 0 : cols[i] + 1;
     }
   };
