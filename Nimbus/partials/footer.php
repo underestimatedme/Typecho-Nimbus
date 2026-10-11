@@ -31,7 +31,7 @@ $policeCode = preg_replace('/\D+/', '', $police);
 <?= (string)Options::get('FootCode', '') ?>
 <?php if (Options::get('CustomJs')): ?><script><?= (string)Options::get('CustomJs') ?></script>
 <?php endif; ?>
-<script type="module" src="<?= View::e(View::asset('js/app.js')) ?>"></script>
+<script type="module" src="<?= View::e(\Nimbus\Assets::jsUrl('app.js')) ?>"></script>
 <?php $archive->footer(); ?>
 </body>
 </html>

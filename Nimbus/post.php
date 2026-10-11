@@ -16,7 +16,7 @@ $tri = $showToc && (string)Options::get('PostLayout', 'immersive') === 'immersiv
 View::partial('header', ['archive' => $this, 'nimbusContent' => $nimbusContent]);
 if (Post::magazine($this)):
     // 杂志风：封面 + 悬浮正文卡片 + 左侧目录 + 右侧操作栏
-    View::partial('post-cover', ['archive' => $this, 'post' => $this]);
+    View::partial('post-cover', ['archive' => $this, 'post' => $this, 'toc' => $showToc]);
 ?>
 <div class="n-container">
   <div class="n-article<?= $showToc ? ' has-toc' : '' ?>">

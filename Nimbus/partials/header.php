@@ -90,6 +90,7 @@ $favicon = (string)Options::get('Favicon', '');
 $nimbusPreload = [];
 if (Options::bool('RouterEnable')) $nimbusPreload[] = 'modules/router.js';
 if ($config['music']) $nimbusPreload[] = 'modules/player.js';
+echo \Nimbus\Assets::importMapTag();
 echo \Nimbus\Assets::preloadTags($page, $nimbusPreload);
 ?>
 <script id="n-config" type="application/json"><?= json_encode($config, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) ?></script>

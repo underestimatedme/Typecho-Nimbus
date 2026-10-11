@@ -17,13 +17,14 @@ $cat = isset($post->categories[0]) ? $post->categories[0] : null;
 $lead = $post->hidden ? '' : (string)(Post::field($post, 'summary') ?? '');
 $avatar = Comment::avatarUrl((string)$post->author->mail, 64, (string)Options::get('GravatarMirror', 'https://cravatar.cn/avatar/'));
 ?>
-<header class="n-cover n-post-cover<?= $img !== '' ? ' has-image' : '' ?>" data-hero data-cover>
+<header class="n-cover n-post-cover<?= $img !== '' ? ' has-image' : '' ?><?= !empty($toc) ? ' has-toc' : '' ?>" data-hero data-cover>
   <div class="n-cover-bg" aria-hidden="true">
     <?php if ($img !== ''): ?><img class="n-cover-img" src="<?= View::e($img) ?>" alt="" fetchpriority="high" decoding="async"><?php endif; ?>
     <i class="n-aurora n-aurora-a"></i><i class="n-aurora n-aurora-b"></i><i class="n-aurora n-aurora-c"></i>
     <i class="n-cover-grid"></i><i class="n-cover-grain"></i>
   </div>
   <div class="n-container n-post-cover-in">
+    <div class="n-post-cover-main">
     <nav class="n-crumbs" aria-label="<?= I18n::e('位置') ?>">
       <a href="<?= View::e((string)$o->siteUrl) ?>"><?= View::icon('home') ?><?= I18n::e('首页') ?></a>
       <?php if ($cat): ?><i>/</i><a href="<?= View::e($cat['permalink']) ?>"><?= View::e($cat['name']) ?></a><?php endif; ?>
@@ -37,6 +38,7 @@ $avatar = Comment::avatarUrl((string)$post->author->mail, 64, (string)Options::g
       <?php if (!$post->hidden && Options::bool('ShowWordCount')): ?><span class="n-pill"><?= View::icon('edit') ?><?= I18n::e('{n} 字', ['n' => $words]) ?></span><?php endif; ?>
       <?php if ($views !== null): ?><span class="n-pill"><?= View::icon('eye') ?><b data-views><?= View::num($views) ?></b></span><?php endif; ?>
       <a class="n-pill" href="#comments"><?= View::icon('comment') ?><?= (int)$post->commentsNum ?></a>
+    </div>
     </div>
   </div>
 </header>

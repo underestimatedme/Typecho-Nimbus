@@ -108,16 +108,58 @@ final class Assets
         return array_keys($seen);
     }
 
+    /** @var array<string,string>|null 相对路径 => 版本号 */
+    private static $jsVer = null;
+
+    /** assets/js 下全部模块的版本号（文件修改时间 + 大小），改动任何一个文件只影响它自己的地址。 */
+    public static function jsVersions(): array
+    {
+        if (self::$jsVer !== null) return self::$jsVer;
+        $base = NIMBUS_DIR . '/assets/js/';
+        $out = [];
+        $it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($base, \FilesystemIterator::SKIP_DOTS));
+        foreach ($it as $f) {
+            if (substr($f->getFilename(), -3) !== '.js') continue;
+            $rel = str_replace('\\', '/', substr($f->getPathname(), strlen($base)));
+            if ($rel === 'admin.js') continue;
+            $out[$rel] = substr(md5($f->getMTime() . '|' . $f->getSize() . '|' . NIMBUS_VERSION), 0, 8);
+        }
+        ksort($out);
+        return self::$jsVer = $out;
+    }
+
+    private static function jsBase(): string
+    {
+        return (string)preg_replace('/\?v=.*$/', '', View::asset('js'));
+    }
+
+    /** 带版本号的模块地址。 */
+    public static function jsUrl(string $rel): string
+    {
+        $v = self::jsVersions()[$rel] ?? NIMBUS_VERSION;
+        return self::jsBase() . '/' . $rel . '?v=' . $v;
+    }
+
+    /**
+     * Import map：把每个模块的原始地址映射到带版本号的地址。
+     * 模块之间用相对路径 import（没有版本号），浏览器会长期缓存旧文件；有了映射，主题升级后改过的文件会重新下载。
+     */
+    public static function importMapTag(): string
+    {
+        $map = [];
+        foreach (array_keys(self::jsVersions()) as $rel) $map[self::jsBase() . '/' . $rel] = self::jsUrl($rel);
+        return '<script type="importmap">' . json_encode(['imports' => $map], JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) . '</script>' . "\n";
+    }
+
     /** <link rel="modulepreload"> 标签（app.js 本身由 <script> 加载，不重复）。 */
     public static function preloadTags(string $page, array $extra = []): string
     {
         $page = preg_replace('/[^a-z0-9-]/', '', $page) ?: 'index';
         $roots = array_merge(['app.js', 'pages/' . $page . '.js'], $extra);
-        $base = preg_replace('/\?v=.*$/', '', View::asset('js'));
         $out = '';
         foreach (self::moduleGraph($roots) as $rel) {
             if ($rel === 'app.js') continue;
-            $out .= '<link rel="modulepreload" href="' . View::e($base . '/' . $rel) . '">' . "\n";
+            $out .= '<link rel="modulepreload" href="' . View::e(self::jsUrl($rel)) . '">' . "\n";
         }
         return $out;
     }

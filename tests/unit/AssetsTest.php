@@ -21,3 +21,10 @@ test('模块依赖：解析静态 import、规范化路径、包含页面模块'
     assert_true(in_array('modules/util.js', $g, true) && in_array('modules/toc.js', $g, true) && in_array('pages/post.js', $g, true));
     assert_true(!in_array('modules/router.js', $g, true), '动态 import 不应出现');
 });
+test('模块版本号：覆盖全部模块、不含后台脚本、格式稳定', function () {
+    $v = Assets::jsVersions();
+    assert_true(isset($v['app.js'], $v['modules/util.js'], $v['pages/post.js']));
+    assert_true(!isset($v['admin.js']));
+    foreach ($v as $rel => $ver) assert_true((bool)preg_match('/^[0-9a-f]{8}$/', $ver), $rel);
+    assert_eq($v, Assets::jsVersions());
+});
