@@ -4,8 +4,8 @@
  *
  * @package Nimbus
  * @author Nimbus Contributors
- * @version 1.2.0
- * @link https://github.com/underestimatedme/Nimbus
+ * @version 0.1
+ * @link https://github.com/underestimatedme/Typecho-Nimbus
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 use Nimbus\View;

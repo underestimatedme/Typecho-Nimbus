@@ -110,7 +110,7 @@ foreach ($pages as [$title, $slug, $tpl, $text]) {
         $json = json_encode([
             ['name' => 'Typecho', 'url' => 'https://typecho.org', 'avatar' => 'https://typecho.org/favicon.ico', 'desc' => '轻量开源博客程序'],
             ['name' => '云间客', 'url' => 'https://example.com', 'avatar' => '', 'desc' => '热爱生活，偶尔写代码'],
-            ['name' => 'Nimbus', 'url' => 'https://github.com/underestimatedme/Nimbus', 'avatar' => 'https://invalid.invalid/x.png', 'desc' => '本主题仓库'],
+            ['name' => 'Nimbus', 'url' => 'https://github.com/underestimatedme/Typecho-Nimbus', 'avatar' => 'https://invalid.invalid/x.png', 'desc' => '本主题仓库'],
         ], JSON_UNESCAPED_UNICODE);
         $db->prepare("INSERT INTO {$p}fields (cid,name,type,str_value,int_value,float_value) VALUES (?,'links','str',?,0,0)")->execute([$cid, $json]);
     }

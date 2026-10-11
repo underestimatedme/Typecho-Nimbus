@@ -53,7 +53,7 @@ final class Admin
         foreach ($defaults as $k => $v) if (is_array($v) && $opt->{$k} === null) $unsaved[] = $k;
         echo '<div class="n-admin" data-nimbus-admin data-defaults="' . View::e(json_encode($defaults, JSON_UNESCAPED_UNICODE)) . '" data-unsaved="' . View::e(json_encode($unsaved)) . '">';
         echo '<div class="n-admin-head"><strong>Nimbus</strong><span class="n-admin-ver">v' . NIMBUS_VERSION . '</span>';
-        echo '<a class="n-admin-link" href="https://github.com/underestimatedme/Nimbus" target="_blank" rel="noopener">文档与反馈</a>';
+        echo '<a class="n-admin-link" href="https://github.com/underestimatedme/Typecho-Nimbus" target="_blank" rel="noopener">文档与反馈</a>';
         echo '</div>';
         if (Kit::enabled()) {
             echo '<div class="n-admin-tip n-admin-tip-ok">已连接 <b>NimbusKit</b> v' . View::e((string)Kit::version()) . '：已开启 ' . View::e(implode('、', array_map(function ($f) { return ['views' => '浏览量', 'likes' => '点赞', 'search' => '即时搜索', 'ajaxComment' => 'AJAX 评论', 'sitemap' => 'Sitemap'][$f] ?? $f; }, Kit::features()))) . '。</div>';

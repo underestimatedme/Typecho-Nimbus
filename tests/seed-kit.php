@@ -33,8 +33,8 @@ if ($tableExists('nimbus_bookmarks') && !$has('nimbus_bookmarks')) {
 }
 if ($tableExists('nimbus_projects') && !$has('nimbus_projects')) {
     $rows = [
-        ['Nimbus', '开源免费的 Typecho 主题：三套皮肤、沉浸式阅读、无刷新切换。', 'https://picsum.photos/id/1015/800/450', 'https://example.com', 'https://github.com/underestimatedme/Nimbus', 'PHP,CSS,JavaScript,Typecho', 1],
-        ['NimbusKit', 'Nimbus 配套插件：浏览量、点赞、即时搜索、邮件通知、说说与相册。', 'https://picsum.photos/id/1036/800/450', '', 'https://github.com/underestimatedme/Nimbus', 'PHP,SQLite,MySQL,PostgreSQL', 2],
+        ['Nimbus', '开源免费的 Typecho 主题：三套皮肤、沉浸式阅读、无刷新切换。', 'https://picsum.photos/id/1015/800/450', 'https://example.com', 'https://github.com/underestimatedme/Typecho-Nimbus', 'PHP,CSS,JavaScript,Typecho', 1],
+        ['NimbusKit', 'Nimbus 配套插件：浏览量、点赞、即时搜索、邮件通知、说说与相册。', 'https://picsum.photos/id/1036/800/450', '', 'https://github.com/underestimatedme/Typecho-Nimbus', 'PHP,SQLite,MySQL,PostgreSQL', 2],
         ['小工具合集', '日常写的一些命令行小工具。', '', '', '', 'Python,Bash', 3],
     ];
     foreach ($rows as [$n, $d, $c, $u, $r, $t, $so]) $db->prepare("INSERT INTO {$p}nimbus_projects (name,description,cover,url,repo,tags,sort,status,created) VALUES (?,?,?,?,?,?,?,'publish',?)")->execute([$n, $d, $c, $u, $r, $t, $so, $now]);
@@ -53,7 +53,7 @@ if (!$has('nimbus_links')) {
     $rows = [
         ['Typecho', 'https://typecho.org', 'https://typecho.org/favicon.ico', '轻量开源博客程序', 1],
         ['云间客', 'https://example.com', '', '热爱生活，偶尔写代码', 2],
-        ['Nimbus', 'https://github.com/underestimatedme/Nimbus', 'https://invalid.invalid/x.png', '本主题仓库', 3],
+        ['Nimbus', 'https://github.com/underestimatedme/Typecho-Nimbus', 'https://invalid.invalid/x.png', '本主题仓库', 3],
         ['小明的博客', 'https://example.org', '', '记录学习与成长', 4],
     ];
     foreach ($rows as [$n, $u, $a, $d, $s]) $db->prepare("INSERT INTO {$p}nimbus_links (name,url,avatar,description,sort,status,created) VALUES (?,?,?,?,?,'publish',?)")->execute([$n, $u, $a, $d, $s, $now]);

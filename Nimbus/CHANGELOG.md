@@ -1,5 +1,10 @@
 # 更新日志
 
+## 0.1
+
+- Nimbus 主题版本号调整为 0.1。
+- 项目仓库地址更新为 [underestimatedme/Typecho-Nimbus](https://github.com/underestimatedme/Typecho-Nimbus)。
+
 ## 1.2.0
 
 主题：

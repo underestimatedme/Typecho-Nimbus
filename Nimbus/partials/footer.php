@@ -17,7 +17,7 @@ $policeCode = preg_replace('/\D+/', '', $police);
       <span>© <?= View::date('Y') ?> <?= View::e((string)$o->title) ?></span>
       <?php if ($icp !== ''): ?><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener nofollow"><?= View::e($icp) ?></a><?php endif; ?>
       <?php if ($police !== ''): ?><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=<?= View::e($policeCode) ?>" target="_blank" rel="noopener nofollow"><?= View::e($police) ?></a><?php endif; ?>
-      <span>Powered by <a href="https://typecho.org" target="_blank" rel="noopener">Typecho</a> · Theme <a href="https://github.com/underestimatedme/Nimbus" target="_blank" rel="noopener">Nimbus</a></span>
+      <span>Powered by <a href="https://typecho.org" target="_blank" rel="noopener">Typecho</a> · Theme <a href="https://github.com/underestimatedme/Typecho-Nimbus" target="_blank" rel="noopener">Nimbus</a></span>
     </div>
     <?php if (Options::get('FooterHtml')): ?><div class="n-footer-custom"><?= (string)Options::get('FooterHtml') ?></div><?php endif; ?>
   </div>
