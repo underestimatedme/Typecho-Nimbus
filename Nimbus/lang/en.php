@@ -6,6 +6,7 @@
  */
 return [
 'ui' => [
+    '发布闪念' => 'Publish a moment',
     // 通用
     '首页' => 'Home', '搜索' => 'Search', '搜索 {q}' => 'Search: {q}', '搜索文章…' => 'Search posts…', '返回首页' => 'Back to home',
     '返回' => 'Back', '关闭' => 'Close', '菜单' => 'Menu', '打开菜单' => 'Open menu', '主导航' => 'Main navigation',

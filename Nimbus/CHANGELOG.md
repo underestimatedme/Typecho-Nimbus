@@ -2,6 +2,9 @@
 
 ## 0.1
 
+- 兼容 Cuteen 菜单：`name` 字段、JSON 片段、分类 / 子分类及页面顺序，切换时继承原菜单和 `RandImg` 图片池。
+- 兼容 Cuteen 文章缩略图字段 `imgst`，应用于列表、精选、文章封面和上下篇；Nimbus 的 `thumb` 字段优先。
+- 新增同名 `page-soliloquize.php` 闪念兼容模板：沿用原页面已审核顶层评论，按发布时间倒序，以说说形式展示、分页，作者登录后可发布；无需 NimbusKit。
 - Nimbus 主题版本号调整为 0.1。
 - 项目仓库地址更新为 [underestimatedme/Typecho-Nimbus](https://github.com/underestimatedme/Typecho-Nimbus)。
 

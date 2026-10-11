@@ -29,6 +29,15 @@ final class Admin
 
     public static function save(array $settings, bool $isInit): void
     {
+        $o = \Helper::options();
+        // Typecho 切换主题前已删除旧配置行，但本请求 options 仍保留原主题设置。
+        if ($isInit && preg_match('/^Cuteen(?:[_-].*)?$/i', (string)$o->theme)) {
+            unset($settings['MenuSource']);
+            $settings = self::migrateCuteen($settings, [
+                'CustomMenu' => $o->CustomMenu, 'RandImg' => $o->RandImg,
+                'LabelOrder' => $o->LabelOrder, 'MergePages' => $o->MergePages,
+            ]);
+        }
         if (!$isInit) $settings = self::normalize($settings, $_POST);
         $db = \Typecho_Db::get();
         // 启用主题时 options->theme 仍是旧主题名，按主题目录名保存
@@ -36,6 +45,20 @@ final class Admin
         $exists = $db->fetchRow($db->select('name')->from('table.options')->where('name = ? AND user = 0', $name)->limit(1));
         if ($exists) $db->query($db->update('table.options')->rows(['value' => serialize($settings)])->where('name = ? AND user = 0', $name));
         else $db->query($db->insert('table.options')->rows(['name' => $name, 'user' => 0, 'value' => serialize($settings)]));
+    }
+
+    /** 切换时只继承菜单与缩略图池，已指定的 Nimbus 值优先。 */
+    public static function migrateCuteen(array $settings, array $legacy): array
+    {
+        if (empty($settings['CustomMenu'])) {
+            $menu = Menu::parse((string)($legacy['CustomMenu'] ?? ''));
+            $items = $menu ? Menu::build([], $menu) : [];
+            if ($items) $settings['CustomMenu'] = json_encode($items, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        }
+        if (empty($settings['ThumbPool']) && is_string($legacy['RandImg'] ?? null)) $settings['ThumbPool'] = $legacy['RandImg'];
+        if (empty($settings['MenuSource'])) $settings['MenuSource'] = ($legacy['LabelOrder'] ?? '') === 'P-C' ? 'pages-first' : 'categories-first';
+        if (empty($settings['MenuPageGroup']) && is_string($legacy['MergePages'] ?? null)) $settings['MenuPageGroup'] = trim($legacy['MergePages']);
+        return $settings;
     }
 
     public static function render($form): void

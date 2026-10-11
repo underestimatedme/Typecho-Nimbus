@@ -31,8 +31,8 @@ final class Post
         $cid = (int)$post->cid;
         $key = 'thumb:' . $cid;
         if (isset(self::$cache[$key])) return self::$cache[$key];
-        $field = null;
-        try { $field = $post->fields->thumb; } catch (\Throwable $e) { $field = null; }
+        $field = self::field($post, 'thumb') ?? self::field($post, 'imgst');
+        if ($field !== null) return self::$cache[$key] = $field;
         $builtin = View::asset('img/thumbs');
         $builtin = preg_replace('/\?v=.*$/', '', $builtin);
         return self::$cache[$key] = self::thumbFrom(is_string($field) ? $field : null, (string)$post->text, Options::list('ThumbPool'), $cid, $builtin);
@@ -41,7 +41,7 @@ final class Post
     /** 文章是否有真实配图（自定义字段或正文图片），用于决定文章页头图。 */
     public static function hasOwnImage($post): bool
     {
-        try { if (is_string($post->fields->thumb) && trim($post->fields->thumb) !== '') return true; } catch (\Throwable $e) {}
+        if (self::field($post, 'thumb') !== null || self::field($post, 'imgst') !== null) return true;
         $html = (string)$post->text;
         return (bool)preg_match('/<img[^>]+src=|!\[[^\]]*\]\(/i', $html);
     }
@@ -141,7 +141,7 @@ final class Post
         $wrap = function ($row) use ($archive) {
             if (!$row) return null;
             $row = $archive->filter($row);
-            return ['cid' => (int)$row['cid'], 'title' => $row['title'], 'permalink' => $row['permalink'], 'thumb' => self::thumbFrom(null, $row['text'], Options::list('ThumbPool'), (int)$row['cid'], preg_replace('/\?v=.*$/', '', View::asset('img/thumbs')))];
+            return ['cid' => (int)$row['cid'], 'title' => $row['title'], 'permalink' => $row['permalink'], 'thumb' => self::rowThumb($row)];
         };
         return self::$cache[$key] = ['prev' => $wrap($prev), 'next' => $wrap($next)];
     }
@@ -259,14 +259,16 @@ final class Post
         return false;
     }
 
-    /** 数据库行（filter 后的数组）对应的缩略图：自定义字段 thumb → 正文首图 → 缩略图池 → 内置图。 */
+    /** 数据库行对应的缩略图：thumb → Cuteen imgst → 正文首图 → 缩略图池 → 内置图。 */
     public static function rowThumb(array $row): string
     {
         $field = null;
         try {
             $db = \Typecho_Db::get();
-            $f = $db->fetchRow($db->select('str_value')->from('table.fields')->where('cid = ? AND name = ?', (int)$row['cid'], 'thumb')->limit(1));
-            if ($f) $field = (string)$f['str_value'];
+            $fields = $db->fetchAll($db->select('name', 'str_value')->from('table.fields')->where('cid = ?', (int)$row['cid'])->where('name IN ?', ['thumb', 'imgst']));
+            $values = [];
+            foreach ($fields as $f) $values[$f['name']] = trim((string)$f['str_value']);
+            $field = !empty($values['thumb']) ? $values['thumb'] : ($values['imgst'] ?? null);
         } catch (\Throwable $e) {
         }
         return self::thumbFrom($field, (string)($row['text'] ?? ''), Options::list('ThumbPool'), (int)$row['cid'], preg_replace('/\?v=.*$/', '', View::asset('img/thumbs')));

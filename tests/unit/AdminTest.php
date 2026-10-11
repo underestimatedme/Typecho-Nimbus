@@ -1,4 +1,17 @@
 <?php
+test('Cuteen activation carries old menu and random image pool into Nimbus', function () {
+    $s = Nimbus\Admin::migrateCuteen(['CustomMenu' => '', 'ThumbPool' => ''], ['CustomMenu' => '{"name":"闪念","url":"/blink.html"}', 'RandImg' => "https://img.example/a.jpg\nhttps://img.example/b.jpg", 'LabelOrder' => 'P-C', 'MergePages' => '页面']);
+    assert_eq('闪念', json_decode($s['CustomMenu'], true)[0]['title']);
+    assert_eq("https://img.example/a.jpg\nhttps://img.example/b.jpg", $s['ThumbPool']);
+    assert_eq('pages-first', $s['MenuSource']);
+    assert_eq('页面', $s['MenuPageGroup']);
+});
+test('Cuteen migration preserves explicit Nimbus settings', function () {
+    $s = Nimbus\Admin::migrateCuteen(['CustomMenu' => '[{"title":"新","url":"/new"}]', 'ThumbPool' => '/new.jpg', 'MenuSource' => 'pages'], ['CustomMenu' => '{"name":"旧","url":"/old"}', 'RandImg' => '/old.jpg']);
+    assert_eq('[{"title":"新","url":"/new"}]', $s['CustomMenu']);
+    assert_eq('/new.jpg', $s['ThumbPool']);
+    assert_eq('pages', $s['MenuSource']);
+});
 // 后台选项说明会被 Typecho 当 HTML 输出：确认渲染前已转义，不会出现原始标签
 test('config descriptions and labels contain no raw tags after escaping', function () {
     foreach (['Site', 'Index', 'Post', 'Sidebar', 'Appearance', 'Media', 'Advanced'] as $g) {

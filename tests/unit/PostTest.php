@@ -1,6 +1,16 @@
 <?php
 use Nimbus\Post;
 
+test('Cuteen imgst field provides widget thumbnail and article cover', function () {
+    $p = (object)['cid' => 901, 'fields' => (object)['thumb' => '', 'imgst' => ' https://img.example/legacy.jpg '], 'text' => '<img src="body.jpg">'];
+    assert_eq('https://img.example/legacy.jpg', Post::thumb($p));
+    assert_eq(true, Post::hasOwnImage($p));
+});
+test('Nimbus thumb field overrides legacy imgst', function () {
+    $p = (object)['cid' => 902, 'fields' => (object)['thumb' => '/new.jpg', 'imgst' => '/old.jpg'], 'text' => ''];
+    assert_eq('/new.jpg', Post::thumb($p));
+});
+
 test('thumbFrom prefers field', fn() => assert_eq('https://a/b.jpg', Post::thumbFrom('https://a/b.jpg', '<img src="x.jpg">', [], 1, '/t')));
 test('thumbFrom extracts first img', fn() => assert_eq('x.jpg', Post::thumbFrom('', '<p>hi</p><img alt="" src="x.jpg"><img src="y.jpg">', [], 1, '/t')));
 test('thumbFrom extracts markdown img', fn() => assert_eq('https://p/1.jpg', Post::thumbFrom('', "<!--markdown-->text\n![a](https://p/1.jpg)\n", [], 1, '/t')));

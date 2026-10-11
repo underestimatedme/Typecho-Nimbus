@@ -38,7 +38,8 @@ final class NimbusBootstrap
         $o = \Helper::options();
         $o->commentsThreaded = true;
         $o->commentsMaxNestingLevels = max(3, (int)$o->commentsMaxNestingLevels);
-        $o->commentsPageDisplay = 'last';
-        $o->commentsOrder = 'ASC';
+        $moments = $archive->is('page') && (string)$archive->template === 'page-soliloquize.php';
+        $o->commentsPageDisplay = $moments ? 'first' : 'last';
+        $o->commentsOrder = $moments ? 'DESC' : 'ASC';
     }
 }

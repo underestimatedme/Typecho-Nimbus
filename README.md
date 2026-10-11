@@ -175,6 +175,7 @@ tests/        本地测试站、单元测试、冒烟测试、截图脚本
 
 ```bash
 bash tests/lint.sh && bash tests/lint-php74.sh && php tests/run.php && node --test tests/js/*.test.mjs && bash tests/smoke.sh
+php tests/cuteen-compat.php
 ```
 
 改了 CSS 源文件后运行 `php tests/build-css.php` 重新生成合并样式。更多说明见[主题说明 · 开发与测试](Nimbus/README.md#开发与测试)。欢迎提 Issue 和 Pull Request。

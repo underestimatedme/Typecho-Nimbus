@@ -8,13 +8,11 @@ use Nimbus\Post;
 $cids = Options::list('TopPosts');
 $posts = empty($cids) ? [] : Post::byCids($archive, $cids);
 if (empty($posts)) return;
-$pool = Options::list('ThumbPool');
-$builtin = preg_replace('/\?v=.*$/', '', View::asset('img/thumbs'));
 ?>
 <div class="n-feature n-reveal" data-carousel data-interval="5000" aria-roledescription="<?= I18n::e('轮播') ?>">
   <?php foreach ($posts as $i => $p): ?>
   <a class="n-slide<?= $i === 0 ? ' is-on' : '' ?>" href="<?= View::e($p['permalink']) ?>" aria-hidden="<?= $i === 0 ? 'false' : 'true' ?>">
-    <div class="n-slide-bg" style="background-image:url('<?= View::e(Post::thumbFrom(null, $p['text'], $pool, (int)$p['cid'], $builtin)) ?>')"></div>
+    <div class="n-slide-bg" style="background-image:url('<?= View::e(Post::rowThumb($p)) ?>')"></div>
     <div class="n-slide-in">
       <span class="n-slide-tag"><?= View::icon('star') ?><?= I18n::e('置顶') ?></span>
       <h3 class="n-slide-title"><?= View::e(View::t($p['title'])) ?></h3>
