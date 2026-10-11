@@ -221,7 +221,7 @@ final class Store
         if (!$all) $q->where('status = ?', 'publish');
         $rows = $db->fetchAll($q->order('sort', \Typecho\Db::SORT_ASC)->order('id', \Typecho\Db::SORT_DESC));
         return array_map(function ($r) {
-            return ['id' => (int)$r['id'], 'name' => (string)$r['name'], 'description' => (string)$r['description'], 'cover' => (string)$r['cover'], 'url' => (string)$r['url'], 'repo' => (string)$r['repo'], 'tags' => Text::tags((string)$r['tags']), 'sort' => (int)$r['sort'], 'status' => (string)$r['status']];
+            return ['id' => (int)$r['id'], 'name' => (string)$r['name'], 'description' => (string)$r['description'], 'cover' => (string)$r['cover'], 'url' => (string)$r['url'], 'repo' => (string)$r['repo'], 'tags' => Text::tags((string)$r['tags']), 'sort' => (int)$r['sort'], 'status' => (string)$r['status'], 'created' => (int)($r['created'] ?? 0)];
         }, $rows);
     }
 

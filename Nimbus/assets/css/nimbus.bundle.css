@@ -1468,6 +1468,7 @@ html[data-motion="off"] .n-post-hero-chip, html[data-motion="off"] .n-post-hero-
 .n-tl-year-head { position: sticky; top: calc(var(--nav-h) + 12px); z-index: 3; display: flex; align-items: baseline; justify-content: center; gap: 10px; width: fit-content; margin: 30px auto 26px; padding: 10px 26px; border-radius: var(--r-pill); background: var(--glass); backdrop-filter: blur(14px); border: 1px solid var(--line); box-shadow: var(--shadow); }
 .n-tl-year-head span { font-family: var(--font-title); font-size: 30px; line-height: 1; font-weight: 800; background: var(--accent-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .n-tl-year-head small { font-size: var(--text-xs); color: var(--muted); }
+.n-tl-year-head small b { font-weight: 600; }
 .n-tl-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 28px; }
 .n-tl-item { position: relative; display: grid; grid-template-columns: 1fr 1fr; column-gap: 64px; align-items: center; }
 .n-tl-dot { position: absolute; left: var(--spine); top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: var(--card); border: 3px solid var(--line-hover); z-index: 2; transition: border-color var(--dur), box-shadow var(--dur), transform var(--dur) var(--ease); }
@@ -1515,6 +1516,27 @@ html[data-motion="off"] .n-post-hero-chip, html[data-motion="off"] .n-post-hero-
   .n-tl-date b { font-size: 20px; }
 }
 @media (prefers-reduced-motion: reduce) { .n-tl-item.n-reveal .n-tl-card { opacity: 1; translate: 0 0; } }
+
+/* 文章 / 教程 / 项目 */
+.n-tl-filter { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0 auto 10px; width: fit-content; padding: 5px; border-radius: var(--r-pill); background: var(--chip); }
+.n-tl-filter button { display: inline-flex; align-items: center; gap: 6px; padding: 7px 15px; border-radius: var(--r-pill); font-size: var(--text-sm); font-weight: 600; color: var(--fg-soft); transition: background var(--dur-fast), color var(--dur-fast), box-shadow var(--dur-fast); }
+.n-tl-filter button .n-ico { width: 14px; height: 14px; }
+.n-tl-filter button small { font-size: 11px; opacity: .6; }
+.n-tl-filter button:hover { color: var(--fg-strong); }
+.n-tl-filter button.is-on { background: var(--card); color: var(--accent-text); box-shadow: 0 2px 10px -3px rgba(15, 23, 42, .2); }
+.n-tl-item[hidden], .n-tl-year[hidden] { display: none; }
+.n-tl-kind { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; letter-spacing: .08em; color: var(--accent-text); }
+.n-tl-kind .n-ico { width: 13px; height: 13px; }
+.n-tl-item.is-tutorial .n-tl-card { border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+.n-tl-item.is-tutorial .n-tl-card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent); }
+.n-tl-item.is-tutorial .n-tl-dot { width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 6px; transform: rotate(45deg); }
+.n-tl-item.is-project .n-tl-kind { color: #10b981; }
+.n-tl-item.is-project .n-tl-dot { border-color: #10b981; }
+.n-tl-item.is-project.is-passed .n-tl-dot { border-color: #10b981; box-shadow: 0 0 0 5px rgba(16, 185, 129, .18), 0 0 16px rgba(16, 185, 129, .5); }
+.n-tl-item.is-project .n-tl-card:hover .n-tl-go { background: linear-gradient(135deg, #10b981, #06b6d4); }
+.n-tl-item.is-tutorial .n-tl-date span, .n-tl-item.is-project .n-tl-date span { font-weight: 700; color: var(--accent-text); }
+.n-tl-item.is-project .n-tl-date span { color: #10b981; }
+@media (max-width: 860px) { .n-tl-item.is-tutorial .n-tl-dot { margin-top: 0; } }
 }
 /* --- pages/music.css --- */
 @layer pages {

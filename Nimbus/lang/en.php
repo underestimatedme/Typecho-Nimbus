@@ -73,6 +73,8 @@ return [
     '系列教程' => 'Series', '{n} 章' => '{n} chapters', '约 {n} 分钟' => 'about {n} min', '更新于 {d}' => 'Updated {d}', '还没开始' => 'Not started', '开始学习' => 'Start', '章' => 'chapters', '分钟' => 'min',
     '跟着教程，一步一步来' => 'Learn step by step', '全部教程' => 'All series', '第 {i} / {n} 章' => 'Chapter {i} / {n}', '查看教程目录' => 'View all chapters', '上一章' => 'Previous chapter', '下一章' => 'Next chapter',
     '{n} 个教程' => '{n} series', '还没有教程。在「主题设置 → 首页 → 教程分类」中填写分类缩略名即可。' => 'No series yet. Add category slugs under "Theme settings → Home → Tutorial categories".',
+    // 时间线
+    '教程' => 'Series', '开始连载' => 'Series started', '{n} 项' => '{n} items', '新项目' => 'New project', '筛选' => 'Filter', '{n} 个项目' => '{n} projects', '第 {n} 章' => 'Chapter {n}', '最新：{t}' => 'Latest: {t}',
     // 侧栏
     '站点信息' => 'Site info', '运行天数' => 'Days online', '{n} 天' => '{n} days', '文章数' => 'Posts', '评论数' => 'Comments', '分类数' => 'Categories', '标签数' => 'Tags', '最后更新' => 'Last update', '最新评论' => 'Recent comments',
     // IP 属地（数据为中文，常见地区给出英文）
