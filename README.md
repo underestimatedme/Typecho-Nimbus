@@ -1,3 +1,5 @@
+<p align="right"><strong>简体中文</strong> | <a href="README.en.md">English</a></p>
+
 <p align="center">
   <img src="docs/screenshots/banner.jpg" alt="Nimbus — 为 Typecho 打造的杂志级博客主题" width="100%">
 </p>
