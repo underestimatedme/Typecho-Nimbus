@@ -20,6 +20,7 @@
 </p>
 
 <p align="center">
+  <a href="https://underestimated.cn">在线示例</a> ·
   <a href="#快速开始">快速开始</a> ·
   <a href="docs/install-typecho.md">安装 Typecho</a> ·
   <a href="#截图">截图</a> ·

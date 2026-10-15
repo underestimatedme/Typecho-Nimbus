@@ -20,6 +20,7 @@
 </p>
 
 <p align="center">
+  <a href="https://underestimated.cn">Live demo</a> ·
   <a href="#quick-start">Quick start</a> ·
   <a href="docs/install-typecho.md">Install Typecho (Chinese)</a> ·
   <a href="#screenshots">Screenshots</a> ·
