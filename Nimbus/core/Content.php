@@ -28,6 +28,8 @@ final class Content
         $xp = new \DOMXPath($doc);
         $root = $doc->getElementById('n-root');
         if (!$root) return $out;
+        // Some Typecho Mermaid plugins pre-convert fenced blocks to <div class="mermaid">.
+        if ($xp->query('.//*[contains(concat(" ", normalize-space(@class), " "), " mermaid ")]', $root)->length > 0) $out['hasMermaid'] = true;
 
         // 表格
         foreach (iterator_to_array($xp->query('.//table', $root)) as $t) {

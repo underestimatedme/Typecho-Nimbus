@@ -9,6 +9,7 @@ test('img inside link not wrapped', fn() => assert_true(strpos(Content::renderFr
 test('code lang and fold', function () use ($o) { $code = implode("\n", array_fill(0, 40, 'x')); $r = Content::renderFrom('<pre><code class="language-php">' . $code . '</code></pre>', $o); assert_true(strpos($r['html'], 'data-lang="php"') !== false, 'lang'); assert_true(strpos($r['html'], 'data-fold') !== false, 'fold'); assert_eq(true, $r['hasCode']); });
 test('short code not folded', function () use ($o) { $r = Content::renderFrom('<pre><code class="language-js">a</code></pre>', $o); assert_true(strpos($r['html'], 'data-fold') === false); });
 test('mermaid converted', function () use ($o) { $r = Content::renderFrom('<pre><code class="language-mermaid">graph TD;A--&gt;B</code></pre>', $o); assert_true(strpos($r['html'], '<div class="mermaid">graph TD;A--&gt;B</div>') !== false, $r['html']); assert_eq(true, $r['hasMermaid']); });
+test('pre-rendered Mermaid containers are detected', function () use ($o) { $r = Content::renderFrom('<div class="mermaid">flowchart LR;A--&gt;B</div>', $o); assert_eq(true, $r['hasMermaid']); });
 test('detects math', fn() => assert_eq(true, Content::renderFrom('<p>$$x^2$$</p>', $o)['hasMath']));
 test('no math by default', fn() => assert_eq(false, Content::renderFrom('<p>price $5 and $6</p>', $o)['hasMath']));
 test('external link target', fn() => assert_true(strpos(Content::renderFrom('<a href="https://x.com/a">x</a>', $o)['html'], 'target="_blank"') !== false));

@@ -11,17 +11,13 @@ use Nimbus\Kit;
 use Nimbus\Stats;
 
 $o = \Helper::options();
-// 精选：置顶文章第一篇，否则最新一篇
-$feature = null;
+// 精选：按设置顺序轮播置顶文章；未设置时显示最新一篇
+$features = [];
 $top = Options::list('TopPosts');
-if ($top) { $f = Post::byCids($archive, array_slice($top, 0, 1)); $feature = $f[0] ?? null; }
-$isPinned = $feature !== null;
-if (!$feature) { $r = Post::recent($archive, 1); $feature = $r[0] ?? null; }
-if (!$feature) return;
-$fText = \Nimbus\Shortcode::strip((string)$feature['text']);
-$fWords = Post::wordCount($fText);
-$fExcerpt = Post::excerptFrom(null, $fText, 90);
-$fCat = isset($feature['categories'][0]) ? (string)$feature['categories'][0]['name'] : '';
+if ($top) $features = Post::byCids($archive, $top);
+$isPinned = !empty($features);
+if (!$features) $features = Post::recent($archive, 1);
+if (!$features) return;
 
 $owner = Widgets::owner();
 $name = (string)Options::get('AuthorName', $owner['screenName'] ?: (string)$o->title);
@@ -56,15 +52,28 @@ $music = \Nimbus\Music::config();
 $musicUrl = Widgets::pageUrl($archive, 'page-music.php');
 ?>
 <section class="n-bento" aria-label="<?= I18n::e('精选') ?>">
-  <a class="n-bento-tile n-bento-feature n-reveal" href="<?= View::e((string)$feature['permalink']) ?>">
-    <span class="n-bento-feature-img" style="background-image:url('<?= View::e(Post::rowThumb($feature)) ?>')"></span>
-    <span class="n-bento-feature-body">
-      <span class="n-bento-eyebrow"><?= View::icon($isPinned ? 'star' : 'clock') ?><?= $isPinned ? I18n::e('精选') : I18n::e('最新') ?><?php if ($fCat !== ''): ?><i>·</i><?= View::e($fCat) ?><?php endif; ?></span>
-      <b class="n-bento-feature-title"><?= View::e(View::t((string)$feature['title'])) ?></b>
-      <?php if ($fExcerpt !== ''): ?><span class="n-bento-feature-excerpt"><?= View::e($fExcerpt) ?></span><?php endif; ?>
-      <span class="n-bento-feature-meta"><time><?= View::date('Y-m-d', (int)$feature['created']) ?></time><span><?= I18n::e('{n} 分钟', ['n' => Post::readingTime($fWords)]) ?></span><span class="n-bento-go"><?= I18n::e('阅读全文') ?><?= View::icon('arrow-right') ?></span></span>
-    </span>
-  </a>
+  <div class="n-bento-tile n-bento-feature n-reveal"<?= count($features) > 1 ? ' data-carousel data-interval="5000" aria-roledescription="' . I18n::e('轮播') . '"' : '' ?>>
+    <?php foreach ($features as $i => $feature):
+      $fText = \Nimbus\Shortcode::strip((string)$feature['text']);
+      $fWords = Post::wordCount($fText);
+      $fExcerpt = Post::excerptFrom(null, $fText, 90);
+      $fCat = isset($feature['categories'][0]) ? (string)$feature['categories'][0]['name'] : ''; ?>
+    <a class="n-slide n-bento-feature-slide<?= $i === 0 ? ' is-on' : '' ?>" href="<?= View::e((string)$feature['permalink']) ?>" aria-hidden="<?= $i === 0 ? 'false' : 'true' ?>">
+      <span class="n-bento-feature-img" style="background-image:url('<?= View::e(Post::rowThumb($feature)) ?>')"></span>
+      <span class="n-bento-feature-body">
+        <span class="n-bento-eyebrow"><?= View::icon($isPinned ? 'star' : 'clock') ?><?= $isPinned ? I18n::e('精选') : I18n::e('最新') ?><?php if ($fCat !== ''): ?><i>·</i><?= View::e($fCat) ?><?php endif; ?></span>
+        <b class="n-bento-feature-title"><?= View::e(View::t((string)$feature['title'])) ?></b>
+        <?php if ($fExcerpt !== ''): ?><span class="n-bento-feature-excerpt"><?= View::e($fExcerpt) ?></span><?php endif; ?>
+        <span class="n-bento-feature-meta"><time><?= View::date('Y-m-d', (int)$feature['created']) ?></time><span><?= I18n::e('{n} 分钟', ['n' => Post::readingTime($fWords)]) ?></span><span class="n-bento-go"><?= I18n::e('阅读全文') ?><?= View::icon('arrow-right') ?></span></span>
+      </span>
+    </a>
+    <?php endforeach; ?>
+    <?php if (count($features) > 1): ?>
+    <div class="n-dots" role="tablist"><?php foreach ($features as $i => $_): ?><button type="button" class="n-dot<?= $i === 0 ? ' is-on' : '' ?>" role="tab" aria-label="<?= I18n::e('第 {n} 张', ['n' => $i + 1]) ?>" data-dot="<?= $i ?>"></button><?php endforeach; ?></div>
+    <button type="button" class="n-slide-arrow n-slide-prev" data-prev aria-label="<?= I18n::e('上一张') ?>"><?= View::icon('arrow-left') ?></button>
+    <button type="button" class="n-slide-arrow n-slide-next" data-next aria-label="<?= I18n::e('下一张') ?>"><?= View::icon('arrow-right') ?></button>
+    <?php endif; ?>
+  </div>
 
   <div class="n-bento-tile n-bento-author n-reveal">
     <i class="n-bento-av" style="background-image:url('<?= View::e($avatar) ?>')"></i>

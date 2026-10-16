@@ -30,6 +30,7 @@ check "/index.php/timeline.html" 200 'data-river' 'n-tl-item' 'data-type="tutori
 check "/index.php/music.html" 200 'data-music-page'
 check "/" 200 'nimbus.bundle.css' 'rel="modulepreload"' 'type="importmap"' 'app.js?v='
 check "/" 200 'data-cover' 'class="n-bento"' 'id="n-posts"' 'n-stack-card' 'data-pager' 'class="n-pager-pages"'
+check "/" 200 'data-carousel' 'data-dot="2"'
 check "/usr/themes/Nimbus/assets/css/nimbus.bundle.css" 200 '@layer components'
 check "/index.php/category/typecho-theme-tutorial/" 200 'n-tut-page' 'data-tut-go' 'n-tut-list'
 check "/index.php/tutorials.html" 200 'n-tut-card'
