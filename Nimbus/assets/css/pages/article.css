@@ -60,8 +60,7 @@ a.n-pill:hover { background: rgba(255, 255, 255, .18); }
 .n-prose-magazine blockquote::before { content: "“"; position: absolute; left: 0; top: -.18em; font-size: 3.6em; line-height: 1; font-family: Georgia, serif; background: var(--accent-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .n-prose-magazine blockquote p { color: inherit; }
 .n-prose-magazine img { border-radius: 18px; box-shadow: 0 24px 60px -30px rgba(15, 23, 42, .45); }
-.n-prose-magazine hr { border: 0; height: auto; margin: 3em auto; text-align: center; background: none; }
-.n-prose-magazine hr::after { content: "✦   ✦   ✦"; white-space: pre; color: var(--muted); letter-spacing: .2em; }
+.n-prose-magazine hr { width: 72px; height: 2px; margin: 1.5em auto; border: 0; border-radius: 2px; background: var(--accent-grad); }
 
 /* 文末：上一篇 / 下一篇、相关文章、评论 */
 .n-article-after { max-width: 1040px; margin: clamp(48px, 6vw, 80px) auto 0; }

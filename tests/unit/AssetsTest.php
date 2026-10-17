@@ -15,6 +15,11 @@ test('仓库附带的 nimbus.bundle.css 与源文件一致', function () {
     $want = Assets::bundle((string)file_get_contents($dir . '/nimbus.css'), function ($f) use ($dir) { return (string)file_get_contents($dir . '/' . $f); });
     assert_true(is_file($dir . '/nimbus.bundle.css') && file_get_contents($dir . '/nimbus.bundle.css') === $want, '请运行 php tests/build-css.php 重新生成');
 });
+test('杂志文章分隔线使用紧凑的渐变线样式', function () {
+    $css = file_get_contents(dirname(__DIR__, 2) . '/Nimbus/assets/css/pages/article.css');
+    assert_true(strpos($css, '.n-prose-magazine hr { width: 72px; height: 2px; margin: 1.5em auto;') !== false, $css);
+    assert_true(strpos($css, '✦   ✦   ✦') === false, '不应再显示三颗星');
+});
 test('模块依赖：解析静态 import、规范化路径、包含页面模块', function () {
     assert_eq(['./util.js', '../modules/a.js'], Assets::imports("import { x } from './util.js';\nimport * as a from '../modules/a.js';\nimport('./lazy.js');\nconst s = 'import x from \"./no.js\"';"));
     $g = Assets::moduleGraph(['app.js', 'pages/post.js']);
