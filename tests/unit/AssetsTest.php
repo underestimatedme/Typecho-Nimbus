@@ -20,6 +20,11 @@ test('杂志文章分隔线使用紧凑的渐变线样式', function () {
     assert_true(strpos($css, '.n-prose-magazine hr { width: 72px; height: 2px; margin: 1.5em auto;') !== false, $css);
     assert_true(strpos($css, '✦   ✦   ✦') === false, '不应再显示三颗星');
 });
+test('文章长内容时左右栏父容器拉伸以支持 sticky', function () {
+    $css = file_get_contents(dirname(__DIR__, 2) . '/Nimbus/assets/css/pages/article.css');
+    assert_true(strpos($css, '.n-article > .n-rail, .n-article > .n-toc { align-self: stretch; }') !== false, '左右栏需要拉伸到文章网格行高');
+    assert_true(strpos($css, '.n-rail-in { position: sticky;') !== false, '左侧操作栏应保持 sticky');
+});
 test('模块依赖：解析静态 import、规范化路径、包含页面模块', function () {
     assert_eq(['./util.js', '../modules/a.js'], Assets::imports("import { x } from './util.js';\nimport * as a from '../modules/a.js';\nimport('./lazy.js');\nconst s = 'import x from \"./no.js\"';"));
     $g = Assets::moduleGraph(['app.js', 'pages/post.js']);

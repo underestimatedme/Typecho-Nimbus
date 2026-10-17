@@ -1985,6 +1985,7 @@ a.n-pill:hover { background: rgba(255, 255, 255, .18); }
 .n-article > .n-rail { grid-column: 1; grid-row: 1; }
 .n-article > .n-article-paper { grid-column: 2; grid-row: 1; }
 .n-article > .n-toc { grid-column: 3; grid-row: 1; }
+.n-article > .n-rail, .n-article > .n-toc { align-self: stretch; }
 .n-article-paper.n-post { max-width: none; width: 100%; justify-self: stretch; padding: clamp(28px, 4.6vw, 72px) clamp(22px, 5vw, 80px) clamp(28px, 4vw, 56px); border-radius: 32px; background: var(--card); border: 1px solid var(--line); box-shadow: 0 40px 100px -40px rgba(15, 23, 42, .35), var(--shadow); }
 .n-article-paper > .n-post-foot { margin-top: var(--space-6); }
 @media (min-width: 1001px) {
