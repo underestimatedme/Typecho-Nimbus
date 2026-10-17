@@ -34,6 +34,7 @@ final class NimbusBootstrap
             // 短代码：正文与摘要的所有出口（模板、RSS、摘要）统一经过处理，回复可见内容不会泄露
             \Typecho\Plugin::factory('Widget_Abstract_Contents')->contentEx = 'Nimbus\\Shortcode::hookContent';
             \Typecho\Plugin::factory('Widget_Abstract_Contents')->excerptEx = 'Nimbus\\Shortcode::hookExcerpt';
+            \Typecho\Plugin::factory('Widget_Abstract_Comments')->contentEx_9999 = 'Nimbus\\Comment::sanitizeMarkdownLinks';
         }
         $o = \Helper::options();
         $o->commentsThreaded = true;
@@ -46,6 +47,9 @@ final class NimbusBootstrap
             if (!preg_match('/<' . $tag . '(?:\s|>)/i', $allowedCommentTags)) {
                 $allowedCommentTags .= '<' . $tag . '>';
             }
+        }
+        if (!preg_match('/<a(?:\s|>)/i', $allowedCommentTags)) {
+            $allowedCommentTags .= '<a href="" title="">';
         }
         $o->commentsHTMLTagAllowed = $allowedCommentTags;
         $o->commentsMaxNestingLevels = max(3, (int)$o->commentsMaxNestingLevels);

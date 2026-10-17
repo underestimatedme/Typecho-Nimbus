@@ -19,7 +19,11 @@ check() { # path expected_status [grep patterns...]
 }
 check "/" 200 'data-page="index"'
 check "/index.php/archives/1/" 200 'data-page="post"'
-check "/index.php/archives/3/" 200 'n-post-cover has-image' 'class="n-article has-toc"' 'data-width="fluid"' '<strong>Markdown</strong>' '<code>代码</code>'
+check "/index.php/archives/3/" 200 'n-post-cover has-image' 'class="n-article has-toc"' 'data-width="fluid"' '<strong>Markdown</strong>' '<code>代码</code>' '<a href="https://typecho.org">链接</a>'
+if curl -s "$BASE/index.php/archives/3/" | grep -q 'href="javascript:'; then
+  echo "FAIL comment renderer preserved a javascript link"
+  fail=1
+fi
 check "/index.php/archives/9/" 200 'class="n-cover n-post-cover' 'n-article-paper' 'class="n-rail"' 'n-prose-magazine'
 check "/index.php/category/tech/" 200 'data-page="index"'
 check "/index.php/archives.html" 200 'data-page="page"'

@@ -16,6 +16,33 @@ final class Comment
         return rtrim($mirror, '/') . '/' . $hash . '?s=' . $size . '&d=identicon';
     }
 
+    /** Typecho's Markdown parser permits raw HTML; keep Markdown links but reject unsafe URL schemes. */
+    public static function sanitizeMarkdownLinks($content, $comment = null, $last = null): string
+    {
+        $html = is_string($last) ? $last : (string)$content;
+        return (string)preg_replace_callback('/<a\b[^>]*>/i', static function ($match) {
+            $tag = $match[0];
+            if (!preg_match('~\bhref\s*=\s*(?:"([^"]*)"|\'([^\']*)\'|([^\s>]+))~i', $tag, $hrefMatch)) {
+                return $tag;
+            }
+
+            $href = '';
+            foreach ([1, 2, 3] as $group) {
+                if (isset($hrefMatch[$group]) && $hrefMatch[$group] !== '') {
+                    $href = $hrefMatch[$group];
+                    break;
+                }
+            }
+            $href = html_entity_decode($href, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $href = rawurldecode((string)preg_replace('/[\x00-\x20\x7f]+/', '', trim($href)));
+            if (preg_match('/^[a-z][a-z0-9+.-]*:/i', $href) && !preg_match('/^(https?|mailto):/i', $href)) {
+                return (string)preg_replace('~\s+href\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s>]+)~i', '', $tag);
+            }
+
+            return $tag;
+        }, $html);
+    }
+
     /** @param array<string,string> $map name => url */
     public static function emojiReplace(string $text, array $map): string
     {

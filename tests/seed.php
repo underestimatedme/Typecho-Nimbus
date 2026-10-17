@@ -24,8 +24,22 @@ opt($db, $p, 'commentsThreaded', '1');
 opt($db, $p, 'commentsShowCommentOnly', '0');
 opt($db, $p, 'rewrite', '0');
 
+$commentFixture = "这是第 %d 条测试评论，内容包含 **Markdown** 与 `代码`，还有 [链接](https://typecho.org) 和 <a href=\"javascript:alert(1)\">危险链接</a>。";
 $done = $db->query("SELECT COUNT(*) FROM {$p}contents WHERE slug='nimbus-seed-marker'")->fetchColumn();
-if ($done > 0) { echo "seed: already seeded\n"; exit(0); }
+if ($done > 0) {
+    $cid = $db->query("SELECT cid FROM {$p}contents WHERE slug='post-1'")->fetchColumn();
+    if ($cid) {
+        $st = $db->prepare("SELECT coid FROM {$p}comments WHERE cid=? ORDER BY coid LIMIT 1");
+        $st->execute([$cid]);
+        $coid = $st->fetchColumn();
+        if ($coid) {
+            $db->prepare("UPDATE {$p}comments SET text=? WHERE coid=?")
+                ->execute([sprintf($commentFixture, 1), $coid]);
+        }
+    }
+    echo "seed: already seeded\n";
+    exit(0);
+}
 
 // 分类
 $cats = [['default', '默认分类'], ['tech', '技术'], ['life', '生活'], ['photo', '摄影']];
@@ -91,7 +105,7 @@ foreach ($posts as $i => $row) {
     for ($k = 0; $k < $n; $k++) {
         $name = $names[$k % 4];
         $db->prepare("INSERT INTO {$p}comments (cid,created,author,authorId,ownerId,mail,url,ip,agent,text,type,status,parent) VALUES (?,?,?,?,1,?,?,'127.0.0.1','Mozilla/5.0 (Macintosh) Chrome/120',?,'comment','approved',?)")
-            ->execute([$cid, $created + $k * 3600, $name, $k === 1 ? 1 : 0, strtolower($name) . '@example.com', 'https://example.com', "这是第 " . ($k + 1) . " 条测试评论，内容包含 **Markdown** 与 `代码`。", $k >= 2 ? $parent : 0]);
+            ->execute([$cid, $created + $k * 3600, $name, $k === 1 ? 1 : 0, strtolower($name) . '@example.com', 'https://example.com', sprintf($commentFixture, $k + 1), $k >= 2 ? $parent : 0]);
         if ($k === 0) $parent = (int)$db->lastInsertId();
     }
     $db->prepare("UPDATE {$p}contents SET commentsNum=? WHERE cid=?")->execute([$n, $cid]);
