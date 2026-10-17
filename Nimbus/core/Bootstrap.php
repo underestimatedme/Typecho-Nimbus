@@ -37,6 +37,17 @@ final class NimbusBootstrap
         }
         $o = \Helper::options();
         $o->commentsThreaded = true;
+        $o->commentsMarkdown = true;
+        // Typecho strips Markdown's generated tags unless explicitly allowed for comments.
+        $allowedCommentTags = (string)$o->commentsHTMLTagAllowed;
+        $markdownTags = ['strong', 'em', 'del', 'code', 'pre', 'blockquote', 'ul', 'ol', 'li', 'hr',
+            'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'table', 'thead', 'tbody', 'tr', 'th', 'td'];
+        foreach ($markdownTags as $tag) {
+            if (!preg_match('/<' . $tag . '(?:\s|>)/i', $allowedCommentTags)) {
+                $allowedCommentTags .= '<' . $tag . '>';
+            }
+        }
+        $o->commentsHTMLTagAllowed = $allowedCommentTags;
         $o->commentsMaxNestingLevels = max(3, (int)$o->commentsMaxNestingLevels);
         $moments = $archive->is('page') && (string)$archive->template === 'page-soliloquize.php';
         $o->commentsPageDisplay = $moments ? 'first' : 'last';
