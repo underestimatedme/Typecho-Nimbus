@@ -2,6 +2,14 @@
 use Nimbus\View;
 
 test('e escapes', fn() => assert_eq('&lt;a&gt;&quot;', View::e('<a>"')));
+test('sameText recognizes content that differs only by markup and whitespace', function () {
+    $same = method_exists(View::class, 'sameText') && View::sameText('<p>公告&nbsp; 内容</p>', "公告\n 内容");
+    assert_true($same, 'HTML formatting and whitespace should not make duplicate content look different');
+});
+test('sameText keeps different visible text distinct', function () {
+    $same = method_exists(View::class, 'sameText') && View::sameText('公告内容', '另一条公告');
+    assert_eq(false, $same);
+});
 test('e null safe', fn() => assert_eq('', View::e(null)));
 test('icon returns svg with class', fn() => assert_true(strpos(View::icon('search', 'n-ico'), '<svg') === 0 && strpos(View::icon('search', 'n-ico'), 'n-ico') !== false));
 test('icon unknown returns empty', fn() => assert_eq('', View::icon('nope')));

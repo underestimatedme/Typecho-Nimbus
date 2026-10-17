@@ -69,6 +69,7 @@ fi
 # 英文界面（临时切换前台语言，检查后恢复中文）
 DB="$(dirname "$0")/../.dev/typecho/usr/nimbus.db"
 if [ -f "$DB" ]; then
+  bash "$(dirname "$0")/home-bento-duplicate.sh" "$DB" "$BASE" || fail=1
   php "$(dirname "$0")/set-theme-opt.php" "$DB" Language=en >/dev/null
   check "/index.php/archives/1/" 200 '<html lang="en"' 'Leave a comment' '"i18n":{"'
   check "/index.php/stats.html" 200 'Writing heatmap'

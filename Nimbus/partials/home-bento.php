@@ -47,9 +47,16 @@ $moments = Kit::moments(1, 1);
 $moment = $moments && !empty($moments['items']) ? $moments['items'][0] : null;
 $momentsUrl = Widgets::pageUrl($archive, 'page-moments.php');
 $notice = trim(strip_tags((string)Options::get('NoticeHtml', '')));
+$noteText = $moment
+    ? trim(html_entity_decode(strip_tags((string)$moment['content']), ENT_QUOTES, 'UTF-8'))
+    : ($notice !== '' ? $notice : (string)$o->description);
+$noteQuote = $moment || $notice !== '' ? mb_substr($noteText, 0, 80) : $noteText;
 
 $music = \Nimbus\Music::config();
 $musicUrl = Widgets::pageUrl($archive, 'page-music.php');
+$defaultMotto = I18n::t('记录、思考，与世界温柔相处');
+$motto = trim((string)$o->description) ?: $defaultMotto;
+if (View::sameText($noteQuote, $motto)) $motto = $defaultMotto;
 ?>
 <section class="n-bento" aria-label="<?= I18n::e('精选') ?>">
   <div class="n-bento-tile n-bento-feature n-reveal"<?= count($features) > 1 ? ' data-carousel data-interval="5000" aria-roledescription="' . I18n::e('轮播') . '"' : '' ?>>
@@ -97,10 +104,10 @@ $musicUrl = Widgets::pageUrl($archive, 'page-music.php');
   <<?= $momentsUrl !== '' && $moment ? 'a href="' . View::e($momentsUrl) . '"' : 'div' ?> class="n-bento-tile n-bento-note n-reveal">
     <span class="n-bento-label"><?= View::icon($moment ? 'comment' : 'info') ?><?= $moment ? I18n::e('最新说说') : I18n::e('公告') ?></span>
     <?php if ($moment): ?>
-      <span class="n-bento-quote"><?= View::e(mb_substr(trim(html_entity_decode(strip_tags((string)$moment['content']), ENT_QUOTES, 'UTF-8')), 0, 80)) ?></span>
+      <span class="n-bento-quote"><?= View::e($noteQuote) ?></span>
       <span class="n-bento-foot"><?= View::e(View::timeAgo((int)$moment['created'])) ?><?php if (!empty($moment['images'])): ?> · <?= I18n::e('{n} 张照片', ['n' => count($moment['images'])]) ?><?php endif; ?></span>
     <?php else: ?>
-      <span class="n-bento-quote"><?= View::e($notice !== '' ? mb_substr($notice, 0, 80) : (string)$o->description) ?></span>
+      <span class="n-bento-quote"><?= View::e($noteQuote) ?></span>
     <?php endif; ?>
   </<?= $momentsUrl !== '' && $moment ? 'a' : 'div' ?>>
 
@@ -116,7 +123,7 @@ $musicUrl = Widgets::pageUrl($archive, 'page-music.php');
   <?php else: ?>
   <div class="n-bento-tile n-bento-motto n-reveal">
     <span class="n-bento-label"><?= View::icon('star') ?><?= I18n::e('此刻') ?></span>
-    <span class="n-bento-quote"><?= View::e((string)$o->description ?: I18n::t('记录、思考，与世界温柔相处')) ?></span>
+    <span class="n-bento-quote"><?= View::e($motto) ?></span>
   </div>
   <?php endif; ?>
 </section>

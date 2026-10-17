@@ -90,6 +90,18 @@ final class View
         return htmlspecialchars_decode((string)$title, ENT_QUOTES);
     }
 
+    /** Compare visible text while ignoring HTML markup and repeated whitespace. */
+    public static function sameText(string $a, string $b): bool
+    {
+        $normalize = static function (string $text): string {
+            $text = html_entity_decode(strip_tags($text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $text = preg_replace('/\s+/u', ' ', $text);
+            return trim((string)$text);
+        };
+        $a = $normalize($a);
+        return $a !== '' && $a === $normalize($b);
+    }
+
     /** 渲染 partials/{$name}.php，$vars 可用；$archive 一般传模板里的 $this。 */
     public static function partial(string $name, array $vars = []): void
     {
