@@ -25,6 +25,11 @@ test('文章长内容时左右栏父容器拉伸以支持 sticky', function () {
     assert_true(strpos($css, '.n-article > .n-rail, .n-article > .n-toc { align-self: stretch; }') !== false, '左右栏需要拉伸到文章网格行高');
     assert_true(strpos($css, '.n-rail-in { position: sticky;') !== false, '左侧操作栏应保持 sticky');
 });
+test('音乐歌单长艺人名被限制在单曲卡片内', function () {
+    $css = file_get_contents(dirname(__DIR__, 2) . '/Nimbus/assets/css/pages/music.css');
+    assert_true(strpos($css, '.n-mp-list button { display: grid; grid-template-columns: 34px minmax(0, 1fr) minmax(0, 35%);') !== false, '歌曲名称和歌手名需要共享单曲卡片宽度');
+    assert_true(strpos($css, '.n-mp-list em { font-style: normal; font-size: var(--text-xs); color: var(--muted); white-space: nowrap; min-width: 0; overflow: hidden; text-overflow: ellipsis; }') !== false, '超长歌手名需要在自己的列内显示省略号');
+});
 test('模块依赖：解析静态 import、规范化路径、包含页面模块', function () {
     assert_eq(['./util.js', '../modules/a.js'], Assets::imports("import { x } from './util.js';\nimport * as a from '../modules/a.js';\nimport('./lazy.js');\nconst s = 'import x from \"./no.js\"';"));
     $g = Assets::moduleGraph(['app.js', 'pages/post.js']);
