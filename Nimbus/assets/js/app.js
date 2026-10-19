@@ -6,6 +6,7 @@ import * as search from './modules/search.js';
 import * as reveal from './modules/reveal.js';
 import * as count from './modules/count.js';
 import * as menuFit from './modules/menu-fit.js';
+import { isAllowedOnDevice } from './modules/media-policy.js';
 
 function readConfig() {
   const el = document.getElementById('n-config');
@@ -26,8 +27,8 @@ async function boot(root = document) {
   reveal.init(root);
   count.init(root);
   if (document.documentElement.dataset.fx) import('./modules/cyber-fx.js').then((m) => m.init()).catch(() => {});
-  if (cfg.live2d) import('./modules/live2d.js').then((m) => m.init()).catch(() => {});
-  if (cfg.music) import('./modules/player.js').then((m) => m.init()).catch(() => {});
+  if (isAllowedOnDevice(cfg.live2d)) import('./modules/live2d.js').then((m) => m.init()).catch(() => {});
+  if (isAllowedOnDevice(cfg.music)) import('./modules/player.js').then((m) => m.init()).catch(() => {});
   if (pageModule && pageModule.destroy) { try { pageModule.destroy(); } catch (e) {} }
   pageModule = null;
   const page = (document.body.dataset.page || 'index');

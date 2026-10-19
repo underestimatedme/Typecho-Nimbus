@@ -89,7 +89,6 @@ $favicon = (string)Options::get('Favicon', '');
 <?php
 $nimbusPreload = [];
 if (Options::bool('RouterEnable')) $nimbusPreload[] = 'modules/router.js';
-if ($config['music']) $nimbusPreload[] = 'modules/player.js';
 echo \Nimbus\Assets::importMapTag();
 echo \Nimbus\Assets::preloadTags($page, $nimbusPreload);
 ?>

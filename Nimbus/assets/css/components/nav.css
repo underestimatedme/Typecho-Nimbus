@@ -18,6 +18,7 @@
 .n-menu { display: flex; gap: 2px; font-size: var(--text-sm); font-weight: 500; }
 .n-menu-item { position: relative; }
 .n-menu-item > a { display: inline-flex; align-items: center; gap: 5px; padding: 8px 13px; border-radius: var(--r-pill); position: relative; transition: background var(--dur-fast); }
+.n-menu-label { min-width: 0; }
 .n-menu-item > a::after { content: ""; position: absolute; left: 13px; right: 13px; bottom: 4px; height: 2px; border-radius: 2px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform var(--dur) var(--ease); }
 .n-menu-item:hover > a::after, .n-menu-item.is-current > a::after { transform: scaleX(1); }
 .n-nav-solid .n-menu-item:hover > a, .n-nav-float .n-menu-item:hover > a, .n-nav-solid .n-menu-item.is-current > a, .n-nav-float .n-menu-item.is-current > a { background: var(--chip); }
@@ -51,10 +52,12 @@
 .n-drawer-head { display: flex; align-items: center; justify-content: space-between; }
 .n-drawer-head .n-icon-btn { background: var(--chip); border-color: transparent; }
 .n-drawer-menu { display: flex; flex-direction: column; gap: 2px; font-size: var(--text-md); }
-.n-drawer-menu > li > a { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-radius: 12px; transition: background var(--dur-fast); }
+.n-drawer-menu > li > a { display: flex; align-items: center; gap: 8px; width: 100%; min-width: 0; box-sizing: border-box; padding: 12px 14px; border-radius: 12px; transition: background var(--dur-fast); }
+.n-drawer-menu .n-menu-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .n-drawer-menu > li > a:hover, .n-drawer-menu > li.is-current > a { background: var(--accent-soft); color: var(--accent-text); }
 .n-drawer-menu .n-menu-caret { display: none; }
-.n-drawer-menu .n-submenu { position: static; opacity: 1; translate: 0; pointer-events: auto; box-shadow: none; border: 0; background: transparent; padding: 0 0 0 20px; margin: 0; }
+.n-drawer-menu .n-submenu { position: static; width: 100%; min-width: 0; box-sizing: border-box; opacity: 1; translate: 0; pointer-events: auto; box-shadow: none; border: 0; background: transparent; padding: 0 0 0 20px; margin: 0; }
+.n-drawer-menu .n-submenu a { width: 100%; min-width: 0; max-width: 100%; box-sizing: border-box; }
 .n-drawer-foot { margin-top: auto; display: flex; gap: 8px; flex-wrap: wrap; }
 
 @media (max-width: 1000px) {

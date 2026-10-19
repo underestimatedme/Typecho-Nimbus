@@ -52,7 +52,7 @@ final class Music
     {
         if (!Options::bool('MusicEnable')) return null;
         $source = (string)Options::get('MusicSource', 'list');
-        $cfg = ['source' => $source, 'autoplay' => Options::bool('MusicAutoplay'), 'list' => [], 'meting' => null];
+        $cfg = ['source' => $source, 'autoplay' => Options::bool('MusicAutoplay'), 'mobile' => Options::bool('MusicMobile'), 'list' => [], 'meting' => null];
         if ($source === 'meting') {
             $api = self::safeUrl((string)Options::get('MusicMetingApi', ''));
             $id = preg_replace('/[^0-9A-Za-z_-]/', '', (string)Options::get('MusicMetingId', ''));

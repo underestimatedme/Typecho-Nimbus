@@ -25,10 +25,10 @@ $renderMenu = function (string $cls) use ($items, $current) {
         $isCur = Menu::isCurrent($it['url'], $current);
         $has = !empty($it['children']);
         $h .= '<li class="n-menu-item' . ($isCur ? ' is-current' : '') . ($has ? ' has-children' : '') . '">';
-        $h .= '<a href="' . View::e($it['url']) . '"' . ($isCur ? ' aria-current="page"' : '') . '>' . ($it['icon'] ? View::icon($it['icon']) : '') . View::e($it['title']) . ($has ? View::icon('chevron-down', 'n-menu-caret') : '') . '</a>';
+        $h .= '<a href="' . View::e($it['url']) . '"' . ($isCur ? ' aria-current="page"' : '') . '>' . ($it['icon'] ? View::icon($it['icon']) : '') . '<span class="n-menu-label">' . View::e($it['title']) . '</span>' . ($has ? View::icon('chevron-down', 'n-menu-caret') : '') . '</a>';
         if ($has) {
             $h .= '<ul class="n-submenu">';
-            foreach ($it['children'] as $c) $h .= '<li><a href="' . View::e($c['url']) . '">' . ($c['icon'] ? View::icon($c['icon']) : '') . View::e($c['title']) . '</a></li>';
+            foreach ($it['children'] as $c) $h .= '<li><a href="' . View::e($c['url']) . '">' . ($c['icon'] ? View::icon($c['icon']) : '') . '<span class="n-menu-label">' . View::e($c['title']) . '</span></a></li>';
             $h .= '</ul>';
         }
         $h .= '</li>';

@@ -345,6 +345,7 @@ html[data-motion="off"] .n-reveal { opacity: 1; translate: 0 0; }
 .n-menu { display: flex; gap: 2px; font-size: var(--text-sm); font-weight: 500; }
 .n-menu-item { position: relative; }
 .n-menu-item > a { display: inline-flex; align-items: center; gap: 5px; padding: 8px 13px; border-radius: var(--r-pill); position: relative; transition: background var(--dur-fast); }
+.n-menu-label { min-width: 0; }
 .n-menu-item > a::after { content: ""; position: absolute; left: 13px; right: 13px; bottom: 4px; height: 2px; border-radius: 2px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform var(--dur) var(--ease); }
 .n-menu-item:hover > a::after, .n-menu-item.is-current > a::after { transform: scaleX(1); }
 .n-nav-solid .n-menu-item:hover > a, .n-nav-float .n-menu-item:hover > a, .n-nav-solid .n-menu-item.is-current > a, .n-nav-float .n-menu-item.is-current > a { background: var(--chip); }
@@ -378,10 +379,12 @@ html[data-motion="off"] .n-reveal { opacity: 1; translate: 0 0; }
 .n-drawer-head { display: flex; align-items: center; justify-content: space-between; }
 .n-drawer-head .n-icon-btn { background: var(--chip); border-color: transparent; }
 .n-drawer-menu { display: flex; flex-direction: column; gap: 2px; font-size: var(--text-md); }
-.n-drawer-menu > li > a { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-radius: 12px; transition: background var(--dur-fast); }
+.n-drawer-menu > li > a { display: flex; align-items: center; gap: 8px; width: 100%; min-width: 0; box-sizing: border-box; padding: 12px 14px; border-radius: 12px; transition: background var(--dur-fast); }
+.n-drawer-menu .n-menu-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .n-drawer-menu > li > a:hover, .n-drawer-menu > li.is-current > a { background: var(--accent-soft); color: var(--accent-text); }
 .n-drawer-menu .n-menu-caret { display: none; }
-.n-drawer-menu .n-submenu { position: static; opacity: 1; translate: 0; pointer-events: auto; box-shadow: none; border: 0; background: transparent; padding: 0 0 0 20px; margin: 0; }
+.n-drawer-menu .n-submenu { position: static; width: 100%; min-width: 0; box-sizing: border-box; opacity: 1; translate: 0; pointer-events: auto; box-shadow: none; border: 0; background: transparent; padding: 0 0 0 20px; margin: 0; }
+.n-drawer-menu .n-submenu a { width: 100%; min-width: 0; max-width: 100%; box-sizing: border-box; }
 .n-drawer-foot { margin-top: auto; display: flex; gap: 8px; flex-wrap: wrap; }
 
 @media (max-width: 1000px) {
@@ -1869,7 +1872,7 @@ html[data-motion="off"] .n-post-hero-chip, html[data-motion="off"] .n-post-hero-
 .n-bento-feature-body { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 12px; width: 100%; padding: 32px; }
 .n-bento-eyebrow { display: inline-flex; align-items: center; gap: 6px; width: fit-content; padding: 6px 13px; border-radius: var(--r-pill); font-size: 12px; font-weight: 600; letter-spacing: .06em; background: rgba(255, 255, 255, .16); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, .2); }
 .n-bento-eyebrow i { font-style: normal; opacity: .6; }
-.n-bento-feature-title { font-family: var(--font-title); font-size: clamp(26px, 2.4vw, 38px); line-height: 1.25; text-wrap: balance; }
+.n-bento-feature-title { min-width: 0; font-family: var(--font-title); font-size: clamp(26px, 2.4vw, 38px); line-height: 1.25; text-wrap: balance; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 .n-bento-feature-excerpt { font-size: var(--text-sm); line-height: 1.7; color: rgba(255, 255, 255, .78); max-width: 46ch; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .n-bento-feature-meta { display: flex; align-items: center; gap: 16px; font-size: var(--text-xs); color: rgba(255, 255, 255, .7); }
 .n-bento-go { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: var(--r-pill); background: #fff; color: #0b1220; font-weight: 700; font-size: 12px; transition: gap var(--dur) var(--ease); }

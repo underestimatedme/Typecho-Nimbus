@@ -1,5 +1,6 @@
 // 杂志风首页交互：卡片堆随鼠标倾斜、Bento 卡片光斑跟随指针、音乐卡片控制全站播放器
 import { qs, qsa, on, prefersReduced, config } from './util.js';
+import { isAllowedOnDevice } from './media-policy.js';
 
 let offs = [], unsub = null;
 
@@ -26,7 +27,7 @@ export function init(root = document) {
     t.style.setProperty('--my', (e.clientY - r.top) + 'px');
   })));
   const music = qs('[data-bento-music]', root);
-  if (music && config().music) {
+  if (music && isAllowedOnDevice(config().music)) {
     import('./player.js').then(async (P) => {
       await P.init();
       const btn = qs('[data-bento-play]', music);
