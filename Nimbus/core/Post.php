@@ -208,10 +208,12 @@ final class Post
     public static function recent($archive, int $limit): array
     {
         $db = \Typecho_Db::get();
+        $now = (int)\Helper::options()->time ?: time();
         $rows = $db->fetchAll($db->select()->from('table.contents')
             ->where('table.contents.type = ?', 'post')
             ->where('table.contents.status = ?', 'publish')
             ->where("table.contents.password IS NULL OR table.contents.password = ''")
+            ->where('table.contents.created < ?', $now)
             ->order('table.contents.created', \Typecho_Db::SORT_DESC)
             ->limit($limit));
         return array_map(function ($r) use ($archive) { return $archive->filter($r); }, $rows);
