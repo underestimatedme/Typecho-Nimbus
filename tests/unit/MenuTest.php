@@ -31,6 +31,20 @@ test('default menu retains category hierarchy and page grouping', function () us
     assert_eq('关于', $m[0]['title']);
     assert_eq('编程', $m[2]['title']);
 });
+test('default menu can hide pages by slug before grouping', function () {
+    $pages = [
+        ['title' => '关于', 'permalink' => '/about.html'],
+        ['title' => '课程', 'permalink' => 'https://example.test/courses.html'],
+    ];
+    $m = Menu::build($pages, null, [], false, '页面', ['courses']);
+    assert_eq('页面', $m[0]['title']);
+    assert_eq(['关于'], array_column($m[0]['children'], 'title'));
+});
+test('hidden page settings do not remove custom menu entries', function () use ($pages) {
+    $custom = [['title' => '课程', 'url' => '/courses.html']];
+    $m = Menu::build($pages, $custom, [], false, '', ['courses']);
+    assert_eq('/courses.html', $m[0]['url']);
+});
 test('Cuteen dropdown retains third-level categories', function () {
     $cats = [
         ['mid' => 1, 'parent' => 0, 'name' => '编程', 'permalink' => '/code/'],

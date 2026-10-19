@@ -11,7 +11,7 @@ final class Menu
      * @param array|null $custom 自定义菜单 JSON 解析结果
      * @return array 每项 ['title','url','icon','children'=>[]]
      */
-    public static function build(array $pages, ?array $custom, array $categories = [], bool $pagesFirst = false, string $pageGroup = ''): array
+    public static function build(array $pages, ?array $custom, array $categories = [], bool $pagesFirst = false, string $pageGroup = '', array $hiddenPageSlugs = []): array
     {
         if (is_array($custom)) {
             $items = self::normalize($custom);
@@ -20,6 +20,7 @@ final class Menu
         $out = [];
         foreach ($pages as $p) {
             if (empty($p['title']) || empty($p['permalink'])) continue;
+            if (self::isHiddenPage((string)$p['permalink'], $hiddenPageSlugs)) continue;
             $out[] = ['title' => (string)$p['title'], 'url' => (string)$p['permalink'], 'icon' => '', 'children' => []];
         }
         if ($pageGroup !== '' && $out) {
@@ -102,7 +103,14 @@ final class Menu
                 }
             } catch (\Throwable $e) {}
         }
-        $items = self::build($pages, self::parse((string)Options::get('CustomMenu', '')), $categories, $source === 'pages-first', (string)Options::get('MenuPageGroup', ''));
+        $items = self::build(
+            $pages,
+            self::parse((string)Options::get('CustomMenu', '')),
+            $categories,
+            $source === 'pages-first',
+            (string)Options::get('MenuPageGroup', ''),
+            Options::list('HiddenMenuPages')
+        );
         array_unshift($items, ['title' => I18n::t('首页'), 'url' => (string)\Helper::options()->siteUrl, 'icon' => 'home', 'children' => []]);
         return $items;
     }
@@ -114,5 +122,23 @@ final class Menu
         $a = rtrim(parse_url($url, PHP_URL_PATH) ?: '/', '/');
         $b = rtrim(parse_url($current, PHP_URL_PATH) ?: '/', '/');
         return $a === $b;
+    }
+
+    /** 按页面缩略名从自动导航中隐藏独立页面。 */
+    private static function isHiddenPage(string $permalink, array $hiddenPageSlugs): bool
+    {
+        $path = parse_url($permalink, PHP_URL_PATH);
+        $slug = basename(rtrim(is_string($path) ? $path : $permalink, '/'));
+        $slug = strtolower((string)preg_replace('/\.html$/i', '', $slug));
+        if ($slug === '') return false;
+
+        foreach ($hiddenPageSlugs as $hidden) {
+            if (!is_string($hidden) || trim($hidden) === '') continue;
+            $hiddenPath = parse_url(trim($hidden), PHP_URL_PATH);
+            $hiddenSlug = basename(rtrim(is_string($hiddenPath) ? $hiddenPath : trim($hidden), '/'));
+            $hiddenSlug = strtolower((string)preg_replace('/\.html$/i', '', $hiddenSlug));
+            if ($hiddenSlug !== '' && $slug === $hiddenSlug) return true;
+        }
+        return false;
     }
 }
