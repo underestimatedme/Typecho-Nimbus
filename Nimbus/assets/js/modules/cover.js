@@ -27,7 +27,11 @@ export function init(root = document) {
     t.style.setProperty('--my', (e.clientY - r.top) + 'px');
   })));
   const music = qs('[data-bento-music]', root);
-  if (music && isAllowedOnDevice(config().music)) {
+  const musicConfig = config().music;
+  if (music && musicConfig && !isAllowedOnDevice(musicConfig)) {
+    const btn = qs('[data-bento-play]', music);
+    if (btn) btn.hidden = true;
+  } else if (music && musicConfig) {
     import('./player.js').then(async (P) => {
       await P.init();
       const btn = qs('[data-bento-play]', music);
