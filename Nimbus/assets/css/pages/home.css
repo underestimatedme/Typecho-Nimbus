@@ -205,7 +205,10 @@
   .n-cover { overflow: hidden; }
   .n-cover-stats li { padding-left: 18px; }
   .n-bento { grid-template-columns: minmax(0, 1fr); margin-top: -48px; gap: 14px; }
-  .n-bento-feature { grid-column: auto; min-height: 340px; }
-  .n-bento-feature-body { padding: 24px; }
   .n-bento-tile { min-height: 180px; }
+  /* 叠放的轮播参与网格高度计算，长标题或大字号不会被绝对定位裁切。 */
+  .n-bento-feature { display: grid; grid-column: auto; min-height: 340px; }
+  .n-bento-feature-slide { position: relative; grid-area: 1 / 1; min-width: 0; }
+  .n-bento-feature-body { padding: 56px 24px 24px; }
+  .n-bento-feature-meta { flex-wrap: wrap; gap: 10px 12px; }
 }

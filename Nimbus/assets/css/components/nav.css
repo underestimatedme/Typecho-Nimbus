@@ -46,12 +46,13 @@
 :root[data-theme="cyber"] .n-nav-float { border-radius: var(--r-md); }
 
 /* 抽屉 */
-.n-drawer { position: fixed; inset: 0; width: 100%; height: 100%; z-index: var(--z-drawer); }
-.n-drawer-in { position: absolute; top: 0; right: 0; bottom: 0; width: min(320px, 85vw); background: var(--card); color: var(--fg); padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-5); box-shadow: -10px 0 40px rgba(0, 0, 0, .3); translate: 100% 0; transition: translate var(--dur) var(--ease); }
+.n-drawer { position: fixed; inset: 0; width: 100%; height: 100%; height: 100dvh; z-index: var(--z-drawer); }
+.n-drawer-in { position: absolute; top: 0; right: 0; bottom: 0; width: min(320px, 85vw); background: var(--card); color: var(--fg); padding: max(var(--space-5), env(safe-area-inset-top)) max(var(--space-5), env(safe-area-inset-right)) max(var(--space-5), env(safe-area-inset-bottom)) max(var(--space-5), env(safe-area-inset-left)); display: flex; flex-direction: column; gap: var(--space-5); overflow: hidden; box-shadow: -10px 0 40px rgba(0, 0, 0, .3); translate: 100% 0; transition: translate var(--dur) var(--ease); }
 .n-drawer[open] .n-drawer-in { translate: 0 0; }
+.n-drawer-head, .n-drawer-foot { flex-shrink: 0; }
 .n-drawer-head { display: flex; align-items: center; justify-content: space-between; }
 .n-drawer-head .n-icon-btn { background: var(--chip); border-color: transparent; }
-.n-drawer-menu { display: flex; flex-direction: column; gap: 2px; font-size: var(--text-md); }
+.n-drawer-menu { display: flex; flex-direction: column; flex: 1; min-height: 0; min-width: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; gap: 2px; font-size: var(--text-md); }
 .n-drawer-menu > li > a { display: flex; align-items: center; gap: 8px; width: 100%; min-width: 0; box-sizing: border-box; padding: 12px 14px; border-radius: 12px; transition: background var(--dur-fast); }
 .n-drawer-menu .n-menu-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .n-drawer-menu > li > a:hover, .n-drawer-menu > li.is-current > a { background: var(--accent-soft); color: var(--accent-text); }
