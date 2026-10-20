@@ -126,14 +126,25 @@ final class Stats
             ->where('table.comments.status = ?', 'approved')->where('table.contents.status = ?', 'publish')
             ->where('table.comments.created > ?', $now - 400 * 86400));
         $commentTs = array_map(function ($r) { return (int)$r['created']; }, $comments);
-        $metas = function (string $type, int $limit) use ($db) {
-            return $db->fetchAll($db->select('mid', 'name', 'slug', 'count', 'type')->from('table.metas')->where('type = ?', $type)
-                ->where('count > 0')->order('count', \Typecho_Db::SORT_DESC)->limit($limit));
+        // 分类与标签按实际公开文章关联计数，避免多分类、定时文章或旧缓存影响文章总数。
+        $metas = function (string $type, int $limit) use ($db, $now) {
+            $query = $db->select('table.metas.mid', 'table.metas.name', 'table.metas.slug', 'table.metas.type', ['COUNT(DISTINCT table.contents.cid)' => 'count'])
+                ->from('table.metas')
+                ->join('table.relationships', 'table.relationships.mid = table.metas.mid')
+                ->join('table.contents', 'table.contents.cid = table.relationships.cid')
+                ->where('table.metas.type = ?', $type)
+                ->where('table.contents.type = ? AND table.contents.status = ?', 'post', 'publish')
+                ->where('table.contents.created < ?', $now)
+                ->where("table.contents.password IS NULL OR table.contents.password = ''")
+                ->group('table.metas.mid, table.metas.name, table.metas.slug, table.metas.type')
+                ->order('count', \Typecho_Db::SORT_DESC);
+            if ($limit > 0) $query->limit($limit);
+            return $db->fetchAll($query);
         };
         $cats = array_map(function ($r) {
             $f = \Typecho_Widget::widget('Widget_Abstract_Metas')->filter($r);
             return ['name' => (string)$r['name'], 'count' => (int)$r['count'], 'url' => (string)$f['permalink']];
-        }, $metas('category', 100));
+        }, $metas('category', 0));
         $tagRows = $metas('tag', 24);
         $tags = [];
         foreach ($tagRows as $r) {
@@ -144,6 +155,7 @@ final class Stats
         $first = $postTs ? min($postTs) : 0;
         $start = ($since !== '' && ($t = strtotime($since)) !== false) ? $t : $first;
         $counts = Post::counts();
+        $counts['posts'] = count($posts);
 
         $kit = Kit::stats();
         if (is_array($kit)) {

@@ -41,6 +41,7 @@ check "/index.php/category/typecho-theme-tutorial/" 200 'n-tut-page' 'data-tut-g
 check "/index.php/tutorials.html" 200 'n-tut-card'
 check "/" 200 'n-home-tuts'
 check "/index.php/stats.html" 200 'n-ch-heat' 'data-day=' 'n-heat-data' 'n-ch-legend"><li><a href'
+php "$(dirname "$0")/stats-counts.php" || fail=1
 check "/" 200 'id="n-player"'
 check "/usr/themes/Nimbus/assets/js/modules/player.js" 200 'export function play'
 check "/index.php/archives/1/" 200 'data-share-poster'

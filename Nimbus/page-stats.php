@@ -69,7 +69,8 @@ View::partial('header', ['archive' => $this]);
 
       <section class="n-st-panel n-reveal">
         <header><h2><?= I18n::e('分类分布') ?></h2></header>
-        <?= Chart::donut($s['categories'], I18n::t('篇文章')) ?: '<p class="n-st-none">' . I18n::e('暂无数据') . '</p>' ?>
+        <?= Chart::donut($s['categories'], I18n::t('篇文章'), $c['posts']) ?: '<p class="n-st-none">' . I18n::e('暂无数据') . '</p>' ?>
+        <?php if ($s['categories']): ?><p class="n-st-hint"><?= I18n::e('文章总数已去重；一篇文章可属于多个分类，占比按分类归属次数计算。') ?></p><?php endif; ?>
       </section>
 
       <?php if (is_array($kit) && !empty($kit['top'])):

@@ -98,8 +98,9 @@ final class Chart
     /**
      * 环形图（返回 SVG + 图例 HTML）。
      * @param array<int,array{name:string,count:int}> $items
+     * @param int|null $centerTotal 中心可显示去重总数，扇区仍按各项计数比例绘制。
      */
-    public static function donut(array $items, string $centerLabel): string
+    public static function donut(array $items, string $centerLabel, ?int $centerTotal = null): string
     {
         $total = array_sum(array_map(function ($i) { return (int)$i['count']; }, $items));
         if ($total <= 0) return '';
@@ -117,7 +118,7 @@ final class Chart
             $row = '<i class="n-ch-c' . ($k % 8) . '"></i><span>' . View::e($it['name']) . '</span><b>' . (int)$it['count'] . '</b><em>' . self::n(round($frac * 100, 1)) . '%</em>';
             $legend .= '<li>' . ($url !== '' ? '<a href="' . View::e($url) . '">' . $row . '</a>' : $row) . '</li>';
         }
-        $svg .= '<text class="n-ch-center" x="100" y="96" text-anchor="middle">' . $total . '</text><text class="n-ch-center-sub" x="100" y="120" text-anchor="middle">' . View::e($centerLabel) . '</text></svg>';
+        $svg .= '<text class="n-ch-center" x="100" y="96" text-anchor="middle">' . ($centerTotal ?? $total) . '</text><text class="n-ch-center-sub" x="100" y="120" text-anchor="middle">' . View::e($centerLabel) . '</text></svg>';
         return '<div class="n-ch-donut-wrap">' . $svg . $legend . '</ul></div>';
     }
 

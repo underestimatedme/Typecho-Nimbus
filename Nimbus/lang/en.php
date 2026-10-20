@@ -61,6 +61,7 @@ return [
     '统计' => 'Stats', '数字背后，是每一次写作与相遇' => 'Behind every number, a post written and a reader met', '篇' => 'posts', '条' => 'comments', '总字数' => 'Words', '字' => 'words', '运行' => 'Running', '天' => 'days',
     '总浏览' => 'Views', '次' => 'views', '获赞' => 'Likes', '个' => '', '近 30 天浏览量' => 'Views in the last 30 days', '{n} 次' => '{n} views', ' 次' => ' views', '近 12 个月' => 'Last 12 months',
     '写作热力图' => 'Writing heatmap', '近一年 {n} 篇' => '{n} posts in the past year', '少' => 'Less', '多' => 'More', '分类分布' => 'Categories', '篇文章' => 'posts', '暂无数据' => 'No data yet',
+    '文章总数已去重；一篇文章可属于多个分类，占比按分类归属次数计算。' => 'The total counts each post once. Posts can belong to multiple categories; shares are based on category assignments.',
     '热门文章' => 'Popular posts', '查看全部' => 'View all', '前 {n} 篇 · 按浏览量' => 'Top {n} · by views', '按浏览量' => 'by views', '常用标签' => 'Top tags', '启用配套插件 NimbusKit 后可显示浏览量趋势与热门文章。' => 'Enable the companion plugin NimbusKit to see view trends and popular posts.',
     '折线图' => 'Line chart', '柱状图' => 'Bar chart', '环形图' => 'Donut chart', '发文热力图' => 'Posting heatmap', '：' => ': ', '{date}：{n} 篇' => '{date}: {n} posts',
     // 日期

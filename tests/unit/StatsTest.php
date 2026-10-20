@@ -53,6 +53,14 @@ test('niceMax 取整齐刻度', function () {
     assert_eq(120, Chart::niceMax(103));
     assert_true(Chart::niceMax(98765) >= 98765);
 });
+test('分类圆环中心显示去重文章数而不是分类归属次数', function () {
+    $html = Chart::donut([['name' => 'A', 'count' => 2], ['name' => 'B', 'count' => 2]], '篇文章', 3);
+    $doc = new DOMDocument();
+    @$doc->loadHTML('<?xml encoding="UTF-8">' . $html);
+    $xpath = new DOMXPath($doc);
+    assert_eq('3', $xpath->query('//*[@class="n-ch-center"]')->item(0)->textContent);
+    assert_eq(['50%', '50%'], array_map(function ($el) { return $el->textContent; }, iterator_to_array($xpath->query('//em'))));
+});
 test('图表转义标签、空数据不输出', function () {
     $svg = Chart::line('t', ['<b>', 'x'], [1, 2]);
     assert_true(strpos($svg, '&lt;b&gt;') !== false, '&lt;b&gt;');
