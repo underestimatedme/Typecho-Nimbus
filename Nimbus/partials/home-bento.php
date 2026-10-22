@@ -46,11 +46,16 @@ $counts = Post::counts();
 $moments = Kit::moments(1, 1);
 $moment = $moments && !empty($moments['items']) ? $moments['items'][0] : null;
 $momentsUrl = Widgets::pageUrl($archive, 'page-moments.php');
-$notice = trim(strip_tags((string)Options::get('NoticeHtml', '')));
+$noticeHtml = trim((string)Options::get('NoticeHtml', ''));
+if ($noticeHtml === '') {
+    $themeLink = '<a href="https://github.com/underestimatedme/Typecho-Nimbus" target="_blank" rel="noopener noreferrer" data-no-router>' . I18n::e('Nimbus 主题') . '</a>';
+    $noticeHtml = I18n::t('本博客完全使用 {theme}构建。', ['theme' => $themeLink]);
+}
+$notice = trim(html_entity_decode(strip_tags($noticeHtml), ENT_QUOTES, 'UTF-8'));
 $noteText = $moment
     ? trim(html_entity_decode(strip_tags((string)$moment['content']), ENT_QUOTES, 'UTF-8'))
-    : ($notice !== '' ? $notice : (string)$o->description);
-$noteQuote = $moment || $notice !== '' ? mb_substr($noteText, 0, 80) : $noteText;
+    : $notice;
+$noteQuote = mb_substr($noteText, 0, 80);
 
 $music = \Nimbus\Music::config();
 $musicUrl = Widgets::pageUrl($archive, 'page-music.php');
@@ -107,7 +112,7 @@ if (View::sameText($noteQuote, $motto)) $motto = $defaultMotto;
       <span class="n-bento-quote"><?= View::e($noteQuote) ?></span>
       <span class="n-bento-foot"><?= View::e(View::timeAgo((int)$moment['created'])) ?><?php if (!empty($moment['images'])): ?> · <?= I18n::e('{n} 张照片', ['n' => count($moment['images'])]) ?><?php endif; ?></span>
     <?php else: ?>
-      <span class="n-bento-quote"><?= View::e($noteQuote) ?></span>
+      <div class="n-bento-quote"><?= $noticeHtml ?></div>
     <?php endif; ?>
   </<?= $momentsUrl !== '' && $moment ? 'a' : 'div' ?>>
 

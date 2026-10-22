@@ -17,6 +17,7 @@ return [
     '页面不见了' => 'Page not found', '页面不存在' => 'Page not found', '你访问的地址可能已被移动或删除。试试搜索，或者看看这些文章。' => 'The page you are looking for may have been moved or deleted. Try searching, or have a look at these posts.',
     '随便看看' => 'You might like', '置顶' => 'Pinned', '轮播' => 'carousel', '第 {n} 张' => 'Slide {n}', '上一张' => 'Previous', '下一张' => 'Next',
     '开始阅读' => 'Start reading', '阅读全文' => 'Read more', '原文' => 'Original', '公告' => 'Notice', '未命名' => 'Untitled',
+    '本博客完全使用 {theme}构建。' => 'This blog is built entirely with the {theme}.', 'Nimbus 主题' => 'Nimbus theme',
     // 相对时间
     '刚刚' => 'just now', '{n} 分钟前' => '{n} min ago', '{n} 小时前' => '{n} h ago', '{n} 天前' => '{n} days ago',
     // 文章

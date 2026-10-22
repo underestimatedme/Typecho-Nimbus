@@ -120,6 +120,7 @@
 .n-bento-label .n-ico { color: var(--accent-text); }
 .n-bento-foot { margin-top: auto; font-size: var(--text-xs); color: var(--muted); }
 .n-bento-quote { overflow-wrap: anywhere; font-family: var(--font-title); font-size: 19px; line-height: 1.55; color: var(--fg-strong); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.n-bento-note .n-bento-quote a { color: var(--accent-text); text-decoration: underline; text-underline-offset: .2em; }
 
 .n-bento-feature { grid-column: span 2; grid-row: span 2; padding: 0; justify-content: flex-end; min-height: 460px; color: #fff; border: 0; }
 .n-bento-feature-slide { align-items: flex-end; }
