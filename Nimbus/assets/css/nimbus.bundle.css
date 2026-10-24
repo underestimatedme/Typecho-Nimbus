@@ -1681,10 +1681,16 @@ html[data-motion="off"] .n-post-hero-chip, html[data-motion="off"] .n-post-hero-
 .n-st-top li:nth-child(-n+3) .n-st-rank { color: var(--accent-text); }
 .n-st-name { font-size: var(--text-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .n-st-top b { font-size: var(--text-xs); color: var(--muted); font-variant-numeric: tabular-nums; }
-.n-st-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-.n-st-tags a { display: inline-flex; align-items: baseline; gap: 4px; padding: 5px 12px; border-radius: var(--r-pill); background: var(--chip); color: var(--fg-soft); font-size: calc(var(--text-sm) * var(--s, 1)); transition: background var(--dur-fast), color var(--dur-fast), transform var(--dur-fast); }
-.n-st-tags a small { font-size: 11px; color: var(--muted); }
-.n-st-tags a:hover { background: var(--accent-soft); color: var(--accent-text); transform: translateY(-2px); }
+.n-st-tags { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 10px; }
+.n-st-tags a { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 0; min-height: 52px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: color-mix(in srgb, var(--chip) 55%, var(--card)); color: var(--fg); font-size: var(--text-sm); font-weight: 500; line-height: 1.5; transition: background var(--dur-fast), border-color var(--dur-fast), box-shadow var(--dur-fast), transform var(--dur-fast); }
+.n-st-tag-name { min-width: 0; overflow-wrap: anywhere; }
+.n-st-tags a small { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 26px; padding-inline: 7px; border-radius: 8px; background: var(--accent-soft); color: var(--accent-text); font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; }
+.n-st-tags a:hover, .n-st-tags a:focus-visible { background: color-mix(in srgb, var(--accent-soft) 45%, var(--card)); border-color: var(--line-hover); box-shadow: 0 5px 14px -8px var(--accent-glow); transform: translateY(-1px); }
+@media (max-width: 480px) {
+  .n-st-tags { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .n-st-tags a { min-height: 50px; padding: 10px; gap: 8px; }
+  .n-st-tags a small { min-width: 26px; height: 24px; font-size: 11px; border-radius: 7px; }
+}
 @keyframes n-ch-draw { to { stroke-dashoffset: 0; } }
 @keyframes n-ch-fade { to { opacity: 1; } }
 @keyframes n-ch-grow { to { transform: scaleY(1); } }

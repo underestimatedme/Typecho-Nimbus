@@ -97,11 +97,11 @@ View::partial('header', ['archive' => $this]);
       </section>
       <?php endif; ?>
 
-      <?php if (!empty($s['tags'])): $maxT = max(array_column($s['tags'], 'count')); ?>
+      <?php if (!empty($s['tags'])): ?>
       <section class="n-st-panel n-reveal<?= is_array($kit) && !empty($kit['top']) ? ' n-st-wide' : '' ?>">
         <header><h2><?= I18n::e('常用标签') ?></h2></header>
         <div class="n-st-tags">
-          <?php foreach ($s['tags'] as $t): ?><a href="<?= View::e($t['url']) ?>" style="--s:<?= round(0.8 + 0.6 * $t['count'] / max(1, $maxT), 2) ?>"><?= View::e($t['name']) ?><small><?= (int)$t['count'] ?></small></a><?php endforeach; ?>
+          <?php foreach ($s['tags'] as $t): ?><a href="<?= View::e($t['url']) ?>"><span class="n-st-tag-name"><?= View::e($t['name']) ?></span><small><?= (int)$t['count'] ?></small></a><?php endforeach; ?>
         </div>
       </section>
       <?php endif; ?>
