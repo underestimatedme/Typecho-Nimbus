@@ -50,8 +50,9 @@ while ($tags->next()) $chips[] = ['name' => (string)$tags->name, 'url' => (strin
       <h1 class="n-cover-title"><span><?= View::e($parts[0]) ?></span><?php if (isset($parts[1]) && $parts[1] !== ''): ?><em><?= View::e($parts[1]) ?></em><?php endif; ?></h1>
       <p class="n-cover-sub" data-typewriter="<?= View::e(json_encode(array_values($subs), JSON_UNESCAPED_UNICODE)) ?>"><span><?= View::e($subs[0]) ?></span><b class="n-caret" aria-hidden="true"></b></p>
       <div class="n-cover-cta">
-        <a class="n-btn n-btn-primary n-cover-btn" href="#n-posts"><?= I18n::e('开始阅读') ?><?= View::icon('arrow-right') ?></a>
-        <?php if ($random): ?><a class="n-btn n-cover-btn n-cover-btn-ghost" href="<?= View::e((string)$random['permalink']) ?>"><?= View::icon('shuffle') ?><?= I18n::e('随便看看') ?></a><?php endif; ?>
+        <?php foreach (\Nimbus\Home::actions($random ? (string)$random['permalink'] : '') as $i => $action): ?>
+        <a class="n-btn n-cover-btn <?= $i === 0 ? 'n-btn-primary' : 'n-cover-btn-ghost' ?>" href="<?= View::e($action['url']) ?>"><?= View::e($action['label']) ?><?= View::icon($action['icon']) ?></a>
+        <?php endforeach; ?>
       </div>
       <ul class="n-cover-stats">
         <li><b data-count="<?= (int)$counts['posts'] ?>"><?= (int)$counts['posts'] ?></b><span><?= I18n::e('篇文章') ?></span></li>
