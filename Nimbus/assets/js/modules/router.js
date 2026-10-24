@@ -45,6 +45,12 @@ export async function navigate(url, push = true) {
     const doc = new DOMParser().parseFromString(html, 'text/html');
     if (!doc.querySelector('#n-main')) throw new Error('foreign page');
     const finalUrl = r.url || url;
+    // MomoBird 的播放器由 footer 脚本在整页加载时挂载，尚无页面切换生命周期。
+    // 包含占位符的页面走普通跳转，避免只替换正文而留下空播放器；文章之间也如此。
+    if (doc.querySelector('.momobird-podcast')) {
+      location.href = finalUrl;
+      return;
+    }
     const run = () => { swap(doc, finalUrl); };
     if (document.startViewTransition && !prefersReduced()) {
       document.documentElement.classList.add('n-vt-page');
