@@ -27,6 +27,7 @@
 @import url("components/comment.css") layer(components);
 @import url("components/shortcode.css") layer(components);
 @import url("components/player.css") layer(components);
+@import url("components/third-party.css") layer(components);
 @import url("components/poster.css") layer(components);
 @import url("components/cyber-fx.css") layer(components);
 @import url("components/tutorial.css") layer(components);

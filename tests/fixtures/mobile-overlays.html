@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="sky" data-motion="off">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nimbus 浮动入口与分享布局回归</title>
+<link rel="stylesheet" href="/usr/themes/Nimbus/assets/css/nimbus.bundle.css">
+<style>
+  main { padding-top: 24px; padding-bottom: 120px; }
+  #results { white-space: pre-wrap; font: 13px/1.8 monospace; margin-block: 16px; }
+  #qa-controls { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+  #qa-controls button { padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; }
+</style>
+<main class="n-container">
+  <h1 style="font-size:24px">浮动入口与分享布局回归</h1>
+  <p>本地布局夹具：第三方问答为模拟面板，不连接知识库。</p>
+  <div id="qa-controls">
+    <button id="run">运行布局检查</button>
+    <button id="chat">展开 / 收起模拟问答</button>
+    <button id="remove">移除 / 恢复模拟挂件</button>
+    <button id="side">切换挂件左右</button>
+    <button id="language">切换长英文操作文字</button>
+  </div>
+  <pre id="results" aria-live="polite">尚未运行</pre>
+  <article class="n-post" style="padding:24px 22px">
+    <div class="n-prose" id="n-prose"><h2 id="chapter">阅读正文</h2><p>分享、目录、返回顶部和音乐控件使用真实主题样式。检查分享菜单展开和收起时的页面宽度，以及浮动按钮的实际边界。</p></div>
+    <div class="n-post-foot"><div class="n-post-actions">
+      <button class="n-btn n-like">点赞</button>
+      <div class="n-share" data-share data-url="http://localhost/example">
+        <button class="n-btn" data-share-toggle>分享</button>
+        <div class="n-share-menu">
+          <a href="#chapter"><svg class="n-ico"></svg>微博</a>
+          <a href="#chapter"><svg class="n-ico"></svg>QQ</a>
+          <button><svg class="n-ico"></svg>生成海报</button>
+          <button><svg class="n-ico"></svg>复制链接</button>
+        </div>
+      </div>
+    </div></div>
+  </article>
+</main>
+<aside class="n-toc" data-toc><div class="n-toc-in"><h4>目录</h4><nav><a href="#chapter" data-toc-link="chapter">阅读正文</a></nav></div></aside>
+<button class="n-toc-fab" data-toc-fab aria-label="目录">☷</button>
+<button class="n-totop is-show" aria-label="返回顶部">↑</button>
+<div class="n-player is-in"><button class="n-player-disc" aria-label="模拟音乐控件">♫</button></div>
+<div data-momobird-root="layout-fixture">
+  <iframe data-testid="momobird-embed-frame" title="模拟问答面板" srcdoc="<p>仅测试布局，不连接知识库。</p>" style="position:fixed;bottom:88px;right:16px;width:min(380px,calc(100vw - 24px));height:min(560px,calc(100dvh - 112px));border:0;border-radius:16px;z-index:2147483646;display:none;background:white"></iframe>
+  <div data-testid="momobird-launcher" style="position:fixed;bottom:16px;right:16px;width:56px;height:56px;z-index:2147483647"><button aria-label="模拟第三方问答入口" style="width:56px;height:56px;border-radius:50%;background:#6557ee;color:white">问答</button></div>
+</div>
+<script type="module">
+import * as share from '/usr/themes/Nimbus/assets/js/modules/share.js';
+import * as toc from '/usr/themes/Nimbus/assets/js/modules/toc.js';
+share.init(); toc.init();
+const widget = document.querySelector('[data-momobird-root]');
+const frame = widget.querySelector('iframe');
+const nextFrame = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+function chat() { frame.style.display = frame.style.display === 'none' ? 'block' : 'none'; }
+document.querySelector('#chat').onclick = chat;
+widget.querySelector('button').onclick = chat;
+document.querySelector('#remove').onclick = () => widget.isConnected ? widget.remove() : document.body.append(widget);
+document.querySelector('#side').onclick = () => {
+  const launcher = widget.querySelector('[data-testid="momobird-launcher"]');
+  const left = !launcher.style.left;
+  for (const e of [launcher, frame]) { e.style.left = left ? '16px' : ''; e.style.right = left ? '' : '16px'; }
+};
+document.querySelector('#language').onclick = () => {
+  const labels = ['Weibo', 'QQ', 'Generate poster', 'Copy link'];
+  document.querySelectorAll('.n-share-menu a,.n-share-menu button').forEach((e, i) => { e.lastChild.textContent = labels[i]; });
+};
+const rect = selector => document.querySelector(selector).getBoundingClientRect();
+const visible = selector => { const e = document.querySelector(selector); return getComputedStyle(e).visibility !== 'hidden' && getComputedStyle(e).display !== 'none'; };
+const overlaps = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+document.querySelector('#run').onclick = async () => {
+  frame.style.display = 'none';
+  const box = document.querySelector('[data-share]');
+  const results = [];
+  const check = (label, pass) => results.push(`${pass ? 'PASS' : 'FAIL'} ${label}`);
+  await nextFrame();
+  check('收起分享菜单时无横向溢出', document.documentElement.scrollWidth <= document.documentElement.clientWidth);
+  check('收起的分享操作不可聚焦访问', !visible('.n-share-menu'));
+  box.classList.add('is-open');
+  await nextFrame();
+  const menu = rect('.n-share-menu');
+  check('展开的分享菜单位于视口内', menu.left >= 0 && menu.right <= innerWidth);
+  check('分享操作文字完整可见', [...box.querySelectorAll('.n-share-menu a,.n-share-menu button')].every(e => e.scrollWidth <= e.clientWidth));
+  box.classList.remove('is-open');
+  if (widget.isConnected) {
+    const bird = rect('[data-testid="momobird-launcher"]');
+    check('返回顶部未被问答入口覆盖', !overlaps(rect('.n-totop'), bird));
+    check('音乐与问答入口互不重叠', !overlaps(rect('.n-player'), bird));
+    if (visible('.n-toc-fab')) check('目录与底部按钮互不重叠', !overlaps(rect('.n-toc-fab'), bird) && !overlaps(rect('.n-toc-fab'), rect('.n-totop')));
+    frame.style.display = 'block';
+    await nextFrame();
+    check('问答展开后主题浮动控件不抢占操作', ['.n-totop','.n-toc-fab','.n-player'].every(selector => !visible(selector)));
+    frame.style.display = 'none';
+  }
+  await nextFrame();
+  check('恢复后页面无横向溢出', document.documentElement.scrollWidth <= document.documentElement.clientWidth);
+  document.querySelector('#results').textContent = `${innerWidth} × ${innerHeight}\n` + results.join('\n');
+};
+</script>
+</html>
