@@ -65,6 +65,8 @@
 
 **Hero 主标题**：用 `|` 分成两段，后段带流光效果，例如 `给时光|以生命`。
 
+**杂志首页行动按钮**：`HeroPrimaryLabel` / `HeroPrimaryUrl` 和 `HeroSecondaryLabel` / `HeroSecondaryUrl` 分别配置两颗按钮。地址支持 HTTP(S)、以 `/` 开头的站内路径或 `#锚点`，文案按纯文本输出。留空保留「开始阅读 → 文章列表」「随便看看 → 随机文章」；先发布导览页，再填入它的真实地址。作者名称、产品与域名均通过站点配置提供。
+
 **社交链接**：每行 `名称|链接|图标`，图标可选 `github weibo bilibili twitter email rss qq wechat telegram zhihu link`。
 
 **小部件顺序**：每行一个名称，行首 `#` 临时关闭。可用：`author notice hot recent-comments tags categories calendar site-info custom-html`。
