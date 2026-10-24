@@ -721,8 +721,8 @@ html[data-motion="off"] .n-author-av, html[data-motion="off"] .n-author-av i, ht
 .n-toc-progress i { display: block; height: 100%; width: 0; background: var(--accent-grad); transition: width .15s linear; }
 .n-toc-fab { display: none; position: fixed; right: 28px; bottom: 86px; z-index: var(--z-nav); width: 48px; height: 48px; border-radius: 50%; background: var(--accent-grad); color: var(--on-accent); box-shadow: 0 10px 30px -8px var(--accent-glow); font-size: 20px; place-items: center; }
 @media (max-width: 1000px) {
-  .n-toc { position: fixed; inset: 0; z-index: var(--z-modal); background: rgba(0, 0, 0, .5); opacity: 0; pointer-events: none; transition: opacity var(--dur-fast); }
-  .n-toc.is-open { opacity: 1; pointer-events: auto; }
+  .n-toc { position: fixed; inset: 0; z-index: var(--z-modal); background: rgba(0, 0, 0, .5); overflow: hidden; visibility: hidden; opacity: 0; pointer-events: none; transition: opacity var(--dur-fast); }
+  .n-toc.is-open { visibility: visible; opacity: 1; pointer-events: auto; }
   .n-toc-in { position: absolute; right: 0; top: 0; bottom: 0; width: min(320px, 85vw); max-height: none; border-radius: 0; translate: 100% 0; transition: translate var(--dur) var(--ease); }
   .n-toc.is-open .n-toc-in { translate: 0 0; }
   .n-toc-fab { display: grid; }
@@ -798,10 +798,17 @@ pre.line-numbers > code { position: relative; white-space: inherit; }
 .n-like.is-on { color: var(--like); border-color: var(--like); }
 .n-like.is-on .n-ico { fill: var(--like); stroke: var(--like); animation: n-pop .4s var(--ease); }
 .n-share { position: relative; }
-.n-share-menu { position: absolute; left: 50%; bottom: calc(100% + 8px); translate: -50% 6px; display: flex; gap: 4px; padding: 6px; border-radius: 14px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow-hover); opacity: 0; pointer-events: none; transition: opacity var(--dur-fast), translate var(--dur) var(--ease); z-index: 5; }
-.n-share.is-open .n-share-menu { opacity: 1; translate: -50% 0; pointer-events: auto; }
+.n-share-menu { position: absolute; left: 50%; bottom: calc(100% + 8px); translate: -50% 6px; display: flex; gap: 4px; padding: 6px; border-radius: 14px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow-hover); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity var(--dur-fast), translate var(--dur) var(--ease); z-index: 5; }
+.n-share.is-open .n-share-menu { opacity: 1; visibility: visible; translate: -50% 0; pointer-events: auto; }
 .n-share-menu a, .n-share-menu button { display: inline-flex; align-items: center; gap: 5px; padding: 8px 12px; border-radius: 10px; font-size: var(--text-xs); white-space: nowrap; color: var(--fg-soft); transition: background var(--dur-fast), color var(--dur-fast); }
 .n-share-menu a:hover, .n-share-menu button:hover { background: var(--accent-soft); color: var(--accent-text); }
+@media (max-width: 640px) {
+  /* 以整行动作区居中，避免以靠右的分享按钮居中时越过屏幕。 */
+  .n-post-actions { position: relative; }
+  .n-post-actions .n-share { position: static; }
+  .n-share-menu { width: min(280px, 100%); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .n-share-menu a, .n-share-menu button { justify-content: center; white-space: normal; overflow-wrap: anywhere; }
+}
 .n-reward-in { text-align: center; padding: 32px 28px; position: relative; }
 .n-reward-close { position: absolute; right: 12px; top: 12px; background: var(--chip); border-color: transparent; }
 .n-reward-in h3 { font-family: var(--font-title); font-size: var(--text-xl); color: var(--fg-strong); }
@@ -1022,6 +1029,19 @@ a.n-comment-name:hover { color: var(--accent-text); }
 @media print { .n-player { display: none !important; } }
 /* 与 Live2D 看板娘（默认在左下角）同时开启时，播放器让到右侧 */
 @media (min-width: 769px) { .has-live2d .n-player { left: 300px; } }
+}
+/* --- components/third-party.css --- */
+@layer components {
+/* MomoBird 挂件兼容：仅在服务自行挂载后生效，不创建问答入口或写入站点身份。
+   使用 widget/loader.ts 已公开的 DOM 标记；挂件展开时通过内联 display 切换。 */
+body:has([data-momobird-root]) .n-totop { right: 88px; }
+body:has([data-momobird-root] [data-testid="momobird-launcher"][style*="left:"]) .n-player { bottom: 88px; }
+body:has([data-momobird-root] iframe[data-testid="momobird-embed-frame"][style*="display: block"]) :is(.n-totop, .n-toc-fab, .n-player) { visibility: hidden; pointer-events: none; }
+@media (max-width: 640px) {
+  /* 右下角保留挂件的位置；目录与返回顶部排列在其左边，减少正文上的堆叠。 */
+  body:has([data-momobird-root]) .n-toc-fab { right: 88px; bottom: 16px; }
+  body:has([data-momobird-root]) .n-totop { right: 144px; }
+}
 }
 /* --- components/poster.css --- */
 @layer components {

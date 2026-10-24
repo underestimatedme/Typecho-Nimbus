@@ -1,0 +1,10 @@
+/* MomoBird 挂件兼容：仅在服务自行挂载后生效，不创建问答入口或写入站点身份。
+   使用 widget/loader.ts 已公开的 DOM 标记；挂件展开时通过内联 display 切换。 */
+body:has([data-momobird-root]) .n-totop { right: 88px; }
+body:has([data-momobird-root] [data-testid="momobird-launcher"][style*="left:"]) .n-player { bottom: 88px; }
+body:has([data-momobird-root] iframe[data-testid="momobird-embed-frame"][style*="display: block"]) :is(.n-totop, .n-toc-fab, .n-player) { visibility: hidden; pointer-events: none; }
+@media (max-width: 640px) {
+  /* 右下角保留挂件的位置；目录与返回顶部排列在其左边，减少正文上的堆叠。 */
+  body:has([data-momobird-root]) .n-toc-fab { right: 88px; bottom: 16px; }
+  body:has([data-momobird-root]) .n-totop { right: 144px; }
+}
