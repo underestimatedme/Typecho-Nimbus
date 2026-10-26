@@ -17,7 +17,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  *
  * @package NimbusKit
  * @author Nimbus Contributors
- * @version 1.1.0
+ * @version 1.2.0
  * @link https://github.com/underestimatedme/Typecho-Nimbus
  */
 class Plugin implements PluginInterface
@@ -91,6 +91,9 @@ class Plugin implements PluginInterface
         ], Config::FEATURES, _t('启用的功能'), _t('关闭后主题会自动隐藏对应的按钮与数据。'));
         $form->addInput($f);
 
+        $form->addInput(new Radio('analyticsEnable', ['1' => '开启', '0' => '关闭'], '0', _t('来源与作品点击统计'), _t('默认关闭。开启并保存后开始按天汇总；30分钟短期Cookie去重，不是UV或注册/购买转化。尊重DNT/GPC，已登录Typecho账号的访问不计入。不保存IP、User-Agent、完整来源URL或页面查询参数。')));
+        $form->addInput(new \Typecho\Widget\Helper\Form\Element\Textarea('analyticsGoals', null, '', _t('统计目标链接'), _t('每行：英文标识|显示名称|公开URL。最多20个；标识用小写字母、数字、下划线或短横线，以字母开头。支持http(s)或站内绝对路径，无效行不采集。名称和目标通过配置提供，主题不绑定具体产品。')));
+
         $form->addInput(new Radio('mailEnable', ['1' => '开启', '0' => '关闭'], '0', _t('邮件通知'), _t('新评论通知站长、回复通知被回复者。')));
         $form->addInput(new TextInput('smtpHost', null, '', _t('SMTP 服务器'), _t('如 smtp.qq.com、smtp.163.com、smtp.gmail.com')));
         $form->addInput(new TextInput('smtpPort', null, '465', _t('端口'), _t('SSL 一般为 465，STARTTLS 一般为 587，明文为 25。')));
@@ -110,7 +113,7 @@ class Plugin implements PluginInterface
         $form->addInput(new Radio('githubOnly', ['0' => '否', '1' => '是'], '0', _t('仅允许 GitHub 用户评论'), _t('开启后，未登录 GitHub 的访客无法评论（已登录的站长不受影响）。')));
         $form->addInput(new Hidden('githubBase', null, 'https://github.com'));
         $form->addInput(new Hidden('githubApi', null, 'https://api.github.com'));
-        $form->addInput(new Radio('dropOnDeactivate', ['0' => '保留数据', '1' => '删除全部数据'], '0', _t('禁用插件时'), _t('选择「删除」后，禁用插件会清空说说、友链、相册、浏览量与点赞，无法恢复。')));
+        $form->addInput(new Radio('dropOnDeactivate', ['0' => '保留数据', '1' => '删除全部数据'], '0', _t('禁用插件时'), _t('选择「删除」后，禁用插件会清空说说、友链、相册、收藏夹、项目、浏览量、点赞及来源点击统计，无法恢复。')));
     }
 
     public static function personalConfig(Form $form)
@@ -128,6 +131,7 @@ class Plugin implements PluginInterface
             if ($old) $settings = array_merge($settings, array_intersect_key($old, $settings));
             self::backup(null);
         }
+        if (($settings['analyticsEnable'] ?? '0') === '1') Store::installGrowth();
         Helper::configPlugin('NimbusKit', $settings);
         Config::reset();
     }

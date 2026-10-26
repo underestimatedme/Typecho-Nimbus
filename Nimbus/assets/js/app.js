@@ -5,6 +5,7 @@ import * as progress from './modules/progress.js';
 import * as search from './modules/search.js';
 import * as reveal from './modules/reveal.js';
 import * as count from './modules/count.js';
+import * as growth from './modules/growth.js';
 import * as menuFit from './modules/menu-fit.js';
 import { isAllowedOnDevice } from './modules/media-policy.js';
 
@@ -26,6 +27,7 @@ async function boot(root = document) {
   search.init(root);
   reveal.init(root);
   count.init(root);
+  growth.init();
   if (document.documentElement.dataset.fx) import('./modules/cyber-fx.js').then((m) => m.init()).catch(() => {});
   if (isAllowedOnDevice(cfg.live2d)) import('./modules/live2d.js').then((m) => m.init()).catch(() => {});
   if (isAllowedOnDevice(cfg.music)) import('./modules/player.js').then((m) => m.init()).catch(() => {});

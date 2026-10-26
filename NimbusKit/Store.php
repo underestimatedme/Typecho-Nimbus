@@ -178,6 +178,42 @@ final class Store
         return ['views' => (int)($r['v'] ?? 0), 'likes' => (int)($r['l'] ?? 0)];
     }
 
+    // ---------- 来源 / 配置目标的按日汇总 ----------
+
+    public static function installGrowth(): void
+    {
+        $db = self::db();
+        $db->query(Schema::growthStatement($db->getAdapterName(), $db->getPrefix()), \Typecho\Db::WRITE);
+    }
+
+    public static function countGrowth(string $kind, string $source, string $goal): void
+    {
+        $db = self::db();
+        $day = Text::dayKey(self::now() ?: time(), (int)\Helper::options()->timezone);
+        $increment = function () use ($db, $day, $kind, $source, $goal) {
+            return $db->query($db->update('table.nimbus_growth')->expression('hits', 'hits + 1')
+                ->where('day = ? AND kind = ? AND source = ? AND goal = ?', $day, $kind, $source, $goal));
+        };
+        if ($increment()) return;
+        try {
+            $db->query($db->insert('table.nimbus_growth')->rows(['day' => $day, 'kind' => $kind, 'source' => $source, 'goal' => $goal, 'hits' => 1]));
+        } catch (\Typecho\Db\Exception $e) {
+            // A simultaneous first write may insert the row after our UPDATE.
+            if (!$increment()) throw $e;
+        }
+    }
+
+    public static function growthRows(int $days = 14): array
+    {
+        $days = max(1, min(90, $days));
+        $now = self::now() ?: time();
+        $tz = (int)\Helper::options()->timezone;
+        $start = Text::dayKey($now - ($days - 1) * 86400, $tz);
+        $end = Text::dayKey($now, $tz);
+        $db = self::db();
+        return $db->fetchAll($db->select()->from('table.nimbus_growth')->where('day >= ? AND day <= ?', $start, $end)->order('day', \Typecho\Db::SORT_DESC));
+    }
+
     // ---------- 收藏夹 ----------
 
     public static function bookmarks(bool $all = false): array

@@ -11,6 +11,8 @@ final class Config
     const FEATURES = ['views', 'likes', 'search', 'ajaxComment', 'sitemap'];
     const DEFAULTS = [
         'features' => self::FEATURES,
+        'analyticsEnable' => '0',
+        'analyticsGoals' => '',
         'mailEnable' => '0',
         'smtpHost' => '',
         'smtpPort' => '465',
