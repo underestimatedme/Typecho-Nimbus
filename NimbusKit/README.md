@@ -20,6 +20,7 @@
 | 项目 | 后台管理项目（封面、技术栈、演示 / 源码链接），前台项目展示页 |
 | GitHub 登录评论 | 访客用 GitHub 账号登录后评论，昵称、头像、主页自动填写且不可伪造；可设「仅 GitHub 用户可评论」 |
 | IP 属地 | 评论头显示省份（国外显示国家），需自行放入 ip2region 数据文件 |
+| 来源与作品点击 | 可选、默认关闭；按来源汇总到访与配置目标的链接点击，后台查看近 14 天 |
 | 浏览趋势 | 按天记录浏览量，供主题统计看板绘制近 30 天趋势 |
 | Sitemap | `/sitemap.xml`，含首页、文章、独立页、分类、标签 |
 
@@ -35,6 +36,12 @@
 **从 1.0 升级**：覆盖目录后在「控制台 → 插件」禁用再启用一次 NimbusKit，以创建新表并注册新钩子。设置会自动保留。
 
 前台展示：新建独立页面，「自定义模板」选择「说说」「相册」「收藏夹」「项目」「统计」（Nimbus 主题提供）。
+
+## 来源与作品点击
+
+更新主题和插件后，在插件设置中开启「来源与作品点击统计」并保存，即可为旧数据库创建统计表，无需禁用插件。每行配置 `英文标识|显示名称|公开URL`；后台「管理 → Nimbus → 统计」查看近 14 天汇总。关闭后停止采集，保留已有记录。
+
+30 分钟 Cookie 去重，统计的是浏览器到访和链接点击，不能当作独立访客、注册或购买。来源缺失归为「直接 / 来源不可知」；不追溯历史。尊重 DNT/GPC，已登录 Typecho 用户不计入。不保存 IP、User-Agent、完整来源 URL 或页面查询参数。配置方法与限制见 [统计说明](../docs/growth-analytics.md)。
 
 ## 邮件配置示例
 
@@ -67,6 +74,7 @@
 
 | 端点 | 方法 | 参数 | 说明 |
 | --- | --- | --- | --- |
+| `growth` | POST | `kind`（entry / goal）、`utm`、来源主机名 `referrer`、目标标识 `goal` | 仅开启时采集；返回是否计入，不公开汇总 |
 | `view` | POST | `cid` | 记录一次浏览 |
 | `like` | POST | `cid`、`type`（post / moment） | 点赞，已赞过返回当前数 |
 | `search` | GET | `q`（2–40 字） | 最多 8 条结果 |
@@ -75,12 +83,12 @@
 
 ## 主题开发者
 
-主题通过静态门面 `NimbusKit_Api` 读取数据：`VERSION`、`features()`、`views($cid)`、`likes($cid)`、`hotPosts($limit)`、`links()`、`moments($page, $size)`、`albums()`、`bookmarks()`、`projects()`、`stats()`、`region($ip)`、`github($back)`。功能关闭时对应方法返回 `null`。
+主题通过静态门面 `NimbusKit_Api` 读取数据：`VERSION`、`features()`、`views($cid)`、`likes($cid)`、`hotPosts($limit)`、`links()`、`moments($page, $size)`、`albums()`、`bookmarks()`、`projects()`、`stats()`、`growth()`、`region($ip)`、`github($back)`。功能关闭时对应方法返回 `null`。
 
 前台 GitHub 登录相关端点：`github-login?back=`、`github-callback`、`github-logout?back=`。
 
 ## 数据与卸载
 
-数据表：`nimbus_stats`、`nimbus_like_log`、`nimbus_moments`、`nimbus_links`、`nimbus_albums`、`nimbus_bookmarks`、`nimbus_projects`、`nimbus_daily`（带 Typecho 表前缀）。
+数据表：`nimbus_stats`、`nimbus_like_log`、`nimbus_moments`、`nimbus_links`、`nimbus_albums`、`nimbus_bookmarks`、`nimbus_projects`、`nimbus_daily`、`nimbus_growth`（带 Typecho 表前缀）。
 
 禁用插件默认**保留**数据。若要彻底清除，先在插件设置里把「禁用插件时」改为「删除全部数据」并保存，再禁用。

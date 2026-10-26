@@ -3,6 +3,7 @@ namespace TypechoPlugin\NimbusKit;
 
 use TypechoPlugin\NimbusKit\Lib\Visitor;
 use TypechoPlugin\NimbusKit\Lib\Sitemap;
+use TypechoPlugin\NimbusKit\Lib\Growth;
 
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 
@@ -16,6 +17,9 @@ class Action extends \Widget\Base
         $endpoint = (string)$this->request->get('endpoint');
         try {
             switch ($endpoint) {
+                case 'growth':
+                    $this->growth();
+                    break;
                 case 'view':
                     $this->view();
                     break;
@@ -89,6 +93,41 @@ class Action extends \Widget\Base
         $views = Store::incrementView('post', $cid);
         setcookie($cookie, '1', ['expires' => time() + Visitor::VIEW_TTL, 'path' => '/', 'httponly' => true, 'samesite' => 'Lax']);
         $this->ok(['views' => $views, 'counted' => true]);
+    }
+
+    private function growth(): void
+    {
+        if (Config::get('analyticsEnable') !== '1') $this->fail('disabled', 404);
+        $this->requirePost();
+        if ($this->request->getHeader('DNT') === '1' || $this->request->getHeader('Sec-GPC') === '1') {
+            $this->ok(['counted' => false, 'reason' => 'privacy']);
+        }
+        if (\Widget\User::alloc()->hasLogin()) $this->ok(['counted' => false, 'reason' => 'signed-in']);
+        $kind = $_POST['kind'] ?? null;
+        $utm = $_POST['utm'] ?? '';
+        $referrer = $_POST['referrer'] ?? '';
+        if (!is_string($kind) || !in_array($kind, ['entry', 'goal'], true) || !is_string($utm) || strlen($utm) > 40 || !is_string($referrer) || strlen($referrer) > 253) $this->fail('invalid input');
+        $goal = null;
+        if ($kind === 'goal') {
+            $key = $_POST['goal'] ?? '';
+            if (!is_string($key)) $this->fail('invalid input');
+            foreach (Growth::goals((string)Config::get('analyticsGoals')) as $g) if ($g['key'] === $key) { $goal = $g; break; }
+            if (!$goal) $this->fail('invalid goal', 404);
+        }
+        $site = (string)$this->options->siteUrl;
+        $scope = 'nimbus_g_source_' . substr(hash('sha256', $site), 0, 12);
+        $saved = $_COOKIE[$scope] ?? '';
+        $hasSource = is_string($saved) && isset(Growth::SOURCES[$saved]);
+        $source = $hasSource ? $saved : Growth::source($utm, $referrer, (string)parse_url($site, PHP_URL_HOST));
+        $cookie = $goal ? Growth::goalCookie($goal['key'], $goal['url']) : $scope . '_entry';
+        if (!empty($_COOKIE[$cookie])) $this->ok(['counted' => false, 'source' => $source]);
+        $options = ['expires' => time() + Growth::TTL, 'path' => rtrim((string)parse_url($site, PHP_URL_PATH), '/') . '/', 'secure' => parse_url($site, PHP_URL_SCHEME) === 'https', 'httponly' => true, 'samesite' => 'Lax'];
+        if (!$hasSource) {
+            setcookie($scope, $source, $options);
+        }
+        Store::countGrowth($kind, $source, $goal ? $goal['key'] : '');
+        setcookie($cookie, '1', $options);
+        $this->ok(['counted' => true, 'source' => $source]);
     }
 
     private function like(): void

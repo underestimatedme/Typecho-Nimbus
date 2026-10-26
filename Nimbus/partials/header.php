@@ -44,6 +44,7 @@ $config = [
     'admin' => (string)$o->adminUrl,
     'api' => Kit::apiUrl(),
     'features' => Kit::features(),
+    'growth' => Kit::growth(),
     'music' => \Nimbus\Music::config(),
     'live2d' => \Nimbus\Music::live2d(),
     'rainCode' => in_array((string)Options::get('CyberRainCode', 'mix'), ['mix', 'python', 'go', 'rust'], true) ? (string)Options::get('CyberRainCode', 'mix') : 'mix',

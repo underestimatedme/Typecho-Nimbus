@@ -250,6 +250,29 @@ $pluginUrl = rtrim((string)$options->pluginUrl, '/') . '/NimbusKit';
         <?php endforeach; ?>
       </div>
 
+<?php
+    $growthRows = []; $growthUnavailable = false;
+    try { $growthRows = Store::growthRows(14); } catch (\Throwable $ex) { $growthUnavailable = true; }
+    $growthSources = []; $growthGoals = [];
+    $goalNames = [];
+    foreach (\TypechoPlugin\NimbusKit\Lib\Growth::goals((string)Config::get('analyticsGoals')) as $g) $goalNames[$g['key']] = $g['label'];
+    foreach ($growthRows as $row) {
+        $source = (string)$row['source'];
+        if ($row['kind'] === 'entry') $growthSources[$source] = ($growthSources[$source] ?? 0) + (int)$row['hits'];
+        else { $key = $row['goal'] . '|' . $source; if (!isset($growthGoals[$key])) $growthGoals[$key] = ['goal' => $row['goal'], 'source' => $source, 'hits' => 0]; $growthGoals[$key]['hits'] += (int)$row['hits']; }
+    }
+    $sourceName = function ($source) { return \TypechoPlugin\NimbusKit\Lib\Growth::SOURCES[$source] ?? '其他来源'; };
+?>
+      <div class="nk-card" style="margin-top:18px">
+        <h3>来源与作品点击 <small>近 14 天 · <?= Config::get('analyticsEnable') === '1' ? '采集已开启' : '采集未开启' ?></small></h3>
+        <p class="nk-tip">从开启之后开始记录，30 分钟 Cookie 去重；不是独立访客、订阅或购买。来源由 UTM / 浏览器来源信息归类，缺失时归为“直接 / 来源不可知”。DNT/GPC 和已登录 Typecho 账号不计入。<a href="<?= $e(\Typecho\Common::url('options-plugin.php?config=NimbusKit', (string)$options->adminUrl)) ?>">配置统计目标</a></p>
+        <?php if ($growthUnavailable): ?><p class="nk-tip"><?= Config::get('analyticsEnable') === '1' ? '统计表暂不可用，请重新保存插件设置以完成初始化。' : '保存并开启统计后开始积累记录。' ?></p><?php endif; ?>
+        <div class="nk-grid nk-grid-2">
+          <div><h4>来源到访</h4><?php if (!$growthSources): ?><p class="nk-empty">尚无来源记录。</p><?php else: ?><table class="nk-table"><thead><tr><th>来源</th><th>去重到访</th></tr></thead><tbody><?php arsort($growthSources); foreach ($growthSources as $source => $hits): ?><tr><td><?= $e($sourceName($source)) ?></td><td><?= (int)$hits ?></td></tr><?php endforeach; ?></tbody></table><?php endif; ?></div>
+          <div><h4>作品入口点击</h4><?php if (!$growthGoals): ?><p class="nk-empty">尚无目标点击记录。</p><?php else: ?><table class="nk-table"><thead><tr><th>目标</th><th>来源</th><th>去重点击</th></tr></thead><tbody><?php foreach ($growthGoals as $g): ?><tr><td><?= $e($goalNames[$g['goal']] ?? ('已移除目标：' . $g['goal'])) ?></td><td><?= $e($sourceName($g['source'])) ?></td><td><?= (int)$g['hits'] ?></td></tr><?php endforeach; ?></tbody></table><?php endif; ?></div>
+        </div>
+      </div>
+
 <?php else: // mail
     $cfg = Config::all(); ?>
       <div class="nk-grid">

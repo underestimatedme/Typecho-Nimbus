@@ -44,6 +44,12 @@ final class Kit
         }
     }
 
+    public static function growth(): ?array
+    {
+        $v = self::call('growth');
+        return is_array($v) ? $v : null;
+    }
+
     public static function views(int $cid): ?int
     {
         $v = self::call('views', [$cid]);

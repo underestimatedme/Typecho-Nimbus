@@ -6,7 +6,7 @@ namespace TypechoPlugin\NimbusKit\Lib;
  */
 final class Schema
 {
-    const TABLES = ['nimbus_stats', 'nimbus_like_log', 'nimbus_moments', 'nimbus_links', 'nimbus_albums', 'nimbus_bookmarks', 'nimbus_projects', 'nimbus_daily'];
+    const TABLES = ['nimbus_stats', 'nimbus_like_log', 'nimbus_moments', 'nimbus_links', 'nimbus_albums', 'nimbus_bookmarks', 'nimbus_projects', 'nimbus_daily', 'nimbus_growth'];
 
     /** Typecho 适配器名（Mysqli、Pdo_Mysql、SQLite、Pdo_SQLite、Pgsql、Pdo_Pgsql）归一。 */
     public static function normalizeAdapter(string $adapter): string
@@ -46,7 +46,14 @@ final class Schema
             "CREATE TABLE IF NOT EXISTS {$p}nimbus_bookmarks (id {$id}, group_name VARCHAR(100) NOT NULL DEFAULT '', name VARCHAR(100) NOT NULL DEFAULT '', url VARCHAR(500) NOT NULL DEFAULT '', icon VARCHAR(500) NOT NULL DEFAULT '', description VARCHAR(500) NOT NULL DEFAULT '', sort INT NOT NULL DEFAULT 0, status VARCHAR(10) NOT NULL DEFAULT 'publish', created INT NOT NULL DEFAULT 0){$tail}",
             "CREATE TABLE IF NOT EXISTS {$p}nimbus_projects (id {$id}, name VARCHAR(200) NOT NULL DEFAULT '', description {$text}, cover VARCHAR(500) NOT NULL DEFAULT '', url VARCHAR(500) NOT NULL DEFAULT '', repo VARCHAR(500) NOT NULL DEFAULT '', tags VARCHAR(500) NOT NULL DEFAULT '', sort INT NOT NULL DEFAULT 0, status VARCHAR(10) NOT NULL DEFAULT 'publish', created INT NOT NULL DEFAULT 0){$tail}",
             "CREATE TABLE IF NOT EXISTS {$p}nimbus_daily (day INT NOT NULL PRIMARY KEY, views INT NOT NULL DEFAULT 0){$tail}",
+            self::growthStatement($adapter, $prefix),
         ];
+    }
+
+    public static function growthStatement(string $adapter, string $prefix): string
+    {
+        $tail = self::normalizeAdapter($adapter) === 'mysql' ? ' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' : '';
+        return "CREATE TABLE IF NOT EXISTS {$prefix}nimbus_growth (day INT NOT NULL, kind VARCHAR(10) NOT NULL, source VARCHAR(20) NOT NULL, goal VARCHAR(40) NOT NULL DEFAULT '', hits INT NOT NULL DEFAULT 0, PRIMARY KEY (day, kind, source, goal)){$tail}";
     }
 
     /**

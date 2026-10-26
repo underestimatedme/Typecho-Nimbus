@@ -9,11 +9,17 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  */
 final class Api
 {
-    const VERSION = '1.1.0';
+    const VERSION = '1.2.0';
 
     public static function features(): array
     {
         return array_values(array_intersect(Config::FEATURES, (array)Config::get('features')));
+    }
+
+    public static function growth(): ?array
+    {
+        if (Config::get('analyticsEnable') !== '1') return null;
+        return ['goals' => \TypechoPlugin\NimbusKit\Lib\Growth::goals((string)Config::get('analyticsGoals'))];
     }
 
     public static function views(int $cid): ?int
